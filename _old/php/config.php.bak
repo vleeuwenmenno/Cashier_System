@@ -1,0 +1,16 @@
+<?php
+
+define('DBNAME', 'comtoday');
+define('DBHOST', 'localhost');
+define('DBUSER', 'louis');
+define('DBPASSWORD', 'johan1');
+//define('DBUSER', 'root');
+//define('DBPASSWORD', 'not4you2');
+
+$rootdir="/data/websites/comtoday/";
+//$rootdirwin="C:\\WWW\\comtoday\\";
+//$rootdirwin="/websites/comtoday/";
+//$httpdir = 'http://10.0.0.1/comtoday/'; 
+$httpdir = 'http://192.168.1.1/comtoday/'; 
+
+?>
