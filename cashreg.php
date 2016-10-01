@@ -1,10 +1,7 @@
 <?php 
-    include_once("includes.php"); 
+include_once("includes.php"); 
 
-	if (Permissions::checkSession("", false))
-	{
-		header("Location: cashreg.php");
-	}
+Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 ?>
 <html>
     <head>
@@ -56,13 +53,13 @@
             <div class="side-menu-container">
                 <ul class="nav navbar-nav">
                     <!-- Dropdown-->
-                    <li class="panel panel-default disabled" id="dropdown">
-                        <a data-toggle="collapse" href="#dropdown-lvl0">
+                    <li class="panel panel-default" id="dropdown">
+                        <a data-toggle="collapse" href="#dropdown-lvl1">
                             <span class="glyphicon glyphicon-eur"></span> Kassa</span>
                         </a>
 
                         <!-- Dropdown level 1 -->
-                        <div id="dropdown-lvl1" class="panel-collapse collapse">
+                        <div id="dropdown-lvl1" class="panel-collapse">
                             <div class="panel-body">
                                 <ul class="nav navbar-nav">
                                     <!-- Dropdown level 2 -->
@@ -81,7 +78,19 @@
                                         </div>
                                     </li>
                                     <li><a href="#"><span class="glyphicon glyphicon-barcode"></span> Artikelen</a></li>
-                                    <li><a href="#"><span class="glyphicon glyphicon-expand"></span> Klanten</a></li>
+                                    <li class="panel panel-default" id="dropdown">
+                                        <a data-toggle="collapse" href="#dropdown-lvl3">
+                                            <span class="glyphicon glyphicon-expand"></span> Klanten</span>
+                                        </a>
+                                        <div id="dropdown-lvl3" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <ul class="nav navbar-nav">
+                                                    <li><a href="#"><span class="glyphicon glyphicon-search"></span> Zoeken</a></li>
+                                                    <li><a href="#"><span class="glyphicon glyphicon-file"></span> Nieuwe Klant</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
                                     <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Systemen</a></li>
                                 </ul>
                             </div>
@@ -89,7 +98,7 @@
                     </li>
 
                     <li><a href="#"><span class="glyphicon glyphicon-user"></span> Beheer Login</a></li>
-                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> Login</a></li>
+                    <li><a href="logout.php"><span class="glyphicon glyphicon-user"></span> Uitloggen</a></li>
                 </ul>
             </div>
             </nav>
@@ -99,39 +108,7 @@
             
             </div>
             <div class="col-sm-6">
-                <form class="ui form panel" style="text-align: left !important;" action="index.php?login<?php if (isset($_GET['r'])) { echo '&r=' . $_GET['r']; }?>" method="POST" enctype="multipart/form-data">
-                    <h2>Kassa</h2>
-                    <div class="form-group">
-                        <label for="employee">Medewerker: </label>
-                        <input type="text" class="form-control" name="employee" id="employee">
-                    </div>
-                    <div class="form-group">
-                        <label for="passwrd">Wachtwoord: </label>
-                        <input type="password" class="form-control" name="passwrd" id="passwrd">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Login</button>
-                    <button type="button" class="btn btn-default">Annuleren</button>
-                    <?php
-                    if (isset($_POST['employee']) || isset($_POST['passwrd']))
-                    {
-                        $_SESSION['login'] = array(
-                            'user' => trim($_POST['employee']),
-                            'pass' => $_POST['passwrd']);
-                    ?>
-                    <script>
-                            (function()
-                            {
-                                window.location.replace("login.php<?php if (isset($_GET['r'])) { echo '?r=' . $_GET['r']; } else { echo '?r=index.php'; } ?>");
-                            })();
-                    </script>
-                    <?php
-                    }
-                    if (isset($_GET['notice']))
-                    {
-                        echo $_GET['notice'];
-                    }
-                    ?>
-				</form>
+                
 			</div>
             <div class="col-sm-2"></div>
         </div>

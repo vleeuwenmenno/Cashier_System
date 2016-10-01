@@ -2,7 +2,7 @@
 include('includes.php');
 Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 
-$db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], 'travel_web');
+$db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
 if($db->connect_errno > 0)
 {

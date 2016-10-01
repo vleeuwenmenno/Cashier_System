@@ -2,7 +2,7 @@
 
 class Permissions
 {
-    public static function checkSession($r)
+    public static function checkSession($r, $rt = true)
     {
         global $config;
 
@@ -50,7 +50,10 @@ class Permissions
 
                 $_SESSION['result'] = $_LANG['SESSION_EXP'];
 
-                header("Location: index.php?login&r=" . $r);
+				if ($rt)
+					header("Location: index.php?login&r =" . $r);
+				else
+					return false;
             }
             else if (($time_diff / 60) > 0)
             {
@@ -62,6 +65,8 @@ class Permissions
                 }
 
                 $i = 1;
+
+				return true;
             }
         }
 
@@ -70,10 +75,14 @@ class Permissions
             unset($_SESSION['sessionId']);
             unset($_SESSION['login_ok']);
 
-            $_SESSION['result'] = $_LANG['PLEASE_LOGIN'];
-            header("Location: index.php?login&r=" . $r);
+            $_SESSION['result']                 = $_LANG['PLEASE_LOGIN'];
+
+			if ($rt)
+				header("Location: index.php?login&r =" . $r);
+			else
+				return false;
         }
     }
 }
 
- ?>
+?>

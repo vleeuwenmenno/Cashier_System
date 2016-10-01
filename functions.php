@@ -12,6 +12,7 @@ else
 &nbsp;&nbsp;&nbsp;&nbsp;'SQL_DB' => \"\"<br />
 );<br />");
 
+include('classes/misc.php');
 include('classes/permissions.php');
 
 ?>
