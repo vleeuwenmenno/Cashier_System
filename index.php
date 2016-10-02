@@ -3,7 +3,7 @@
 
 	if (Permissions::checkSession("", false))
 	{
-		header("Location: cashreg.php");
+		header("Location: master.php");
 	}
 ?>
 <html>
@@ -60,32 +60,6 @@
                         <a data-toggle="collapse" href="#dropdown-lvl0">
                             <span class="glyphicon glyphicon-eur"></span> Kassa</span>
                         </a>
-
-                        <!-- Dropdown level 1 -->
-                        <div id="dropdown-lvl1" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                <ul class="nav navbar-nav">
-                                    <!-- Dropdown level 2 -->
-                                    <li class="panel panel-default" id="dropdown">
-                                        <a data-toggle="collapse" href="#dropdown-lvl2">
-                                            <span class="glyphicon glyphicon-eur"></span> Bonnen</span>
-                                        </a>
-                                        <div id="dropdown-lvl2" class="panel-collapse collapse">
-                                            <div class="panel-body">
-                                                <ul class="nav navbar-nav">
-                                                    <li><a href="#"><span class="glyphicon glyphicon-search"></span> Zoeken</a></li>
-                                                    <li><a href="#"><span class="glyphicon glyphicon-file"></span> Nieuwe Bon</a></li>
-                                                    <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Beheren</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li><a href="#"><span class="glyphicon glyphicon-barcode"></span> Artikelen</a></li>
-                                    <li><a href="#"><span class="glyphicon glyphicon-expand"></span> Klanten</a></li>
-                                    <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Systemen</a></li>
-                                </ul>
-                            </div>
-                        </div>
                     </li>
 
                     <li><a href="#"><span class="glyphicon glyphicon-user"></span> Beheer Login</a></li>

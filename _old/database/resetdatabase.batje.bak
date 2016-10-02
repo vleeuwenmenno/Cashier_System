@@ -1,2 +1,0 @@
-mysql -u root -pnot4you2 < createcomtoday.sql
-mysql -u root -pnot4you2 < comtodaybackuplive2705.sql

@@ -55,7 +55,7 @@ class Permissions
 				else
 					return false;
             }
-            else if (($time_diff / 60) > 0)
+            else if (($time_diff / $config['timeout']) > 0)
             {
                 $sqls = "UPDATE sessions SET lastPing = '" . date('Y/m/d H:i:s') . "' WHERE sessionId = '" . $_SESSION['sessionId'] . "'";
 
