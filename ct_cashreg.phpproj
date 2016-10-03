@@ -33,6 +33,15 @@
     <Compile Include="fonts\glyphicons-halflings-regular.ttf" />
     <Compile Include="fonts\glyphicons-halflings-regular.woff" />
     <Compile Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Compile Include="item.php" />
+    <Compile Include="Item\calcString.php" />
+    <Compile Include="Item\itemAdd.php" />
+    <Compile Include="Item\itemDelete.php" />
+    <Compile Include="Item\itemLoad.php" />
+    <Compile Include="Item\itemManage.php" />
+    <Compile Include="Item\itemUpdate.php" />
+    <Compile Include="Item\itemUpdateStock.php" />
+    <Compile Include="Item\viewItem.php" />
     <Compile Include="js\i18n\ar.js" />
     <Compile Include="js\i18n\az.js" />
     <Compile Include="js\i18n\bg.js" />
@@ -107,5 +116,11 @@
     <Folder Include="js\i18n" />
     <Folder Include="js" />
     <Folder Include="customer\" />
+    <Folder Include="Item\" />
+    <Folder Include="import\" />
+    <Folder Include="import\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="js\bootstrap-notify.min.js" />
   </ItemGroup>
 </Project>

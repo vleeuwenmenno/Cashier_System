@@ -14,6 +14,7 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 
         <script src="js/jquery.js"></script>
         <script src="js/bootstrap.min.js"></script>
+        <script src="js/bootstrap-notify.min.js"></script>
         <script src="js/select2.full.min.js"></script>
     </head>
     <body>
@@ -73,19 +74,66 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
                                         <div id="dropdown-lvl2" class="panel-collapse collapse">
                                             <div class="panel-body">
                                                 <ul class="nav navbar-nav">
-                                                    <li><a href="#"><span class="glyphicon glyphicon-search"></span> Zoeken</a></li>
                                                     <li><a href="#"><span class="glyphicon glyphicon-file"></span> Nieuwe Bon</a></li>
-                                                    <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Beheren</a></li>
+                                                    <li><a href="#"><span class="glyphicon glyphicon-search"></span> Zoeken</a></li>
                                                 </ul>
                                             </div>
                                         </div>
                                     </li>
-                                    <li><a href="#"><span class="glyphicon glyphicon-barcode"></span> Artikelen</a></li>
                                     <li class="panel panel-default" id="dropdown">
                                         <a data-toggle="collapse" href="#dropdown-lvl3">
-                                            <span class="glyphicon glyphicon-expand"></span> Klanten</span>
+                                            <span class="glyphicon glyphicon-barcode"></span> Artikelen</span>
                                         </a>
                                         <div id="dropdown-lvl3" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <ul class="nav navbar-nav">
+                                                    <li><a href="#" id="searchItem"><span class="glyphicon glyphicon-search"></span> Zoeken</a></li>
+                                                    <li><a href="#" id="createNewItem"><span class="glyphicon glyphicon-file"></span> Nieuw Artikel</a></li>
+                                                    <li><a href="#" id="itemEntryUpdate"><span class="glyphicon glyphicon-barcode"></span> Artikel Inboeken</a></li>
+                                                    <li><a href="#" id="manageItems"><span class="glyphicon glyphicon-cog"></span> Artikelen Beheren</a></li>
+                                                    <script>
+														$(document).ready(function ()
+														{
+														    $("#searchItem").on("click", function ()
+															{
+															    $("#pageLoaderIndicator").fadeIn();
+															    $("#PageContent").load("item.php", function() {
+															        $("#pageLoaderIndicator").fadeOut();
+															    });
+														    });
+
+														    $("#manageItems").on("click", function () {
+														        $("#pageLoaderIndicator").fadeIn();
+														        $("#PageContent").load("item/itemManage.php", function () {
+														            $("#pageLoaderIndicator").fadeOut();
+														        });
+														    });
+
+														    $("#createNewItem").on("click", function ()
+															{
+															    $("#pageLoaderIndicator").fadeIn();
+															    $("#PageContent").load("item.php?new", function () {
+															        $("#pageLoaderIndicator").fadeOut();
+															    });
+														    });
+
+														    $("#itemEntryUpdate").on("click", function () {
+														        $("#pageLoaderIndicator").fadeIn();
+														        $("#PageContent").load("item/itemManage.php?update", function () {
+														            $("#pageLoaderIndicator").fadeOut();
+														        });
+														    });
+														});
+                                                    </script>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="panel panel-default" id="dropdown">
+                                        <a data-toggle="collapse" href="#dropdown-lvl4">
+                                            <span class="glyphicon glyphicon-expand"></span> Klanten</span>
+                                        </a>
+                                        <div id="dropdown-lvl4" class="panel-collapse collapse">
                                             <div class="panel-body">
                                                 <ul class="nav navbar-nav">
                                                     <li><a href="#" id="load_custm"><span class="glyphicon glyphicon-search"></span> Zoeken</a></li>

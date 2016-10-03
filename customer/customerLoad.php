@@ -23,24 +23,25 @@ if (isset($_GET['sTerm']))
         while($row = $result->fetch_assoc())
         {
             $i++;
-            if ($i >= $_GET['start'] && $i < ($_GET['start'] + $_GET['count']))
+
+            $matchResult = false;
+
+            if ($_GET['sTerm'] != "")
             {
-                $matchResult = false;
-
-                if ($_GET['sTerm'] != "")
-                {
-                    if (strpos($row['initials'], $_GET['sTerm']) !== false)
-                        $matchResult = true;
-                    if (strpos($row['familyName'], $_GET['sTerm']) !== false)
-                        $matchResult = true;
-                    if (strpos($row['companyName'], $_GET['sTerm']) !== false)
-                        $matchResult = true;
-                    if (strpos($row['postalCode'], $_GET['sTerm']) !== false)
-                        $matchResult = true;
-                }
-                else
+                if (strpos($row['initials'], $_GET['sTerm']) !== false)
                     $matchResult = true;
+                if (strpos($row['familyName'], $_GET['sTerm']) !== false)
+                    $matchResult = true;
+                if (strpos($row['companyName'], $_GET['sTerm']) !== false)
+                    $matchResult = true;
+                if (strpos($row['postalCode'], $_GET['sTerm']) !== false)
+                    $matchResult = true;
+            }
+            else
+                $matchResult = true;
 
+            if ($i >= $_GET['start'] && $i < ($_GET['start'] + $_GET['count']) || $matchResult)
+            {
                 if ($matchResult)
                 {
                     echo '    <tr>';
