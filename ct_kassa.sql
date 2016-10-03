@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 30, 2016 at 03:44 PM
+-- Generation Time: Oct 03, 2016 at 04:09 PM
 -- Server version: 10.1.16-MariaDB
--- PHP Version: 5.5.38
+-- PHP Version: 5.6.24
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -33,12 +33,43 @@ CREATE TABLE `cash_registers` (
   `status` varchar(96) NOT NULL DEFAULT 'LoggedOff'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `cash_registers`
+-- Table structure for table `customers`
 --
 
-INSERT INTO `cash_registers` (`id`, `crName`, `crStaticIP`, `status`) VALUES
-(1, 'Kassa 1', '127.0.0.1', 'LoggedOff');
+CREATE TABLE `customers` (
+  `customerId` int(11) NOT NULL,
+  `initials` varchar(8) NOT NULL,
+  `familyName` varchar(255) NOT NULL,
+  `companyName` varchar(512) NOT NULL,
+  `streetName` varchar(512) NOT NULL,
+  `city` varchar(512) NOT NULL,
+  `postalCode` varchar(8) NOT NULL,
+  `phoneNumber` varchar(32) NOT NULL,
+  `mobileNumber` varchar(32) NOT NULL,
+  `email` varchar(96) NOT NULL,
+  `receipts` varchar(4096) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `items`
+--
+
+CREATE TABLE `items` (
+  `itemId` varchar(128) NOT NULL,
+  `EAN` varchar(512) NOT NULL,
+  `supplier` varchar(255) DEFAULT NULL,
+  `factoryId` varchar(255) NOT NULL,
+  `itemName` varchar(4096) NOT NULL,
+  `itemCategory` varchar(256) NOT NULL,
+  `itemStock` int(11) NOT NULL,
+  `priceExclVat` decimal(18,2) NOT NULL,
+  `priceModifier` varchar(255) NOT NULL DEFAULT '* 1.575'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -63,15 +94,9 @@ CREATE TABLE `users` (
   `userId` varchar(32) NOT NULL,
   `username` varchar(64) NOT NULL,
   `hash` varchar(512) DEFAULT NULL,
-  `salt` varchar(512) DEFAULT NULL
+  `salt` varchar(512) DEFAULT NULL,
+  `managementUser` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`userId`, `username`, `hash`, `salt`) VALUES
-('4656C64E531A6FD938BC62A20CC313A0', 'rob', 'B9D3FF1350DB22B53B7AA8FD37941A7E3E37132E5C1E634E83CD0F0F276ADF26844DE1689BE9C56689FA0CCDD504FDC9395B6260870B43378149913D50995436', 'isrW35yM32Mo5xeunkV73fCCcnvOwydP');
 
 --
 -- Indexes for dumped tables
@@ -84,12 +109,33 @@ ALTER TABLE `cash_registers`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `customers`
+--
+ALTER TABLE `customers`
+  ADD PRIMARY KEY (`customerId`);
+
+--
+-- Indexes for table `items`
+--
+ALTER TABLE `items`
+  ADD PRIMARY KEY (`itemId`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`userId`),
   ADD UNIQUE KEY `userId` (`userId`);
 
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `customers`
+--
+ALTER TABLE `customers`
+  MODIFY `customerId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
