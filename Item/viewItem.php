@@ -10,7 +10,7 @@ if (isset($_GET['id']))
 		die('Unable to connect to database [' . $db->connect_error . ']');
 	}
 
-	$sql = "SELECT * FROM items WHERE itemId='" . $_GET['id'] . "'";
+	$sql = "SELECT * FROM items WHERE itemId='" . $_GET['id'] . "' OR EAN='" . $_GET['id'] . "';";
 
 	if(!$result = $db->query($sql))
 	{
@@ -92,7 +92,7 @@ if (isset($_GET['id']))
 
 				    $("#cancelEditBtn").on("click", function ()
 				    {
-				        $("#PageContent").load('item/viewItem.php?id=<?php echo $_GET['id'];?>');
+				        $("#PageContent").load('item/viewItem.php?id=<?php echo $_GET['id']; ?>');
 				    });
 
 				    $("#deleteBtn").on("click", function () {
@@ -126,7 +126,7 @@ if (isset($_GET['id']))
                 		$.get(
                             "item/itemUpdate.php",
                             {
-                                itemId: "<?php echo $_GET['id']; ?>",
+                                itemId: "<?php if ($row['EAN'] != "") echo $row['EAN']; else echo $row['itemId']; ?>",
                                 EAN: $("#EAN").val(),
                                 supplier: $("#supplier").val(),
                                 factoryId: $("#factoryId").val(),

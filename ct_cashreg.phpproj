@@ -37,6 +37,7 @@
     <Compile Include="Item\calcString.php" />
     <Compile Include="Item\itemAdd.php" />
     <Compile Include="Item\itemDelete.php" />
+    <Compile Include="Item\itemImport.php" />
     <Compile Include="Item\itemLoad.php" />
     <Compile Include="Item\itemManage.php" />
     <Compile Include="Item\itemUpdate.php" />

@@ -104,7 +104,7 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 
 														    $("#manageItems").on("click", function () {
 														        $("#pageLoaderIndicator").fadeIn();
-														        $("#PageContent").load("item/itemManage.php", function () {
+														        $("#PageContent").load("item/itemImport.php", function () {
 														            $("#pageLoaderIndicator").fadeOut();
 														        });
 														    });

@@ -15,7 +15,7 @@ if ($_GET['itemId'] != "" && $_GET['supplier'] != ""
 		die('Unable to connect to database [' . $db->connect_error . ']');
 	}
 
-	$sql = "UPDATE items SET EAN='" . $_GET['EAN'] . "', supplier='" . $_GET['supplier'] . "', factoryId='" . $_GET['factoryId'] . "', itemName='" . $_GET['itemName'] . "', itemCategory='" . $_GET['itemCategory'] . "', itemStock='" . $_GET['itemStock'] . "', priceExclVat='" . $_GET['priceExclVat'] . "', priceModifier='" . $_GET['priceModifier'] . "' WHERE itemId=" . $_GET['itemId'];
+	$sql = "UPDATE items SET EAN='" . $_GET['EAN'] . "', supplier='" . $_GET['supplier'] . "', factoryId='" . $_GET['factoryId'] . "', itemName='" . $_GET['itemName'] . "', itemCategory='" . $_GET['itemCategory'] . "', itemStock='" . $_GET['itemStock'] . "', priceExclVat='" . $_GET['priceExclVat'] . "', priceModifier='" . $_GET['priceModifier'] . "' WHERE itemId=" . $_GET['itemId'] . ' OR EAN=' . $_GET['itemId'];
 
 	if(!$result = $db->query($sql))
 	{

@@ -404,7 +404,12 @@ else
                 $EAN = $row['EAN'];
 
             echo '    <tr>';
-            echo '            <td><a href="#" id="item' . $row['itemId'] . 'Btn">' . $EAN . '</a></td>';
+
+            if ($row['EAN'] != "")
+                echo '            <td><a href="#" id="item' . $EAN . 'Btn">' . $EAN . '</a></td>';
+            else
+                echo '            <td><a href="#" id="item' . $row['itemId'] . 'Btn">' . $EAN . '</a></td>';
+
             echo '            <td>' . urldecode($row['itemName']) . '</td>';
             echo '            <td>' . $row['factoryId'] . '</td>';
             echo '            <td>' . $row['itemStock'] . '</td>';
@@ -413,12 +418,19 @@ else
             echo '    </tr>';
             echo '    <script>';
             echo '    	$(document).ready(function ()
-					                        {
-						                        $("#item' . $row['itemId'] . 'Btn").on("click", function () {
-                                                    $("#loaderAnimation").fadeIn();
-                                                    $("#PageContent").load("item/viewItem.php?id=' . $row['itemId'] . '");
-						                        });
-					                        });';
+					                    {';
+            if ($row['EAN'] != "")
+			    echo			                    '$("#item' . $row['EAN'] . 'Btn").on("click", function () {';
+            else
+                echo			                    '$("#item' . $row['itemId'] . 'Btn").on("click", function () {';
+            echo                                '$("#loaderAnimation").fadeIn();';
+            if ($row['EAN'] != "")
+                echo                           '$("#PageContent").load("item/viewItem.php?id=' . $row['EAN'] . '");';
+            else
+                echo                           '$("#PageContent").load("item/viewItem.php?id=' . $row['itemId'] . '");';
+
+            echo                        '});
+					                    });';
             echo '    </script>';
         }
     }

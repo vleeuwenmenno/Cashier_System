@@ -24,20 +24,26 @@ if (isset($_GET['import']))
             die('Unable to connect to database [' . $db->connect_error . ']');
         }
 
-        echo '<pre>';
+        $ok = 0;
+        $fail = 0;
+
+        echo '<br /><pre>';
         foreach ($array['product'] as $product)
         {
             if (is_array($product['ean']))
-                $sql = "INSERT INTO items (itemId, EAN, supplier, factoryId, itemName, itemCategory, priceExclVat) VALUES ('" . $product['artnr'] . "', '', 'Gistron', '" . $product['sku'] . "', '" . urlencode($product['omschrijving']) . "', '" . $product['productgroep'] . "', '" . $product['prijs_ex'] . "');";
+                $sql = "INSERT INTO items (itemId, EAN, supplier, factoryId, itemName, itemCategory, priceExclVat) VALUES ('" . $product['artnr'] . "', '', 'Gistron', '" . $product['sku'] . "', '" . urlencode(htmlspecialchars($product['omschrijving'])) . "', '" . $product['productgroep'] . "', '" . $product['prijs_ex'] . "');";
             else
-                $sql = "INSERT INTO items (itemId, EAN, supplier, factoryId, itemName, itemCategory, priceExclVat) VALUES ('" . $product['artnr'] . "', '" . $product['ean'] . "', 'Gistron', '" . $product['sku'] . "', '" . urlencode($product['omschrijving']) . "', '" . $product['productgroep'] . "', '" . $product['prijs_ex'] . "');";
+                $sql = "INSERT INTO items (itemId, EAN, supplier, factoryId, itemName, itemCategory, priceExclVat) VALUES ('" . $product['artnr'] . "', '" . $product['ean'] . "', 'Gistron', '" . $product['sku'] . "', '" . urlencode(htmlspecialchars($product['omschrijving'])) . "', '" . $product['productgroep'] . "', '" . $product['prijs_ex'] . "');";
 
             if(!$result = $db->query($sql))
             {
                 echo  $product['artnr'] . ' failed (' . $db->error . ')<br />';
+                $fail++;
             }
             else
             {
+                $ok++;
+
                 $query = "SELECT itemId FROM items WHERE itemId='" . $product['artnr'] . "'";
                 if(!$results = $db->query($query))
                 {
@@ -50,7 +56,7 @@ if (isset($_GET['import']))
                 }
                 else if(mysqli_num_rows($results) > 0)
                 {
-                    echo  $product['artnr'] . ' ok, confirmed.<br />';
+                    //echo  $product['artnr'] . ' ok, confirmed.<br />';
                 }
                 else
                 {
@@ -58,7 +64,67 @@ if (isset($_GET['import']))
                 }
             }
         }
-        echo '</pre>';
+        echo 'Successfully imported ' . $ok . ' items. (Fail count: ' . $fail . ')';
+        die('</pre>');
+    }
+    else if ($_GET['import'] == "copaco")
+    {
+        ini_set('max_input_vars', 10000);
+        ini_set('memory_limit', '-1');
+
+        $xml = simplexml_load_string(file_get_contents(dirname(__FILE__) . '/../import/copaco.xml'));
+        $json = json_encode($xml);
+        $array = json_decode($json,TRUE);
+
+        $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
+
+        if($db->connect_errno > 0)
+        {
+            die('Unable to connect to database [' . $db->connect_error . ']');
+        }
+
+        $ok = 0;
+        $fail = 0;
+
+        echo '<br /><pre>';
+        foreach ($array['item'] as $product)
+        {
+            if (is_array($product['EAN_code']))
+                $sql = "INSERT INTO items (itemId, EAN, supplier, factoryId, itemName, itemCategory, priceExclVat) VALUES ('" . $product['item_id'] . "', '', 'Copaco', '" . $product['vendor_id'] . "', '" . urlencode(htmlspecialchars($product['long_desc'])) . "', '" . $product['item_group'] . "', '" . $product['price'] . "');";
+            else
+                $sql = "INSERT INTO items (itemId, EAN, supplier, factoryId, itemName, itemCategory, priceExclVat) VALUES ('" . $product['item_id'] . "', '" . $product['EAN_code'] . "', 'Copaco', '" . $product['vendor_id'] . "', '" . urlencode(htmlspecialchars($product['long_desc'])) . "', '" . $product['item_group'] . "', '" . $product['price'] . "');";
+
+            if(!$result = $db->query($sql))
+            {
+                echo  $product['artnr'] . ' failed (' . $db->error . ')<br />';
+                $fail++;
+            }
+            else
+            {
+                $ok++;
+
+                $query = "SELECT itemId FROM items WHERE itemId='" . $product['item_id'] . "'";
+                if(!$results = $db->query($query))
+                {
+                    echo  $product['item_id'] . ' failed (' . $db->error . ')<br />';
+                }
+
+                if(mysqli_num_rows($results) > 1)
+                {
+                    echo  $product['item_id'] . ' ok, but duplicate EAN!<br />';
+                }
+                else if(mysqli_num_rows($results) > 0)
+                {
+                    //echo  $product['item_id'] . ' ok, confirmed.<br />';
+                }
+                else
+                {
+                    echo  $product['item_id'] . ' error, not found.<br />';
+                }
+            }
+        }
+        echo 'Successfully imported ' . $ok . ' items. (Fail count: ' . $fail . ')';
+        die('</pre>');
     }
 }
 else if (isset($_GET['update']))
@@ -129,12 +195,12 @@ else if (isset($_GET['update']))
                             },
                             function (data)
                             {
-                                if (data.match("^OK"))
+                                if (data.match("^OK "))
 							    {
                                     $.notify({
 	                                    icon: 'glyphicon glyphicon-ok',
 	                                    title: 'Inboeken succesvol verwerkt',
-                                        message: 'Uw aanvraag is met succes verwerkt in het systeem.'
+	                                    message: 'Voorraad voor ' + data.replace('OK', '') + ' is succesvol geupdate naar '
                                     },{
 	                                    // settings
 	                                    type: 'success',
@@ -185,8 +251,7 @@ else if (isset($_GET['update']))
 							    {
                                     $.notify({
 	                                    icon: 'glyphicon glyphicon-ok',
-	                                    title: 'Inboeken succesvol verwerkt',
-                                        message: 'Uw aanvraag is met succes verwerkt in het systeem.'
+	                                    message: 'Voorraad voor ' + decodeURIComponent(data.replace('OK', '')) + ' is succesvol geupdate.'
                                     },{
 	                                    // settings
 	                                    type: 'success',
@@ -229,84 +294,4 @@ else if (isset($_GET['update']))
 </div>
     <?php
 }
-else
-{
     ?>
-    <h2>Artikelen Beheren</h2>
-    <b>TODO: Zorg dat als er al artikelen aanwezig zijn dat hij dan alleen de prijs update als het itemId en/of EAN gelijk is.</b><br /><br />
-    <div class="form-group">
-        Gistron XML Aanwezig: <?php if (file_exists(dirname(__FILE__) . '/../import/gistron.xml')) { echo 'Ja'; } else { echo 'Nee'; } ?>
-        <br />
-        <input type="button" class="btn btn-primary" id="importGistron" value="Gistron Importeren" />
-
-        <script>
-            $(document).ready(function () {
-                $("#importGistron").click(function ()
-                {
-                    $("#loaderAnimation").fadeIn();
-                    $("#PageContent").load("item/itemManage.php?import=gistron", function () {
-                        $("#loaderAnimation").fadeOut();
-                    });
-                });
-            });
-        </script>
-    </div>
-    <div class="form-group">
-        Copaco XML Aanwezig: <?php if (file_exists(dirname(__FILE__) . '/../import/copaco.xml')) { echo 'Ja'; } else { echo 'Nee'; } ?>
-        <br />
-        <input type="button" class="btn btn-primary" id="importGistron" value="Copaco Importeren" disabled/ />
-
-        <script>
-            $(document).ready(function () {
-                $("#importGistron").click(function ()
-                {
-                    $("#loaderAnimation").fadeIn();
-                    $("#PageContent").load("item/itemManage.php?import=gistron", function () {
-                        $("#loaderAnimation").fadeOut();
-                    });
-                });
-            });
-        </script>
-    </div>
-    <div class="form-group">
-        United Supplies XML Aanwezig: <?php if (file_exists(dirname(__FILE__) . '/../import/unitedsupplies.xml')) { echo 'Ja'; } else { echo 'Nee'; } ?>
-        <br />
-        <input type="button" class="btn btn-primary" id="importGistron" value="United Supplies Importeren" disabled/ />
-
-        <script>
-            $(document).ready(function () {
-                $("#importGistron").click(function ()
-                {
-                    $("#loaderAnimation").fadeIn();
-                    $("#PageContent").load("item/itemManage.php?import=gistron", function () {
-                        $("#loaderAnimation").fadeOut();
-                    });
-                });
-            });
-        </script>
-    </div>
-</div> 
-    <?php
-}
-?>
-<div id="loaderAnimation" style="display: none;">
-    <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
-        <defs>
-            <filter id="gooey">
-                <fegaussianblur in="SourceGraphic" stddeviation="10" result="blur"></fegaussianblur>
-                <fecolormatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo"></fecolormatrix>
-                <feblend in="SourceGraphic" in2="goo"></feblend>
-            </filter>
-        </defs>
-    </svg>
-    <div class="blob blob-0"></div>
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
-    <div class="blob blob-4"></div>
-    <div class="blob blob-5"></div>
-    <center>
-        Bezig met importeren van producten...
-        <br />(Dit kan enige tijd duren)
-    </center>
-</div>
