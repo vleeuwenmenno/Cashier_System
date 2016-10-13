@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 03, 2016 at 04:09 PM
+-- Generation Time: Oct 13, 2016 at 03:46 PM
 -- Server version: 10.1.16-MariaDB
--- PHP Version: 5.6.24
+-- PHP Version: 5.5.38
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ct_kassa`
+-- Database: `ct_cashreg`
 --
 
 -- --------------------------------------------------------
@@ -74,6 +74,21 @@ CREATE TABLE `items` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `receipt`
+--
+
+CREATE TABLE `receipt` (
+  `receiptId` bigint(20) NOT NULL,
+  `creator` int(11) NOT NULL,
+  `items` varchar(8192) NOT NULL,
+  `customerId` int(11) NOT NULL,
+  `totalPaid` int(11) NOT NULL,
+  `paymentMethod` varchar(128) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `sessions`
 --
 
@@ -93,6 +108,7 @@ CREATE TABLE `sessions` (
 CREATE TABLE `users` (
   `userId` varchar(32) NOT NULL,
   `username` varchar(64) NOT NULL,
+  `nickName` varchar(256) NOT NULL,
   `hash` varchar(512) DEFAULT NULL,
   `salt` varchar(512) DEFAULT NULL,
   `managementUser` int(11) NOT NULL DEFAULT '0'
@@ -121,6 +137,12 @@ ALTER TABLE `items`
   ADD PRIMARY KEY (`itemId`);
 
 --
+-- Indexes for table `receipt`
+--
+ALTER TABLE `receipt`
+  ADD PRIMARY KEY (`receiptId`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -135,7 +157,12 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `customerId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `customerId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `receipt`
+--
+ALTER TABLE `receipt`
+  MODIFY `receiptId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
