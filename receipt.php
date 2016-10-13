@@ -3,137 +3,106 @@ include_once("includes.php");
 
 if (isset($_GET['new']))
 {
+    $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
+
+    if($db->connect_errno > 0)
+    {
+        die('Unable to connect to database [' . $db->connect_error . ']');
+    }
+
+    $sql = "INSERT INTO receipt (creator, items, customerId, totalPaid, paymentMethod) VALUES ('1', '', '', '0', 'PIN')";
+
+    if(!$result = $db->query($sql))
+    {
+        die('There was an error running the query [' . $db->error . ']');
+    }
+
+    $receiptId = mysqli_insert_id($db);
 ?>
-<div id="customerForm">
-    <h2>Nieuw Artikel</h2>
-    <div class="form-group">
-        <label for="initials">Artikel Nummer: </label>
-        <input type="text" class="form-control" id="itemId" placeholder="00000" />
-    </div>
-    <div class="form-group">
-        <label for="familyname">EAN: </label>
-        <input type="text" class="form-control" id="EAN" placeholder="0884962825884" />
-    </div>
-    <div class="form-group">
-        <label for="companyname">Leverancier: </label>
-        <input type="text" class="form-control" id="supplier" placeholder="Com Today" />
-    </div>
-    <div class="form-group">
-        <label for="street">Fabrieks artikel nummer: </label>
-        <input type="text" class="form-control" id="factoryId" placeholder="C6615DE" />
-    </div>
-    <div class="form-group">
-        <label for="city">Artikel naam: </label>
-        <input type="text" class="form-control" id="itemName" placeholder="HP No. 15 Zwart 25ml (Origineel)" />
-    </div>
-    <div class="form-group">
-        <label for="postalCode">Artikel categorie: </label>
-        <input type="text" class="form-control" id="itemCategory" placeholder="Inkt origineel" />
-    </div>
-    <div class="form-group">
-        <label for="phonehome">Voorraad: </label>
-        <input type="text" class="form-control" id="itemStock" placeholder="0-1000000" />
-    </div>
-    <div class="form-group">
-        <label for="phonemobile">Prijs exclusief BTW: </label>
-        <input type="text" class="form-control" id="priceExclVat" placeholder="26,66" />
-    </div>
+<div id="cartForm">
+        <span id="receiptNo"><h2>Bon #<?php echo str_pad($receiptId +1, 4, '0', STR_PAD_LEFT); ?></h2></span>
+        <div class="panel panel filterable">
+            <div class="panel-heading">
+                
+            </div>
+            <table class="table">
+                <thead>
+                    <tr class="filters">
+                        <th width="64px">
+                            <a href="#" class="mustFocus">
+                                <input type="text" class="form-control" placeholder="Aantal" disabled />
+                            </a>
+                        </th>
+                        <th>
+                            <a href="#" class="mustFocus">
+                                <input type="text" class="form-control" placeholder="Item" disabled />
+                            </a>
+                        </th>
+                        <th width="128px">
+                            <a href="#" class="mustFocus">
+                                <input type="text" class="form-control" placeholder="Verkoop prijs" disabled />
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
 
-    <label for="priceModifier">Prijs berekening: </label>
-    <div class="input-group">
-        <span class="input-group-addon" id="priceModifierLabel">26,66</span>
-        <input type="text" class="form-control" id="priceModifier" aria-describedby="priceModifierLabel" placeholder="* 1.575" />
-        <span class="input-group-addon" id="priceModifierLabelOutCome">26,66 * 1.575 = &euro;</span>
+                <tbody id="listContents">
+                    
+                </tbody>
+            </table>
+        </div>
+    <button type="button" id="closeReceipt" class="btn btn-default">Bon Sluiten</button>
+    <button type="button" id="selectCustomer" class="btn btn-info">Selecteer klant</button>
+    <button type="button" id="payBtn" class="btn btn-primary pull-right">Betalen</button>
+    
+    <div class="form-group pull-right" style="width: 256px; padding-right: 32px;">
+        <select class="combobox form-control">
+            <option value="" selected="selected">Selecteer betaal methode</option>
+            <option value="CASH">Kontant</option>
+            <option value="PIN">Pin</option>
+            <option value="PC">Pin & Kontant</option>
+            <option value="BANK">Op rekening</option>
+        </select>
+        
     </div>
-    <br />
-    <button type="button" id="applyBtn" class="btn btn-primary">Artikel Toevoegen</button>
-    <script>
-				$(document).ready(function ()
-				{
-				    $('#priceModifier').on('input', function ()
-				    {
-				        var resultSum = "";
-				        $.get(
-                            "item/calcString.php",
-                            {
-                                sum: encodeURIComponent($('#priceExclVat').val() + " " + $("#priceModifier").val() + "POP")
-                            },
-                            function (data)
-                            {
-                                if ($('#priceExclVat').val() == "")
-                                    $("#priceModifierLabel").text("26,66");
-                                else {
-                                    $("#priceModifierLabel").text($('#priceExclVat').val());
-                                    $("#priceModifierLabelOutCome").html($('#priceExclVat').val() + " " + $("#priceModifier").val() + " = " + data + " &euro;");
-                                }
-                            }
-                        );
-				    });
+    
 
-				    $('#priceExclVat').on('input', function ()
-				    {
-				        var resultSum = "";
-				        $.get(
-                            "item/calcString.php",
-                            {
-                                sum: encodeURIComponent($('#priceExclVat').val() + " " + $("#priceModifier").val() + " POP")
-                            },
-                            function (data)
-                            {
-                                if ($('#priceExclVat').val() == "")
-                                    $("#priceModifierLabel").text("26,66");
-                                else {
-                                    $("#priceModifierLabel").text($('#priceExclVat').val());
-                                    $("#priceModifierLabelOutCome").html($('#priceExclVat').val() + " " + $("#priceModifier").val() + " = " + data + " &euro;");
-                                }
-                            }
-                        );
-				    });
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.combobox').combobox();
 
-					$("#applyBtn").on("click", function ()
-					{
-					    $("#customerForm").fadeOut("fast", function () {
-					        $("#loaderAnimation").fadeIn();
-					    });
+            $('#selectCustomer').click(function () {
+               
+            });
 
-						$.get(
-                            "item/itemAdd.php",
-                            {
-                                itemId: $("#itemId").val(),
-                                EAN: $("#EAN").val(),
-                                supplier: $("#supplier").val(),
-                                factoryId: $("#factoryId").val(),
-                                itemName: $("#itemName").val(),
-                                itemCategory: $("#itemCategory").val(),
-                                itemStock: $("#itemStock").val(),
-                                priceExclVat: $("#priceExclVat").val(),
-                                priceModifier: $("#priceModifier").val()
-                            },
-							function(data)
-							{
-								if (data.match("^OK "))
-								{
-									$("#okMessage").modal("show");
-								}
-								else
-								{
-									$("#errorMessageContent").text(data);
-									$("#errorMessage").modal("show");
-								}
-							}
-                        );
-					});
+            $('#closeReceipt').click(function () {
+                $("#newReceipt").html("<span class=\"glyphicon glyphicon-file\"></span> Nieuwe Bon");
+                $("#pageLoaderIndicator").fadeIn();
+                $("#PageContent").load("receipt.php", function () {
+                    $("#pageLoaderIndicator").fadeOut();
+                });
 
-					document.getElementById('phonemobile').addEventListener('input', function (e) {
-						e.target.value = e.target.value.replace(/[^\dA-Z]/g, '').replace(/(.{2})/g, '$1 ').trim();
-					});
-
-					document.getElementById('phonehome').addEventListener('input', function (e) {
-						e.target.value = e.target.value.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, "$1-$2-$3").trim();
-					});
-				});
+                $.notify({
+                    icon: 'glyphicon glyphicon-trash',
+                    title: 'Bon verwijderd',
+                    message: 'Bon is verwijderd (<a href="#">Ongedaan maken</a>)'
+                }, {
+                    // settings
+                    type: 'warning',
+                    delay: 2000,
+                    timer: 10,
+                    placement: {
+                        from: "bottom",
+                        align: "right"
+                    },
+                    onClosed: function () {
+                        //TODO: Send delete to SQL
+                    }
+                });
+            });
+        });
     </script>
-</div>
+    </div>
 
 <div class="modal fade" id="errorMessage">
     <div class="modal-dialog" role="document">
@@ -155,6 +124,7 @@ if (isset($_GET['new']))
                 <script>
 					$(document).ready(function ()
 					{
+					    $("#newReceipt").html("<span class=\"glyphicon glyphicon-file\"></span> " + $('#receiptNo').html().replace('<h2>', '').replace('</h2>', ''));
 						$("#closeErrorBtn").on("click", function () {
 							$("#customerForm").fadeIn();
 							$("#loaderAnimation").fadeOut();
@@ -233,7 +203,7 @@ else
 <div class="row">
     <div class="col-lg-offset-3 col-lg-6">
         <div class="input-group">
-            <input type="text" class="form-control" name="searchBar" id="searchBar" placeholder="Zoek term... (EAN, artikel naam, prijs, enz.)" aria-describedby="basic-addon2" />
+            <input type="text" class="form-control" name="searchBar" id="searchBar" placeholder="Zoek term... (Bon nummer, klant, bedrijf, etc.)" aria-describedby="basic-addon2" />
             <span class="input-group-btn">
                 <button class="btn btn-primary" type="submit" id="searchBtn" style="height: 34px;">
                     <span class="glyphicon glyphicon-search"></span>
@@ -300,7 +270,7 @@ else
 <div class="row">
     <div class="panel panel-primary filterable">
         <div class="panel-heading">
-            <h3 class="panel-title">Artikelen</h3>
+            <h3 class="panel-title">Bonnen</h3>
             <div class="pull-right">
                 <button class="btn btn-default btn-xs btn-filter">
                     <span class="glyphicon glyphicon-filter"></span>&nbsp;Filteren
@@ -310,29 +280,24 @@ else
         <table class="table">
             <thead>
                 <tr class="filters">
-                    <th width="15%">
+                    <th>
                         <a href="#" class="mustFocus">
-                            <input type="text" class="form-control" placeholder="EAN" disabled />
+                            <input type="text" class="form-control" placeholder="Bon Nummer" disabled />
                         </a>
                     </th>
-                    <th width="45%">
+                    <th>
                         <a href="#" class="mustFocus">
-                            <input type="text" class="form-control" placeholder="Item" disabled />
+                            <input type="text" class="form-control" placeholder="Tijd/Datum" disabled />
                         </a>
                     </th>
-                    <th width="20%">
+                    <th>
                         <a href="#" class="mustFocus">
-                            <input type="text" class="form-control" placeholder="Fabriek ID" disabled />
+                            <input type="text" class="form-control" placeholder="Klant/Bedrijf" disabled />
                         </a>
                     </th>
-                    <th width="10%">
+                    <th>
                         <a href="#" class="mustFocus">
-                            <input type="text" class="form-control" placeholder="Voorraad" disabled />
-                        </a>
-                    </th>
-                    <th width="10%">
-                        <a href="#" class="mustFocus">
-                            <input type="text" class="form-control" placeholder="Verkoop prijs" disabled />
+                            <input type="text" class="form-control" placeholder="Bon totaal" disabled />
                         </a>
                     </th>
                 </tr>
@@ -384,8 +349,7 @@ else
         die('Unable to connect to database [' . $db->connect_error . ']');
     }
 
-
-    $sql = "SELECT * FROM items WHERE 1;";
+    $sql = "SELECT * FROM receipt WHERE 1;";
 
     if(!$result = $db->query($sql))
     {
@@ -398,63 +362,7 @@ else
         $i++;
         if ($i < 25)
         {
-            if ($row['EAN'] == "")
-                $EAN = "Geen EAN gevonden";
-            else
-                $EAN = $row['EAN'];
-
-            echo '    <tr>';
-
-            if ($row['EAN'] != "")
-                echo '            <td><a href="#" id="item' . $EAN . 'Btn">' . $EAN . '</a></td>';
-            else
-                echo '            <td><a href="#" id="item' . $row['itemId'] . 'Btn">' . $EAN . '</a></td>';
-
-            echo '            <td>' . urldecode($row['itemName']) . '</td>';
-            echo '            <td>' . $row['factoryId'] . '</td>';
-            echo '            <td>' . $row['itemStock'] . '</td>';
-
-            if ($row['EAN'] != "")
-                echo '            <td><span class="priceClickable" id="' . $row['EAN'] . '" data-toggle="popover" title="Prijs berekening" data-content="'. $row['priceExclVat'] . '&nbsp;excl. ' . $row['priceModifier'] . ' = ' . str_replace(".", ",", round(Misc::calculate($row['priceExclVat'] . ' ' . str_replace(",", ".", $row['priceModifier'])), 2)) . '&nbsp;&euro;">' . str_replace(".", ",", round(Misc::calculate($row['priceExclVat'] . ' ' . str_replace(",", ".", $row['priceModifier'])), 2)) . ' &euro; </span></td>';
-            else
-                echo '            <td><span class="priceClickable" id="' . $row['itemId'] . '" data-toggle="popover" title="Prijs berekening" data-content="'. $row['priceExclVat'] . '&nbsp;excl. ' . $row['priceModifier'] . ' = ' . str_replace(".", ",", round(Misc::calculate($row['priceExclVat'] . ' ' . str_replace(",", ".", $row['priceModifier'])), 2)) . '&nbsp;&euro;">' . str_replace(".", ",", round(Misc::calculate($row['priceExclVat'] . ' ' . str_replace(",", ".", $row['priceModifier'])), 2)) . ' &euro; </span></td>';
-
-            echo '            <td><button type="button" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span></button></td>';
-            echo '    </tr>';
-            echo '    <script>';
-            echo '    	$(document).ready(function ()
-					                    {
-                                                    ';
-            if ($row['EAN'] != "")
-                echo                           '$( "#' . $row['EAN'] . '" ).hover(function() {
-                                                    $(\'#' . $row['EAN'] . '\').popover(\'show\');
-                                                });
-
-                                                $( "#' . $row['EAN'] . '" ).mouseout(function() {
-                                                    $(\'#' . $row['EAN'] . '\').popover(\'hide\');
-                                                });';
-            else
-                echo                           '$( "#' . $row['itemId'] . '" ).hover(function() {
-                                                    $(\'#' . $row['itemId'] . '\').popover(\'show\');
-                                                });
-
-                                                $( "#' . $row['itemId'] . '" ).mouseout(function() {
-                                                    $(\'#' . $row['itemId'] . '\').popover(\'hide\');
-                                                });';
-
-            if ($row['EAN'] != "")
-                echo			                    '$("#item' . $row['EAN'] . 'Btn").on("click", function () {';
-            else
-                echo			                    '$("#item' . $row['itemId'] . 'Btn").on("click", function () {';
-            echo                                '$("#loaderAnimation").fadeIn();';
-            if ($row['EAN'] != "")
-                echo                           '$("#PageContent").load("item/viewItem.php?id=' . $row['EAN'] . '");';
-            else
-                echo                           '$("#PageContent").load("item/viewItem.php?id=' . $row['itemId'] . '");';
-
-            echo                        '});
-					                    });';
-            echo '    </script>';
+            
         }
     }
                 ?>

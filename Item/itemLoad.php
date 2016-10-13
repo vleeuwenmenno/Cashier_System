@@ -40,12 +40,35 @@ if (isset($_GET['sTerm']))
                 echo '            <td>' . urldecode($row['itemName']) . '</td>';
                 echo '            <td>' . $row['factoryId'] . '</td>';
                 echo '            <td>' . $row['itemStock'] . '</td>';
-                echo '            <td>' . str_replace(".", ",", round(Misc::calculate($row['priceExclVat'] . ' ' . str_replace(",", ".", $row['priceModifier'])), 2)) . ' &euro; </td>'; //TODO: Maybe make a tooltip here and show the calculation and a button to change the modifier
+
+                if ($row['EAN'] != "")
+                    echo '            <td><span class="priceClickable" id="' . $row['EAN'] . '" data-toggle="popover" title="Prijs berekening" data-content="'. $row['priceExclVat'] . '&nbsp;excl. ' . $row['priceModifier'] . ' = ' . str_replace(".", ",", round(Misc::calculate($row['priceExclVat'] . ' ' . str_replace(",", ".", $row['priceModifier'])), 2)) . '&nbsp;&euro;">' . str_replace(".", ",", round(Misc::calculate($row['priceExclVat'] . ' ' . str_replace(",", ".", $row['priceModifier'])), 2)) . ' &euro; </span></td>';
+                else
+                    echo '            <td><span class="priceClickable" id="' . $row['itemId'] . '" data-toggle="popover" title="Prijs berekening" data-content="'. $row['priceExclVat'] . '&nbsp;excl. ' . $row['priceModifier'] . ' = ' . str_replace(".", ",", round(Misc::calculate($row['priceExclVat'] . ' ' . str_replace(",", ".", $row['priceModifier'])), 2)) . '&nbsp;&euro;">' . str_replace(".", ",", round(Misc::calculate($row['priceExclVat'] . ' ' . str_replace(",", ".", $row['priceModifier'])), 2)) . ' &euro; </span></td>';
+
                 echo '            <td><button type="button" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span></button></td>';
                 echo '    </tr>';
                 echo '    <script>';
                 echo '    	$(document).ready(function ()
-					                    {';
+					                    {
+                                                    ';
+                if ($row['EAN'] != "")
+                    echo                           '$( "#' . $row['EAN'] . '" ).hover(function() {
+                                                    $(\'#' . $row['EAN'] . '\').popover(\'show\');
+                                                });
+
+                                                $( "#' . $row['EAN'] . '" ).mouseout(function() {
+                                                    $(\'#' . $row['EAN'] . '\').popover(\'hide\');
+                                                });';
+                else
+                    echo                           '$( "#' . $row['itemId'] . '" ).hover(function() {
+                                                    $(\'#' . $row['itemId'] . '\').popover(\'show\');
+                                                });
+
+                                                $( "#' . $row['itemId'] . '" ).mouseout(function() {
+                                                    $(\'#' . $row['itemId'] . '\').popover(\'hide\');
+                                                });';
+
                 if ($row['EAN'] != "")
                     echo			                    '$("#item' . $row['EAN'] . 'Btn").on("click", function () {';
                 else

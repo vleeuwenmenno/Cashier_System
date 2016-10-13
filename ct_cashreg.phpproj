@@ -43,6 +43,7 @@
     <Compile Include="Item\itemUpdate.php" />
     <Compile Include="Item\itemUpdateStock.php" />
     <Compile Include="Item\viewItem.php" />
+    <Compile Include="js\bootstrap-combobox.js" />
     <Compile Include="js\i18n\ar.js" />
     <Compile Include="js\i18n\az.js" />
     <Compile Include="js\i18n\bg.js" />
@@ -107,6 +108,8 @@
     <Compile Include="logout.php" />
     <Compile Include="master.php" />
     <Compile Include="customer\searchCustomers.php" />
+    <Compile Include="receipt.php" />
+    <Compile Include="receipt\getReceipt.php" />
     <Compile Include="vars.php" />
     <Compile Include="customer\viewCustomer.php" />
   </ItemGroup>
@@ -120,8 +123,10 @@
     <Folder Include="Item\" />
     <Folder Include="import\" />
     <Folder Include="import\" />
+    <Folder Include="receipt\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="css\bootstrap-combobox.css" />
     <Content Include="js\bootstrap-notify.min.js" />
   </ItemGroup>
 </Project>

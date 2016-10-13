@@ -11,11 +11,13 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
         <!-- Bootstrap and all it's dependencies -->
         <link rel="stylesheet" href="css/bootstrap.min.css" />
         <link rel="stylesheet" href="css/select2.min.css" />
+        <link rel="stylesheet" href="css/bootstrap-combobox.css" />
 
         <script src="js/jquery.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script src="js/bootstrap-notify.min.js"></script>
         <script src="js/select2.full.min.js"></script>
+        <script src="js/bootstrap-combobox.js"></script>
     </head>
     <body>
         <div class="row">
@@ -29,7 +31,7 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
                     <!-- Brand -->
                     <div class="brand-name-wrapper">
                         <a class="navbar-brand" href="#">
-                            <?php echo $_CFG['COMPANY_NAME']; ?>
+                            <?php echo $_CFG['COMPANY_NAME'] . ' - ' . $_SESSION['login_ok']['nickName']; ?>
                         </a>
                     </div>
 
@@ -74,8 +76,27 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
                                         <div id="dropdown-lvl2" class="panel-collapse collapse">
                                             <div class="panel-body">
                                                 <ul class="nav navbar-nav">
-                                                    <li><a href="#"><span class="glyphicon glyphicon-file"></span> Nieuwe Bon</a></li>
-                                                    <li><a href="#"><span class="glyphicon glyphicon-search"></span> Zoeken</a></li>
+                                                    <li><a href="#" id="newReceipt"><span class="glyphicon glyphicon-file"></span> Nieuwe Bon</a></li>
+                                                    <li><a href="#" id="searchReceipt"><span class="glyphicon glyphicon-search"></span> Zoeken</a></li>
+                                                    <script>
+														$(document).ready(function ()
+														{
+														    $("#newReceipt").on("click", function ()
+															{
+															    $("#pageLoaderIndicator").fadeIn();
+															    $("#PageContent").load("receipt.php?new", function () {
+															        $("#pageLoaderIndicator").fadeOut();
+															    });
+														    });
+
+														    $("#searchReceipt").on("click", function () {
+														        $("#pageLoaderIndicator").fadeIn();
+														        $("#PageContent").load("receipt.php", function () {
+														            $("#pageLoaderIndicator").fadeOut();
+														        });
+														    });
+														});
+                                                    </script>
                                                 </ul>
                                             </div>
                                         </div>
@@ -90,7 +111,7 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
                                                     <li><a href="#" id="searchItem"><span class="glyphicon glyphicon-search"></span> Zoeken</a></li>
                                                     <li><a href="#" id="createNewItem"><span class="glyphicon glyphicon-file"></span> Nieuw Artikel</a></li>
                                                     <li><a href="#" id="itemEntryUpdate"><span class="glyphicon glyphicon-barcode"></span> Artikel Inboeken</a></li>
-                                                    <li><a href="#" id="manageItems"><span class="glyphicon glyphicon-cog"></span> Artikelen Beheren</a></li>
+                                                    <?php if (Permissions::isManager($_SESSION['login_ok']['userId'])) { ?><li><a href="#" id="manageItems"><span class="glyphicon glyphicon-cog"></span> Artikelen Beheren</a></li><?php } ?>
                                                     <script>
 														$(document).ready(function ()
 														{
@@ -141,6 +162,38 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 													<script>
 														$(document).ready(function ()
 														{
+														    var isShown = false;
+														    function disableF5(e)
+														    {
+														        if ((e.which || e.keyCode) == 116)
+														        {
+														            e.preventDefault();
+
+														            if (!isShown)
+														            {
+														                $.notify({
+														                    icon: 'glyphicon glyphicon-remove',
+														                    title: 'Actie geannuleert<br />',
+														                    message: 'Voor veiligheid is uw actie geannuleert, pagina verversen is uitgeschakeld met F5.<br /> (Klik <a href="master.php">hier</a> om de pagina als nog te verversen)'
+														                }, {
+														                    // settings
+														                    type: 'warning',
+														                    delay: 4000,
+														                    timer: 10,
+														                    placement: {
+														                        from: "bottom",
+														                        align: "right"
+														                    },
+														                    onClosed: function () {
+														                        isShown = false;
+														                    }
+														                });
+														                isShown = true;
+														            }
+														        }
+														    };
+														    $(document).on("keydown", disableF5);
+
 															$("#load_custm").on("click", function ()
 															{
 															    $("#pageLoaderIndicator").fadeIn();
@@ -168,7 +221,6 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
                         </div>
                     </li>
 
-                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> Beheer Login</a></li>
                     <li><a href="logout.php"><span class="glyphicon glyphicon-user"></span> Uitloggen</a></li>
                     <div class="loader mainLoader" id="pageLoaderIndicator" style="display: none;"></div>
                 </ul>

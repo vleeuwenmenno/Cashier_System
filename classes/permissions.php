@@ -83,6 +83,33 @@ class Permissions
 				return false;
         }
     }
+
+    public static function isManager($userId)
+    {
+        global $config;
+
+        $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
+
+        if($db->connect_errno > 0)
+        {
+            return false;
+        }
+
+        $sql = "SELECT * FROM users WHERE userId='" . $userId . "';";
+
+        if(!$result = $db->query($sql))
+        {
+            return false;
+        }
+
+        while($row = $result->fetch_assoc())
+        {
+            if ($row['managementUser'] == '1')
+                return true;
+            else
+                return false;
+        }
+    }
 }
 
 ?>

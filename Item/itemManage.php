@@ -206,7 +206,7 @@ else if (isset($_GET['update']))
 	                                    type: 'success',
                                         placement: {
 		                                    from: "bottom",
-		                                    align: "center"
+		                                    align: "right"
 	                                    }
                                     });
 
@@ -227,7 +227,7 @@ else if (isset($_GET['update']))
 	                                    type: 'danger',
                                         placement: {
 		                                    from: "bottom",
-		                                    align: "center"
+		                                    align: "right"
 	                                    }
                                     });
 
