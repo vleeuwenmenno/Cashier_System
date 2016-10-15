@@ -10,7 +10,7 @@ if (isset($_GET['id']))
 		die('Unable to connect to database [' . $db->connect_error . ']');
 	}
 
-	$sql = "SELECT * FROM items WHERE itemId='" . $_GET['id'] . "' OR EAN='" . $_GET['id'] . "';";
+	$sql = "SELECT * FROM items WHERE nativeId='" . $_GET['id'] . "' OR EAN='" . $_GET['id'] . "';";
 
 	if(!$result = $db->query($sql))
 	{

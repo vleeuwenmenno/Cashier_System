@@ -76,7 +76,16 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
                                         <div id="dropdown-lvl2" class="panel-collapse collapse">
                                             <div class="panel-body">
                                                 <ul class="nav navbar-nav">
-                                                    <li><a href="#" id="newReceipt"><span class="glyphicon glyphicon-file"></span> Nieuwe Bon</a></li>
+                                                    <?php 
+                                                    if ($_SESSION['receipt']['status'] == 'open')
+                                                    {
+                                                        echo '<li><a href="#" id="newReceipt"><span class="glyphicon glyphicon-file"></span> Bon #' . str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT) .'</a></li>';
+                                                    }
+                                                    else
+                                                    {
+                                                        echo '<li><a href="#" id="newReceipt"><span class="glyphicon glyphicon-file"></span> Nieuwe Bon</a></li>';
+                                                    }
+                                                    ?>
                                                     <li><a href="#" id="searchReceipt"><span class="glyphicon glyphicon-search"></span> Zoeken</a></li>
                                                     <script>
 														$(document).ready(function ()

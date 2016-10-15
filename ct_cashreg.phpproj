@@ -109,6 +109,8 @@
     <Compile Include="master.php" />
     <Compile Include="customer\searchCustomers.php" />
     <Compile Include="receipt.php" />
+    <Compile Include="receipt\addItem.php" />
+    <Compile Include="receipt\empty.php" />
     <Compile Include="receipt\getReceipt.php" />
     <Compile Include="vars.php" />
     <Compile Include="customer\viewCustomer.php" />

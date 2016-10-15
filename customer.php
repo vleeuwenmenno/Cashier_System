@@ -360,6 +360,7 @@ else
                                 echo '            <td>' . $row['familyName'] . '</td>';
                                 echo '            <td>' . $row['companyName'] . '</td>';
                                 echo '            <td>' . $row['postalCode'] . '</td>';
+                                echo '            <td><button type="button" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span></button></td>';
                                 echo '    </tr>';
                                 echo '    <script>';
                                 echo '    	$(document).ready(function ()

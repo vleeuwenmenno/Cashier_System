@@ -3,24 +3,28 @@ include_once("includes.php");
 
 if (isset($_GET['new']))
 {
-    $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
-
-    if($db->connect_errno > 0)
+    if (!isset($_SESSION['receipt']['status']) || $_SESSION['receipt']['status'] != 'open')
     {
-        die('Unable to connect to database [' . $db->connect_error . ']');
+        $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
+
+        if($db->connect_errno > 0)
+        {
+            die('Unable to connect to database [' . $db->connect_error . ']');
+        }
+
+        $sql = "INSERT INTO receipt (creator, items, customerId, totalPaid, paymentMethod) VALUES ('1', '', '', '0', 'PIN')";
+
+        if(!$result = $db->query($sql))
+        {
+            die('There was an error running the query [' . $db->error . ']');
+        }
+        
+        $_SESSION['receipt']['status'] = 'open';
+        $_SESSION['receipt']['id'] = mysqli_insert_id($db);
     }
-
-    $sql = "INSERT INTO receipt (creator, items, customerId, totalPaid, paymentMethod) VALUES ('1', '', '', '0', 'PIN')";
-
-    if(!$result = $db->query($sql))
-    {
-        die('There was an error running the query [' . $db->error . ']');
-    }
-
-    $receiptId = mysqli_insert_id($db);
 ?>
 <div id="cartForm">
-        <span id="receiptNo"><h2>Bon #<?php echo str_pad($receiptId +1, 4, '0', STR_PAD_LEFT); ?></h2></span>
+        <span id="receiptNo"><h2>Bon #<?php echo str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT); ?></h2></span>
         <div class="panel panel filterable">
             <div class="panel-heading">
                 
@@ -47,7 +51,16 @@ if (isset($_GET['new']))
                 </thead>
 
                 <tbody id="listContents">
-                    
+                    <?php 
+                        foreach ($_SESSION['receipt']['items'] as $key => $val)
+                        {
+                            echo '<tr>';
+                            echo '<th>' . $val . '</th>';
+                            echo '<th>' . $key . '</th>';
+                            echo '<th>' . 'NaN' . '</th>';
+                            echo '</tr>';
+                        }
+                    ?>
                 </tbody>
             </table>
         </div>
@@ -72,7 +85,10 @@ if (isset($_GET['new']))
             $('.combobox').combobox();
 
             $('#selectCustomer').click(function () {
-               
+                $("#pageLoaderIndicator").fadeIn();
+                $("#PageContent").load("customer.php", function () {
+                    $("#pageLoaderIndicator").fadeOut();
+                });
             });
 
             $('#closeReceipt').click(function () {
@@ -82,23 +98,29 @@ if (isset($_GET['new']))
                     $("#pageLoaderIndicator").fadeOut();
                 });
 
-                $.notify({
-                    icon: 'glyphicon glyphicon-trash',
-                    title: 'Bon verwijderd',
-                    message: 'Bon is verwijderd (<a href="#">Ongedaan maken</a>)'
-                }, {
-                    // settings
-                    type: 'warning',
-                    delay: 2000,
-                    timer: 10,
-                    placement: {
-                        from: "bottom",
-                        align: "right"
+                $.get(
+                    "receipt/empty.php",
+                    {
+                        receiptId: '<?php echo $_SESSION['receipt']['id']; ?>'
                     },
-                    onClosed: function () {
-                        //TODO: Send delete to SQL
+                    function (data)
+                    {
+                        $.notify({
+                            icon: 'glyphicon glyphicon-trash',
+                            title: 'Bon verwijderd',
+                            message: 'Bon is verwijderd (<a href="#">Ongedaan maken</a>)'
+                        }, {
+                            // settings
+                            type: 'warning',
+                            delay: 2000,
+                            timer: 10,
+                            placement: {
+                                from: "bottom",
+                                align: "right"
+                            }
+                        });
                     }
-                });
+                );
             });
         });
     </script>

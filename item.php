@@ -56,7 +56,7 @@ if (isset($_GET['new']))
 				        $.get(
                             "item/calcString.php",
                             {
-                                sum: encodeURIComponent($('#priceExclVat').val() + " " + $("#priceModifier").val() + "POP")
+                                sum: encodeURIComponent($('#priceExclVat').val() + " " + $("#priceModifier").val())
                             },
                             function (data)
                             {
@@ -76,7 +76,7 @@ if (isset($_GET['new']))
 				        $.get(
                             "item/calcString.php",
                             {
-                                sum: encodeURIComponent($('#priceExclVat').val() + " " + $("#priceModifier").val() + " POP")
+                                sum: encodeURIComponent($('#priceExclVat').val() + " " + $("#priceModifier").val())
                             },
                             function (data)
                             {
@@ -405,57 +405,74 @@ else
 
             echo '    <tr>';
 
-            if ($row['EAN'] != "")
-                echo '            <td><a href="#" id="item' . $EAN . 'Btn">' . $EAN . '</a></td>';
-            else
-                echo '            <td><a href="#" id="item' . $row['itemId'] . 'Btn">' . $EAN . '</a></td>';
+            echo '            <td><a href="#" id="item' . $row['nativeId'] . 'Btn">' . $EAN . '</a></td>';
 
             echo '            <td>' . urldecode($row['itemName']) . '</td>';
             echo '            <td>' . $row['factoryId'] . '</td>';
             echo '            <td>' . $row['itemStock'] . '</td>';
 
-            if ($row['EAN'] != "")
-                echo '            <td><span class="priceClickable" id="' . $row['EAN'] . '" data-toggle="popover" title="Prijs berekening" data-content="'. $row['priceExclVat'] . '&nbsp;excl. ' . $row['priceModifier'] . ' = ' . str_replace(".", ",", round(Misc::calculate($row['priceExclVat'] . ' ' . str_replace(",", ".", $row['priceModifier'])), 2)) . '&nbsp;&euro;">' . str_replace(".", ",", round(Misc::calculate($row['priceExclVat'] . ' ' . str_replace(",", ".", $row['priceModifier'])), 2)) . ' &euro; </span></td>';
-            else
-                echo '            <td><span class="priceClickable" id="' . $row['itemId'] . '" data-toggle="popover" title="Prijs berekening" data-content="'. $row['priceExclVat'] . '&nbsp;excl. ' . $row['priceModifier'] . ' = ' . str_replace(".", ",", round(Misc::calculate($row['priceExclVat'] . ' ' . str_replace(",", ".", $row['priceModifier'])), 2)) . '&nbsp;&euro;">' . str_replace(".", ",", round(Misc::calculate($row['priceExclVat'] . ' ' . str_replace(",", ".", $row['priceModifier'])), 2)) . ' &euro; </span></td>';
+            echo '            <td><span class="priceClickable" id="' . $row['nativeId'] . '" data-toggle="popover" title="Prijs berekening" data-content="'. $row['priceExclVat'] . '&nbsp;excl. ' . $row['priceModifier'] . ' = ' . str_replace(".", ",", round(Misc::calculate($row['priceExclVat'] . ' ' . str_replace(",", ".", $row['priceModifier'])), 2)) . '&nbsp;&euro;">' . str_replace(".", ",", round(Misc::calculate($row['priceExclVat'] . ' ' . str_replace(",", ".", $row['priceModifier'])), 2)) . ' &euro; </span></td>';
 
-            echo '            <td><button type="button" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span></button></td>';
+            if (isset($_SESSION['receipt']['status']) && $_SESSION['receipt']['status'] == "open")
+            {
+                echo '            <td><button id="add' .  $row['nativeId'] . '" type="button" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span></button></td>';
+            }
+
             echo '    </tr>';
             echo '    <script>';
             echo '    	$(document).ready(function ()
-					                    {
-                                                    ';
-            if ($row['EAN'] != "")
-                echo                           '$( "#' . $row['EAN'] . '" ).hover(function() {
-                                                    $(\'#' . $row['EAN'] . '\').popover(\'show\');
-                                                });
+					    {';
+            if (isset($_SESSION['receipt']['status']) && $_SESSION['receipt']['status'] == "open")
+            {
+                echo '      $("#add' . $row['nativeId'] . '").on("click", function() {
+                                $.get(
+                                    "receipt/addItem.php",
+                                    {
+                                        itemId: \'' . $row['itemId'] . '\',
+                                        itemCount: \'1\'
+                                    },
+                                    function (data)
+                                    { }
+                                );
 
-                                                $( "#' . $row['EAN'] . '" ).mouseout(function() {
-                                                    $(\'#' . $row['EAN'] . '\').popover(\'hide\');
-                                                });';
-            else
-                echo                           '$( "#' . $row['itemId'] . '" ).hover(function() {
-                                                    $(\'#' . $row['itemId'] . '\').popover(\'show\');
-                                                });
+                                $.notify({
+                                    icon: \'glyphicon glyphicon-trash\',
+                                    title: \'' . urldecode($row['itemName']) . '\',
+                                    message: \'<br />Toegevoegt aan bon (<a href="#">Ongedaan maken</a>, <a href="#">Open bon</a>)\'
+                                }, {
+                                    // settings
+                                    type: \'success\',
+                                    delay: 5000,
+                                    timer: 10,
+                                    placement: {
+                                        from: "bottom",
+                                        align: "right"
+                                    },
+                                    onClosed: function () {
+                                        //TODO: Send delete to SQL
+                                    }
+                                });
+                            });';
+            }
 
-                                                $( "#' . $row['itemId'] . '" ).mouseout(function() {
-                                                    $(\'#' . $row['itemId'] . '\').popover(\'hide\');
-                                                });';
+            echo           '$( "#' . $row['nativeId'] . '" ).hover(function() {
+                                $(\'#' . $row['itemId'] . '\').popover(\'show\');
+                            });
 
-            if ($row['EAN'] != "")
-                echo			                    '$("#item' . $row['EAN'] . 'Btn").on("click", function () {';
-            else
-                echo			                    '$("#item' . $row['itemId'] . 'Btn").on("click", function () {';
-            echo                                '$("#loaderAnimation").fadeIn();';
-            if ($row['EAN'] != "")
-                echo                           '$("#PageContent").load("item/viewItem.php?id=' . $row['EAN'] . '");';
-            else
-                echo                           '$("#PageContent").load("item/viewItem.php?id=' . $row['itemId'] . '");';
+                            $( "#' . $row['nativeId'] . '" ).mouseout(function() {
+                                $(\'#' . $row['nativeId'] . '\').popover(\'hide\');
+                            });
 
-            echo                        '});
-					                    });';
-            echo '    </script>';
+                            $("#item' . $row['nativeId'] . 'Btn").on("click", function () {
+                            $("#loaderAnimation").fadeIn();
+                            $("#PageContent").load("item/viewItem.php?id=' . $row['nativeId'] . '");
+
+					        });
+                        });
+                    </script>';
         }
+        else
+            break;
     }
                 ?>
             </tbody>
