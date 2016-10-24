@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 13, 2016 at 03:46 PM
+-- Generation Time: Oct 24, 2016 at 05:55 PM
 -- Server version: 10.1.16-MariaDB
 -- PHP Version: 5.5.38
 
@@ -53,6 +53,13 @@ CREATE TABLE `customers` (
   `receipts` varchar(4096) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `customers`
+--
+
+INSERT INTO `customers` (`customerId`, `initials`, `familyName`, `companyName`, `streetName`, `city`, `postalCode`, `phoneNumber`, `mobileNumber`, `email`, `receipts`) VALUES
+(1, 'M.C.', 'van Leeuwen', 'van Leeuwen Glas & Montage', 'Reguliersdwarsstraat 12A', 'Beverwijk', '1947 GG', '0251-241-255', '', 'info@vanleeuwenglasmontage.nl', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -60,6 +67,7 @@ CREATE TABLE `customers` (
 --
 
 CREATE TABLE `items` (
+  `nativeId` int(11) NOT NULL,
   `itemId` varchar(128) NOT NULL,
   `EAN` varchar(512) NOT NULL,
   `supplier` varchar(255) DEFAULT NULL,
@@ -81,6 +89,8 @@ CREATE TABLE `receipt` (
   `receiptId` bigint(20) NOT NULL,
   `creator` int(11) NOT NULL,
   `items` varchar(8192) NOT NULL,
+  `createDt` varchar(128) NOT NULL,
+  `paidDt` varchar(128) NOT NULL,
   `customerId` int(11) NOT NULL,
   `totalPaid` int(11) NOT NULL,
   `paymentMethod` varchar(128) NOT NULL
@@ -115,6 +125,14 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`userId`, `username`, `nickName`, `hash`, `salt`, `managementUser`) VALUES
+('0', 'menno', 'Menno', '3ADB8B060DCE1F463452243AD1FE0082044523E71EE6DC20EB81F15855A47085230BBFB260861C5559443575FC8BF34B4C6A1C0444DA6BD650B62B91CBAEB405', 'hkjfhihg3no35giheawfuon4fwpislkdzgnhxn', 1),
+('1', 'rob', 'Rob Mol', '3ADB8B060DCE1F463452243AD1FE0082044523E71EE6DC20EB81F15855A47085230BBFB260861C5559443575FC8BF34B4C6A1C0444DA6BD650B62B91CBAEB405', 'hkjfhihg3no35giheawfuon4fwpislkdzgnhxn', 1);
+
+--
 -- Indexes for dumped tables
 --
 
@@ -134,7 +152,7 @@ ALTER TABLE `customers`
 -- Indexes for table `items`
 --
 ALTER TABLE `items`
-  ADD PRIMARY KEY (`itemId`);
+  ADD PRIMARY KEY (`nativeId`);
 
 --
 -- Indexes for table `receipt`
@@ -159,10 +177,15 @@ ALTER TABLE `users`
 ALTER TABLE `customers`
   MODIFY `customerId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
+-- AUTO_INCREMENT for table `items`
+--
+ALTER TABLE `items`
+  MODIFY `nativeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55886;
+--
 -- AUTO_INCREMENT for table `receipt`
 --
 ALTER TABLE `receipt`
-  MODIFY `receiptId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `receiptId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
