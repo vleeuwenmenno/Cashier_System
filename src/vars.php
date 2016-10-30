@@ -9,7 +9,7 @@
         'SQL_PASS' => "",
         'SQL_USER' => "",
         'SQL_HOST' => "localhost",
-        'SQL_DB' => 'ct_cashreg', 
+        'SQL_DB' => 'ct_kassa', 
 		'timeout' => 60 // Session timeout
     );
 

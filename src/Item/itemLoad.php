@@ -65,23 +65,12 @@ if (isset($_GET['sTerm']))
                                 $.notify({
                                     icon: \'glyphicon glyphicon-trash\',
                                     title: \'' . urldecode($row['itemName']) . '\',
-                                    message: \'<br />Toegevoegt aan bon (<a href="#">Ongedaan maken</a>, <a href="#">Open bon</a>)\'
+                                    message: \'<br />Toegevoegt aan bon (<a href="#">Ongedaan maken</a>)\'
                                 }, {
                                     // settings
                                     type: \'success\',
                                     delay: 5000,
-                                    timer: 10,
-                                    template:
-                                                \'<div data-notify="container" role="alert" class="col-xs-11 col-sm-2 alert alert-{0}" style="margin: 15px 0 15px 0; width: 150px;">\
-                                                    <button type="button" class="close" data-notify="dismiss" style="top:7px;">\
-                                                        <span aria-hidden="true">×</span>\
-                                                        <span class="sr-only">Close</span>\
-                                                    </button>\
-                                                    <span data-notify="icon"></span>\
-                                                    <span data-notify="title">{1}</span>\
-                                                    <span data-notify="message" style="padding-right:15px">{2}</span>\
-                                                    <a href="{3}" target="{4}" data-notify="url"></a>\
-                                                </div>\',
+                                    timer: 10
                                     placement: {
                                         from: "bottom",
                                         align: "right"

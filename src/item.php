@@ -269,6 +269,8 @@ else
                     },
                     function (data)
                     {
+                        $("#moreLoaderIndicator").fadeOut();
+
                         if (data != "")
                         {
                             $("#loadMore").fadeIn();
@@ -278,7 +280,6 @@ else
                             $("#listContents").html('<tr><td>Uw zoekopdracht - ' + $("#searchBar").val() + ' - heeft geen resultaat opgeleverd.</td></tr>');
                         }
 
-                        $("#moreLoaderIndicator").fadeOut();
                         $("#listContents").append(data);
                         startLocation += 25;
                     }
@@ -294,6 +295,8 @@ else
                     return false;
                 }
             });
+
+            $("#moreLoaderIndicator").fadeOut();
         });
 </script>
 
@@ -438,7 +441,7 @@ else
                                 $.notify({
                                     icon: \'glyphicon glyphicon-trash\',
                                     title: \'' . urldecode($row['itemName']) . '\',
-                                    message: \'<br />Toegevoegt aan bon (<a href="#">Ongedaan maken</a>, <a href="#">Open bon</a>)\'
+                                    message: \'<br />Toegevoegt aan bon (<a href="#">Ongedaan maken</a>)\'
                                 }, {
                                     // settings
                                     type: \'success\',
