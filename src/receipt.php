@@ -27,11 +27,25 @@ if (isset($_GET['new']))
         <span id="receiptNo"><h2>Bon #<?php echo str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT); ?></h2></span>
         <div class="panel panel filterable">
             <div class="panel-heading">
-                
+                <?php 
+                if (isset($_SESSION['receipt']['customer'])) 
+                {
+                    echo $_SESSION['receipt']['customer']['initials']. ' ' . $_SESSION['receipt']['customer']['familyName'] . '<br />';
+                    echo $_SESSION['receipt']['customer']['companyName'] . '<br />';
+                    echo $_SESSION['receipt']['customer']['streetName'] . '<br />';
+                    echo $_SESSION['receipt']['customer']['postalCode'] . ' ';
+                    echo $_SESSION['receipt']['customer']['city'] . '<br />';
+                }
+                ?>
             </div>
             <table class="table">
                 <thead>
                     <tr class="filters">
+                        <th width="54px">
+                            <a href="#" class="mustFocus">
+                                <input type="text" class="form-control" placeholder="" disabled />
+                            </a>
+                        </th>
                         <th width="64px">
                             <a href="#" class="mustFocus">
                                 <input type="text" class="form-control" placeholder="Aantal" disabled />
@@ -55,17 +69,31 @@ if (isset($_GET['new']))
                         foreach ($_SESSION['receipt']['items'] as $key => $val)
                         {
                             echo '<tr>';
+                            echo '<th><button id="add' .  $row['customerId'] . '" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" style="font-size: 12px;"></span></button></th>';
                             echo '<th>' . $val . '</th>';
-                            echo '<th>' . $key . '</th>';
-                            echo '<th>' . 'NaN' . '</th>';
+                            echo '<th>' . urldecode(Items::getField("itemName", $key)) . '</th>';
+                            echo '<th><span class="priceClickable" id="' . $key . '" data-toggle="popover" title="Prijs berekening" data-content="'. Items::getField("priceExclVat", $key) . '&nbsp;excl. ' . Items::getField("priceModifier", $key) . ' = ' . str_replace(".", ",", round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . str_replace(",", ".", Items::getField("priceModifier", $key))), 2)) . '&nbsp;&euro;">' . str_replace(".", ",", round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . str_replace(",", ".", Items::getField("priceModifier", $key))), 2)) . ' &euro; </span></th>';
                             echo '</tr>';
+
+                            echo '<script>
+                            $(document).ready(function() {
+                                $( "#' . $key . '" ).hover(function() {
+                                    $(\'#' . $key . '\').popover(\'show\');
+                                });
+
+                                $( "#' . $key . '" ).mouseout(function() {
+                                    $(\'#' . $key . '\').popover(\'hide\');
+                                });
+                            });
+                            </script>';
                         }
                     ?>
                 </tbody>
             </table>
         </div>
     <button type="button" id="closeReceipt" class="btn btn-default">Bon Sluiten</button>
-    <button type="button" id="selectCustomer" class="btn btn-info">Selecteer klant</button>
+    <?php if (!isset($_SESSION['receipt']['customer'])) { ?><button type="button" id="selectCustomer" class="btn btn-info">Selecteer klant</button> <?php } ?>
+    <?php if (isset($_SESSION['receipt']['customer'])) { ?><button type="button" id="deselectCustomer" class="btn btn-danger">Verwijder klant van bon</button> <?php } ?>
     <button type="button" id="payBtn" class="btn btn-primary pull-right">Betalen</button>
     
     <div class="form-group pull-right" style="width: 256px; padding-right: 32px;">
@@ -83,6 +111,37 @@ if (isset($_GET['new']))
     <script type="text/javascript">
         $(document).ready(function(){
             $('.combobox').combobox();
+
+
+            $('#deselectCustomer').click(function () {
+                 $.get(
+                    "receipt/deselectCustomer.php",
+                    {
+                        receiptId: '<?php echo $_SESSION['receipt']['id']; ?>'
+                    },
+                    function (data)
+                    {
+                        $.notify({
+                            icon: 'glyphicon glyphicon-trash',
+                            title: '',
+                            message: 'Klant verwijderd van bon'
+                        }, {
+                            // settings
+                            type: 'info',
+                            delay: 2000,
+                            timer: 10,
+                            placement: {
+                                from: "bottom",
+                                align: "right"
+                            }
+                        });
+                        $("#pageLoaderIndicator").fadeIn();
+                        $("#PageContent").load("receipt.php?new", function () {
+                            $("#pageLoaderIndicator").fadeOut();
+                        });
+                    }
+                );
+            });
 
             $('#selectCustomer').click(function () {
                 $("#pageLoaderIndicator").fadeIn();

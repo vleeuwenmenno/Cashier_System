@@ -254,9 +254,7 @@ else
             $("#searchBtn").on("click", function () {
                 startLocation = 0;
 
-                $("#loadMore").fadeOut("fast", function () {
-                    $("#moreLoaderIndicator").fadeIn();
-                });
+                $("#loadMore").fadeOut("fast");
 
                 $("#listContents").html("");
 
@@ -269,8 +267,6 @@ else
                     },
                     function (data)
                     {
-                        $("#moreLoaderIndicator").fadeOut();
-
                         if (data != "")
                         {
                             $("#loadMore").fadeIn();
@@ -295,8 +291,6 @@ else
                     return false;
                 }
             });
-
-            $("#moreLoaderIndicator").fadeOut();
         });
 </script>
 
@@ -379,105 +373,7 @@ else
             </script>
 
             <tbody id="listContents">
-                <?php
-    $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
-
-    if($db->connect_errno > 0)
-    {
-        die('Unable to connect to database [' . $db->connect_error . ']');
-    }
-
-
-    $sql = "SELECT * FROM items WHERE 1;";
-
-    if(!$result = $db->query($sql))
-    {
-        die('There was an error running the query [' . $db->error . ']');
-    }
-
-    $i = 0;
-    while($row = $result->fetch_assoc())
-    {
-        $i++;
-        if ($i < 25)
-        {
-            if ($row['EAN'] == "")
-                $EAN = "Geen EAN gevonden";
-            else
-                $EAN = $row['EAN'];
-
-            echo '    <tr>';
-
-            echo '            <td><a href="#" id="item' . $row['nativeId'] . 'Btn">' . $EAN . '</a></td>';
-
-            echo '            <td>' . urldecode($row['itemName']) . '</td>';
-            echo '            <td>' . $row['factoryId'] . '</td>';
-            echo '            <td>' . $row['itemStock'] . '</td>';
-
-            echo '            <td><span class="priceClickable" id="' . $row['nativeId'] . '" data-toggle="popover" title="Prijs berekening" data-content="'. $row['priceExclVat'] . '&nbsp;excl. ' . $row['priceModifier'] . ' = ' . str_replace(".", ",", round(Misc::calculate($row['priceExclVat'] . ' ' . str_replace(",", ".", $row['priceModifier'])), 2)) . '&nbsp;&euro;">' . str_replace(".", ",", round(Misc::calculate($row['priceExclVat'] . ' ' . str_replace(",", ".", $row['priceModifier'])), 2)) . ' &euro; </span></td>';
-
-            if (isset($_SESSION['receipt']['status']) && $_SESSION['receipt']['status'] == "open")
-            {
-                echo '            <td><button id="add' .  $row['nativeId'] . '" type="button" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span></button></td>';
-            }
-
-            echo '    </tr>';
-            echo '    <script>';
-            echo '    	$(document).ready(function ()
-					    {';
-            if (isset($_SESSION['receipt']['status']) && $_SESSION['receipt']['status'] == "open")
-            {
-                echo '      $("#add' . $row['nativeId'] . '").on("click", function() {
-                                $.get(
-                                    "receipt/addItem.php",
-                                    {
-                                        itemId: \'' . $row['itemId'] . '\',
-                                        itemCount: \'1\'
-                                    },
-                                    function (data)
-                                    { }
-                                );
-
-                                $.notify({
-                                    icon: \'glyphicon glyphicon-trash\',
-                                    title: \'' . urldecode($row['itemName']) . '\',
-                                    message: \'<br />Toegevoegt aan bon (<a href="#">Ongedaan maken</a>)\'
-                                }, {
-                                    // settings
-                                    type: \'success\',
-                                    delay: 5000,
-                                    timer: 10,
-                                    placement: {
-                                        from: "bottom",
-                                        align: "right"
-                                    },
-                                    onClosed: function () {
-                                        //TODO: Send delete to SQL
-                                    }
-                                });
-                            });';
-            }
-
-            echo           '$( "#' . $row['nativeId'] . '" ).hover(function() {
-                                $(\'#' . $row['itemId'] . '\').popover(\'show\');
-                            });
-
-                            $( "#' . $row['nativeId'] . '" ).mouseout(function() {
-                                $(\'#' . $row['nativeId'] . '\').popover(\'hide\');
-                            });
-
-                            $("#item' . $row['nativeId'] . 'Btn").on("click", function () {
-                            $("#loaderAnimation").fadeIn();
-                            $("#PageContent").load("item/viewItem.php?id=' . $row['nativeId'] . '");
-
-					        });
-                        });
-                    </script>';
-        }
-        else
-            break;
-    }
-                ?>
+                
             </tbody>
         </table>
         <?php
@@ -485,8 +381,6 @@ else
     {
         ?>
         <button type="button" class="btn btn-info center-block" id="loadMore">Laad Meer</button>
-        <br />
-        <div class="loader mainLoader" id="moreLoaderIndicator" style="display: none;"></div>
         <script>
                         $(document).ready(function ()
                         {
@@ -494,7 +388,6 @@ else
                             $("#loadMore").on("click", function () {
 
                                 $("#loadMore").fadeOut("fast", function () {
-                                    $("#moreLoaderIndicator").fadeIn();
                                     $("html, body").animate({ scrollTop: $(document).height() }, "normal");
                                 });
 
@@ -512,7 +405,6 @@ else
                                             $("#loadMore").fadeIn();
                                         }
 
-                                        $("#moreLoaderIndicator").fadeOut();
                                         $("#listContents").append(data);
                                         startLocation += 25;
                                     }

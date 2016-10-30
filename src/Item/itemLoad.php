@@ -55,7 +55,7 @@ if (isset($_GET['sTerm']))
                                 $.get(
                                     "receipt/addItem.php",
                                     {
-                                        itemId: \'' . $row['itemId'] . '\',
+                                        itemId: \'' . $row['nativeId'] . '\',
                                         itemCount: \'1\'
                                     },
                                     function (data)
@@ -83,7 +83,7 @@ if (isset($_GET['sTerm']))
                 }
 
                 echo           '$( "#' . $row['nativeId'] . '" ).hover(function() {
-                                $(\'#' . $row['itemId'] . '\').popover(\'show\');
+                                $(\'#' . $row['nativeId'] . '\').popover(\'show\');
                             });
 
                             $( "#' . $row['nativeId'] . '" ).mouseout(function() {

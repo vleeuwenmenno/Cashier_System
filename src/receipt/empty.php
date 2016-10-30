@@ -9,7 +9,8 @@ if (isset($_GET['receiptId']))
     $_SESSION['receipt']['id'] = 0;
     $_SESSION['receipt']['items'] = null;
     $_SESSION['receipt']['status'] = 'closed';
-
+    $_SESSION['receipt']['customer'] = null;
+    
     $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
     if($db->connect_errno > 0)

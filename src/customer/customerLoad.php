@@ -50,7 +50,10 @@ if (isset($_GET['sTerm']))
                     echo '            <td>' . $row['familyName'] . '</td>';
                     echo '            <td>' . $row['companyName'] . '</td>';
                     echo '            <td>' . $row['postalCode'] . '</td>';
-                    echo '    </tr>';
+
+                    if (isset($_SESSION['receipt']['status']) && $_SESSION['receipt']['status'] == "open")
+                        echo '<td><button id="add' .  $row['customerId'] . '" type="button" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span></button></td>';
+
                     echo '    <script>';
                     echo '    	$(document).ready(function ()
 					                        {
@@ -59,7 +62,24 @@ if (isset($_GET['sTerm']))
                                                     $("#PageContent").load("customer/viewCustomer.php?id=' . $row['customerId'] . '");
 						                        });
 					                        });';
+                    echo '      $("#add' . $row['customerId'] . '").on("click", function() {
+                                $.get(
+                                    "customer/customerSelect.php",
+                                    {
+                                        customerId: \'' . $row['customerId'] . '\',
+                                    },
+                                    function (data)
+                                    { 
+                                        $("#pageLoaderIndicator").fadeIn();
+                                        $("#PageContent").load("receipt.php?new", function () {
+                                            $("#pageLoaderIndicator").fadeOut();
+                                        });
+                                    }
+                                );
+                                });';
                     echo '    </script>';
+
+                    echo '    </tr>';
                 }
             }
         }

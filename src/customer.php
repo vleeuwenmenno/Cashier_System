@@ -296,6 +296,8 @@ else
                 <script>
                     $(document).ready(function ()
                     {
+                        $("#searchBtn").trigger('click');
+                        
                         var filterEnabled = false;
                         $(".mustFocus").click(function (obj)
                         {
@@ -332,48 +334,7 @@ else
                 </script>
 
                 <tbody id="listContents">
-                    <?php
-                        $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
-
-                        if($db->connect_errno > 0)
-                        {
-                            die('Unable to connect to database [' . $db->connect_error . ']');
-                        }
-
-
-                        $sql = "SELECT * FROM customers WHERE 1;";
-
-                        if(!$result = $db->query($sql))
-                        {
-                            die('There was an error running the query [' . $db->error . ']');
-                        }
-
-                        $i = 0;
-                        while($row = $result->fetch_assoc())
-                        {
-                            $i++;
-                            if ($i < 25)
-                            {
-                                echo '    <tr>';
-                                echo '            <td><a href="#" id="customer' . $row['customerId'] . 'Btn">' . $row['customerId'] . '</a></td>';
-                                echo '            <td>' . $row['initials'] . '</td>';
-                                echo '            <td>' . $row['familyName'] . '</td>';
-                                echo '            <td>' . $row['companyName'] . '</td>';
-                                echo '            <td>' . $row['postalCode'] . '</td>';
-                                echo '            <td><button type="button" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span></button></td>';
-                                echo '    </tr>';
-                                echo '    <script>';
-                                echo '    	$(document).ready(function ()
-					                    {
-						                    $("#customer' . $row['customerId'] . 'Btn").on("click", function () {
-                                                $("#loaderAnimation").fadeIn();
-                                                $("#PageContent").load("customer/viewCustomer.php?id=' . $row['customerId'] . '");
-						                    });
-					                    });';
-                                echo '    </script>';
-                            }
-                        }
-                    ?>
+                    
                 </tbody>
             </table>
             <?php
