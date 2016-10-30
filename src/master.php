@@ -262,7 +262,7 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
             </div>
             <div class="col-sm-8">
                 <div id="PageContent">
-
+                    
                 </div>
 			</div>
         </div>

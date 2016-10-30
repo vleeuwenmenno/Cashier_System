@@ -12,7 +12,7 @@ if (isset($_GET['new']))
             die('Unable to connect to database [' . $db->connect_error . ']');
         }
 
-        $sql = "INSERT INTO receipt (creator, items, customerId, totalPaid, paymentMethod) VALUES ('1', '', '', '0', 'PIN')";
+        $sql = "INSERT INTO receipt (creator, items, customerId, paymentMethod) VALUES ('1', '', '', 'PIN')";
 
         if(!$result = $db->query($sql))
         {

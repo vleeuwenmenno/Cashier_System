@@ -1,7 +1,37 @@
 <?php
 include_once("includes.php");
 
-if (isset($_GET['open']))
+if (isset($_GET['cashIn']))
+{
+    $thisIp = $_SERVER['REMOTE_ADDR'];
+    $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
+
+    if($db->connect_errno > 0)
+    {
+        die('Unable to connect to database [' . $db->connect_error . ']');
+    }
+
+    $sql = "INSERT INTO `cashsession` (`openedBy`, `cashIn`, `openDate`) VALUES ('" . $_SESSION['login_ok']['userId'] . "', '" . str_replace(",", ".", $_GET['cashIn']) . "', '" . date("d-m-Y H:i:s") . "');";
+
+    if(!$result = $db->query($sql))
+    {
+        die('Er was een fout tijdens het openen van de kassa. (' . $db->error . ')');
+    }
+    else
+    {
+        $sqls = "UPDATE cash_registers SET cash_registers.status='LoggedOn' WHERE crStaticIP='$thisIp'";
+        
+        if(!$results = $db->query($sqls))
+        {
+            die('Er was een fout tijdens het openen van de kassa. (' . $db->error . ')');
+        }
+        else
+        {
+            echo "LOG_OK";
+        }
+    }
+}
+else if (isset($_GET['open']))
 {
     $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
@@ -35,7 +65,7 @@ if (isset($_GET['open']))
                         <b>Medewerker:</b> <?php echo $_SESSION['login_ok']['nickName'];?><br /><br />
                         <div class="input-group">
                             <span class="input-group-addon">Kas-in</span>
-                            <input type="text" class="form-control" placeholder="<?php echo $cashOut; ?>">
+                            <input type="text" class="form-control" id="cashInTxt" placeholder="<?php echo $cashOut; ?>">
                             <span class="input-group-addon">&euro;</span>
                         </div>
                     </div> 
@@ -53,6 +83,39 @@ if (isset($_GET['open']))
                                     }
                                 );
                             }, 1000);
+
+                            $("#openCr").on("click", function() {
+                                $.get(
+                                    "cashregOverview.php",
+                                    {
+                                        cashIn: $('#cashInTxt').val()
+                                    },
+                                    function (data)
+                                    { 
+                                        if (data.includes("LOG_OK"))
+                                        {
+                                            window.open("master.php","_self");
+                                        }
+                                        else
+                                        {
+                                            $.notify({
+                                                icon: 'glyphicon glyphicon-remove',
+                                                title: 'Error<br />',
+                                                message: data
+                                            }, {
+                                                // settings
+                                                type: 'danger',
+                                                delay: 5000,
+                                                timer: 10,
+                                                placement: {
+                                                    from: "bottom",
+                                                    align: "right"
+                                                }
+                                            });
+                                        }
+                                    }
+                                );
+                            });
 
                             $("#cancelCr").on("click", function() {
                                 $("#pageLoaderIndicator").fadeIn();
@@ -126,7 +189,7 @@ else
                                     <b>Geopend door:</b> NAME<br />
                                 </div> 
                                 <button type="button" class="btn btn-primary">Sluiten</button>
-                                <button type="button" class="btn btn-default">Afdrukken</button><br /><br />
+                                <button type="button" class="btn btn-default" id="printReport">Afdrukken</button><br /><br />
                                 <?php
                             }
                             else
@@ -151,6 +214,13 @@ else
                                     }
                                 );
                             }, 1000);
+
+                            $("#printReport").on("click", function() {
+                                $("#pageLoaderIndicator").fadeIn();
+                                $("#PageContent").load("print.php?openReport", function () {
+                                    $("#pageLoaderIndicator").fadeOut();
+                                });
+                            });
 
                             $("#openCr").on("click", function() {
                                 $("#pageLoaderIndicator").fadeIn();

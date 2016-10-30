@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 24, 2016 at 05:55 PM
+-- Generation Time: Oct 30, 2016 at 11:33 PM
 -- Server version: 10.1.16-MariaDB
--- PHP Version: 5.5.38
+-- PHP Version: 7.0.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,8 +17,30 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ct_cashreg`
+-- Database: `ct_kassa`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cashsession`
+--
+
+CREATE TABLE `cashsession` (
+  `cashSessionId` int(11) NOT NULL,
+  `cashRegisterId` int(11) NOT NULL,
+  `openedBy` int(11) NOT NULL,
+  `cashIn` decimal(18,2) NOT NULL,
+  `cashOut` decimal(18,2) NOT NULL,
+  `grossTurnover` decimal(18,2) NOT NULL,
+  `netTurnover` decimal(18,2) NOT NULL,
+  `cash` decimal(18,2) NOT NULL,
+  `pin` decimal(18,2) NOT NULL,
+  `bankTransfer` decimal(18,2) NOT NULL,
+  `margin` decimal(18,2) NOT NULL,
+  `openDate` varchar(255) NOT NULL,
+  `closeDate` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -32,6 +54,13 @@ CREATE TABLE `cash_registers` (
   `crStaticIP` varchar(16) NOT NULL DEFAULT '0.0.0.0',
   `status` varchar(96) NOT NULL DEFAULT 'LoggedOff'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `cash_registers`
+--
+
+INSERT INTO `cash_registers` (`id`, `crName`, `crStaticIP`, `status`) VALUES
+(0, 'Kassa 1', '::1', 'LoggedOn');
 
 -- --------------------------------------------------------
 
@@ -52,13 +81,6 @@ CREATE TABLE `customers` (
   `email` varchar(96) NOT NULL,
   `receipts` varchar(4096) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `customers`
---
-
-INSERT INTO `customers` (`customerId`, `initials`, `familyName`, `companyName`, `streetName`, `city`, `postalCode`, `phoneNumber`, `mobileNumber`, `email`, `receipts`) VALUES
-(1, 'M.C.', 'van Leeuwen', 'van Leeuwen Glas & Montage', 'Reguliersdwarsstraat 12A', 'Beverwijk', '1947 GG', '0251-241-255', '', 'info@vanleeuwenglasmontage.nl', NULL);
 
 -- --------------------------------------------------------
 
@@ -92,7 +114,6 @@ CREATE TABLE `receipt` (
   `createDt` varchar(128) NOT NULL,
   `paidDt` varchar(128) NOT NULL,
   `customerId` int(11) NOT NULL,
-  `totalPaid` int(11) NOT NULL,
   `paymentMethod` varchar(128) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -137,6 +158,12 @@ INSERT INTO `users` (`userId`, `username`, `nickName`, `hash`, `salt`, `manageme
 --
 
 --
+-- Indexes for table `cashsession`
+--
+ALTER TABLE `cashsession`
+  ADD PRIMARY KEY (`cashSessionId`);
+
+--
 -- Indexes for table `cash_registers`
 --
 ALTER TABLE `cash_registers`
@@ -172,6 +199,11 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `cashsession`
+--
+ALTER TABLE `cashsession`
+  MODIFY `cashSessionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+--
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
@@ -180,12 +212,12 @@ ALTER TABLE `customers`
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `nativeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55886;
+  MODIFY `nativeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3425;
 --
 -- AUTO_INCREMENT for table `receipt`
 --
 ALTER TABLE `receipt`
-  MODIFY `receiptId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `receiptId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
