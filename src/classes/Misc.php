@@ -20,6 +20,41 @@ class Misc
 		return isset($replace) ? $replace : $matches[0];
     }
 
+	public static function crIsActive()
+	{
+		global $config;
+		
+		$ok = false;
+		$thisIp = $_SERVER['REMOTE_ADDR'];
+
+		$db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
+
+		if($db->connect_errno > 0)
+		{
+			die('Unable to connect to database [' . $db->connect_error . ']');
+		}
+
+		$sql = "SELECT * FROM cash_registers WHERE crStaticIP='$thisIp';";
+
+		if(!$result = $db->query($sql))
+		{
+			die('Er was een fout tijdens het verwerken van de klant gegevens. (' . $db->error . ')');
+		}
+
+		while($row = $result->fetch_assoc())
+		{
+			if ($row['status'] == "LoggedOff")
+				return false;
+			else
+				return true;
+		}
+		
+		if (!$ok) 
+		{ 
+			return false;
+		}
+	}
+
     public static function isApple()
     {
         //Detect special conditions devices

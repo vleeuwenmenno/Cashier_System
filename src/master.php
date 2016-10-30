@@ -70,9 +70,30 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
                                 <ul class="nav navbar-nav">
                                     <!-- Dropdown level 2 -->
                                     <li class="panel panel-default" id="dropdown">
-                                        <a data-toggle="collapse" href="#dropdown-lvl2">
+                                        <a data-toggle="collapse" href="#" id="cashregOverview">
+                                            <span class="glyphicon glyphicon-eur"></span> Kassa overzicht</span>
+                                        </a>
+                                        <a data-toggle="collapse" <?php if (Misc::crIsActive()) { ?> href="#dropdown-lvl2"<?php } ?>>
                                             <span class="glyphicon glyphicon-eur"></span> Bonnen</span>
                                         </a>
+                                        <script>
+                                            $(document).ready(function ()
+                                            {
+                                                $("#cashregOverview").on("click", function ()
+                                                {
+                                                    $("#pageLoaderIndicator").fadeIn();
+                                                    $("#PageContent").load("cashregOverview.php", function () {
+                                                        $("#pageLoaderIndicator").fadeOut();
+                                                    });
+                                                });
+
+                                                $("#pageLoaderIndicator").fadeIn();
+                                                $("#PageContent").load("cashregOverview.php", function () {
+                                                    $("#pageLoaderIndicator").fadeOut();
+                                                });
+                                            });
+                                        </script>
+                                        
                                         <div id="dropdown-lvl2" class="panel-collapse collapse">
                                             <div class="panel-body">
                                                 <ul class="nav navbar-nav">
@@ -111,7 +132,7 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
                                         </div>
                                     </li>
                                     <li class="panel panel-default" id="dropdown">
-                                        <a data-toggle="collapse" href="#dropdown-lvl3">
+                                        <a data-toggle="collapse" <?php if (Misc::crIsActive()) { ?> href="#dropdown-lvl3"<?php } ?>>
                                             <span class="glyphicon glyphicon-barcode"></span> Artikelen</span>
                                         </a>
                                         <div id="dropdown-lvl3" class="panel-collapse collapse">
@@ -160,7 +181,7 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
                                         </div>
                                     </li>
                                     <li class="panel panel-default" id="dropdown">
-                                        <a data-toggle="collapse" href="#dropdown-lvl4">
+                                        <a data-toggle="collapse" <?php if (Misc::crIsActive()) { ?> href="#dropdown-lvl4"<?php } ?>>
                                             <span class="glyphicon glyphicon-expand"></span> Klanten</span>
                                         </a>
                                         <div id="dropdown-lvl4" class="panel-collapse collapse">
@@ -224,12 +245,11 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
                                             </div>
                                         </div>
                                     </li>
-                                    <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Systemen</a></li>
                                 </ul>
                             </div>
                         </div>
                     </li>
-
+                    
                     <li><a href="logout.php"><span class="glyphicon glyphicon-user"></span> Uitloggen</a></li>
                     <div class="loader mainLoader" id="pageLoaderIndicator" style="display: none;"></div>
                 </ul>
