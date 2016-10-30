@@ -70,7 +70,7 @@ if (isset($_GET['sTerm']))
                                     // settings
                                     type: \'success\',
                                     delay: 5000,
-                                    timer: 10
+                                    timer: 10,
                                     placement: {
                                         from: "bottom",
                                         align: "right"
