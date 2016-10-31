@@ -18,7 +18,7 @@ if (isset($_GET['new']))
         {
             die('There was an error running the query [' . $db->error . ']');
         }
-        
+
         $_SESSION['receipt']['status'] = 'open';
         $_SESSION['receipt']['id'] = mysqli_insert_id($db);
     }
@@ -27,8 +27,8 @@ if (isset($_GET['new']))
         <span id="receiptNo"><h2>Bon #<?php echo str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT); ?></h2></span>
         <div class="panel panel filterable">
             <div class="panel-heading">
-                <?php 
-                if (isset($_SESSION['receipt']['customer'])) 
+                <?php
+                if (isset($_SESSION['receipt']['customer']))
                 {
                     echo $_SESSION['receipt']['customer']['initials']. ' ' . $_SESSION['receipt']['customer']['familyName'] . '<br />';
                     echo $_SESSION['receipt']['customer']['companyName'] . '<br />';
@@ -65,11 +65,11 @@ if (isset($_GET['new']))
                 </thead>
 
                 <tbody id="listContents">
-                    <?php 
+                    <?php
                         foreach ($_SESSION['receipt']['items'] as $key => $val)
                         {
                             echo '<tr>';
-                            echo '<th><button id="add' .  $row['customerId'] . '" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" style="font-size: 12px;"></span></button></th>';
+                            echo '<th><button id="trash' .  $key . '" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" style="font-size: 12px;"></span></button></th>';
                             echo '<th>' . $val . '</th>';
                             echo '<th>' . urldecode(Items::getField("itemName", $key)) . '</th>';
                             echo '<th><span class="priceClickable" id="' . $key . '" data-toggle="popover" title="Prijs berekening" data-content="'. Items::getField("priceExclVat", $key) . '&nbsp;excl. ' . Items::getField("priceModifier", $key) . ' = ' . str_replace(".", ",", round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . str_replace(",", ".", Items::getField("priceModifier", $key))), 2)) . '&nbsp;&euro;">' . str_replace(".", ",", round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . str_replace(",", ".", Items::getField("priceModifier", $key))), 2)) . ' &euro; </span></th>';
@@ -84,6 +84,77 @@ if (isset($_GET['new']))
                                 $( "#' . $key . '" ).mouseout(function() {
                                     $(\'#' . $key . '\').popover(\'hide\');
                                 });
+
+                                $("#trash' . $key . '").on("click", function() {
+                                  $.get(
+                                      "receipt/removeItem.php",
+                                      {
+                                          itemId: \'' . $key . '\',
+                                          itemCount: \'1\'
+                                      },
+                                      function (data)
+                                      {
+                                        $.notify({
+                                            icon: \'glyphicon glyphicon-trash\',
+                                            title: \'' . urldecode(Items::getField("itemName", $key)) . '\',
+                                            message: \'<br />Verwijderd van bon (<a href="#" id="undo' . $key . '">Ongedaan maken</a>)\'
+                                        }, {
+                                            // settings
+                                            type: \'danger\',
+                                            delay: 5000,
+                                            timer: 10,
+                                            placement: {
+                                                from: "bottom",
+                                                align: "right"
+                                            },
+                                            onClosed: function () {
+                                                //TODO: Send delete to SQL
+                                            }
+                                        });
+
+                                        $("#pageLoaderIndicator").fadeIn();
+      															    $("#PageContent").load("receipt.php?new", function () {
+      															        $("#pageLoaderIndicator").fadeOut();
+      															    });
+                                      }
+                                  );
+                                });
+
+                                $("#undo' . $key . '").on("click", function() {
+                                  $.get(
+                                      "receipt/addItem.php",
+                                      {
+                                          itemId: \'' . $key . '\',
+                                          itemCount: \'1\'
+                                      },
+                                      function (data)
+                                      {
+                                        $.notify({
+                                            icon: \'glyphicon glyphicon-trash\',
+                                            title: \'' . urldecode(Items::getField("itemName", $key)) . '\',
+                                            message: \'<br />Toegevoegt aan bon.\'
+                                        }, {
+                                            // settings
+                                            type: \'success\',
+                                            delay: 5000,
+                                            timer: 10,
+                                            placement: {
+                                                from: "bottom",
+                                                align: "right"
+                                            },
+                                            onClosed: function () {
+                                                //TODO: Send delete to SQL
+                                            }
+                                        });
+                                      }
+                                  );
+
+                                  $("#pageLoaderIndicator").fadeIn();
+                                  $("#PageContent").load("receipt.php?new", function () {
+                                      $("#pageLoaderIndicator").fadeOut();
+                                  });
+                                });
+
                             });
                             </script>';
                         }
@@ -95,7 +166,7 @@ if (isset($_GET['new']))
     <?php if (!isset($_SESSION['receipt']['customer'])) { ?><button type="button" id="selectCustomer" class="btn btn-info">Selecteer klant</button> <?php } ?>
     <?php if (isset($_SESSION['receipt']['customer'])) { ?><button type="button" id="deselectCustomer" class="btn btn-danger">Verwijder klant van bon</button> <?php } ?>
     <button type="button" id="payBtn" class="btn btn-primary pull-right">Betalen</button>
-    
+
     <div class="form-group pull-right" style="width: 256px; padding-right: 32px;">
         <select class="combobox form-control">
             <option value="" selected="selected">Selecteer betaal methode</option>
@@ -104,9 +175,9 @@ if (isset($_GET['new']))
             <option value="PC">Pin & Kontant</option>
             <option value="BANK">Op rekening</option>
         </select>
-        
+
     </div>
-    
+
 
     <script type="text/javascript">
         $(document).ready(function(){
@@ -443,7 +514,7 @@ else
         $i++;
         if ($i < 25)
         {
-            
+
         }
     }
                 ?>

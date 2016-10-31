@@ -51,7 +51,7 @@ if (isset($_GET['sTerm']))
 					    {';
                 if (isset($_SESSION['receipt']['status']) && $_SESSION['receipt']['status'] == "open")
                 {
-                    echo '      $("#add' . $row['nativeId'] . '").on("click", function() {
+                    echo ' $("#add' . $row['nativeId'] . '").on("click", function() {
                                 $.get(
                                     "receipt/addItem.php",
                                     {
@@ -65,7 +65,7 @@ if (isset($_GET['sTerm']))
                                 $.notify({
                                     icon: \'glyphicon glyphicon-trash\',
                                     title: \'' . urldecode($row['itemName']) . '\',
-                                    message: \'<br />Toegevoegt aan bon (<a href="#">Ongedaan maken</a>)\'
+                                    message: \'<br />Toegevoegt aan bon.\'
                                 }, {
                                     // settings
                                     type: \'success\',
@@ -82,7 +82,7 @@ if (isset($_GET['sTerm']))
                             });';
                 }
 
-                echo           '$( "#' . $row['nativeId'] . '" ).hover(function() {
+                echo       '$( "#' . $row['nativeId'] . '" ).hover(function() {
                                 $(\'#' . $row['nativeId'] . '\').popover(\'show\');
                             });
 

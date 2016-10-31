@@ -46,7 +46,7 @@ class Misc
 	public static function crIsActive()
 	{
 		global $config;
-		
+
 		$ok = false;
 		$thisIp = $_SERVER['REMOTE_ADDR'];
 
@@ -71,9 +71,9 @@ class Misc
 			else
 				return true;
 		}
-		
-		if (!$ok) 
-		{ 
+
+		if (!$ok)
+		{
 			return false;
 		}
 	}
