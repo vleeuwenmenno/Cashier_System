@@ -138,7 +138,7 @@ if (isset($_GET['id']))
                             },
 							function(data)
 							{
-							    if (data.match("^OK "))
+							    if (data.includes("OK "))
 							    {
 							        var arr = data.split(' ');
 							        $("#customerId").val(arr[1]);
