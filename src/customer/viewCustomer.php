@@ -9,14 +9,14 @@ if (isset($_GET['id']))
 	{
 		die('Unable to connect to database [' . $db->connect_error . ']');
 	}
-	
+
 	$sql = "SELECT * FROM customers WHERE customerId='" . $_GET['id'] . "'";
-	
+
 	if(!$result = $db->query($sql))
 	{
 		die('There was an error running the query [' . $db->error . ']');
 	}
-	
+
 	while($row = $result->fetch_assoc())
 	{
 ?>
@@ -83,7 +83,7 @@ if (isset($_GET['id']))
 				            $("#applyBtn").fadeIn();
 				            $("#cancelEditBtn").fadeIn();
 				        });
-				       
+
 				        $("#initials").attr("readonly", false);
 				        $("#familyname").attr("readonly", false);
 				        $("#companyname").attr("readonly", false);
@@ -117,7 +117,7 @@ if (isset($_GET['id']))
                             },
 							function(data)
 							{
-							    if (data.match("^OK "))
+							    if (data.includes("OK "))
 							    {
 							        var arr = data.split(' ');
 							        $("#customerId").val(arr[1]);
@@ -170,7 +170,7 @@ if (isset($_GET['id']))
                     </div>
                     <div class="modal-body">
                         <p>
-                            Weet u zeker dat u deze klant wilt verwijderen?<br /> 
+                            Weet u zeker dat u deze klant wilt verwijderen?<br />
                             <b>Dit process kan niet worden omgedraaid.</b>
                             Om deze klant te verwijderen typ de volledige naam in de balk hieronder en druk dan op 'Verwijderen'.
                             <br /><br />
@@ -290,7 +290,7 @@ if (isset($_GET['id']))
 			</div>
 		  </div>
 		</div>
-		
+
 		<div id="loaderAnimation" style="display: none;">
 			<svg xmlns="http://www.w3.org/2000/svg" version="1.1">
 			  <defs>
