@@ -1,0 +1,3 @@
+Afromen toevoegen
+Beheer pagina met history van kassa openen en sluiten
+Mogelijkheid om prijs te wijzigen op bon (Met checkbox om wel of niet globaal op te slaan)
