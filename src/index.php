@@ -1,5 +1,5 @@
-<?php 
-    include_once("includes.php"); 
+<?php
+    include_once("includes.php");
 
 	if (Permissions::checkSession("", false))
 	{
@@ -70,7 +70,7 @@
         </div>
         <div class="row">
             <div class="col-sm-3">
-            
+
             </div>
             <div class="col-sm-6">
                 <form class="ui form panel" style="text-align: left !important;" action="index.php?login<?php if (isset($_GET['r'])) { echo '&r=' . $_GET['r']; }?>" method="POST" enctype="multipart/form-data">
@@ -93,10 +93,10 @@
                             'pass' => $_POST['passwrd']);
                     ?>
                     <script>
-                            (function()
-                            {
-                                window.location.replace("login.php<?php if (isset($_GET['r'])) { echo '?r=' . $_GET['r']; } else { echo '?r=index.php'; } ?>");
-                            })();
+                        (function()
+                        {
+                            window.location.replace("login.php<?php if (isset($_GET['r'])) { echo '?r=' . $_GET['r']; } else { echo '?r=index.php'; } ?>");
+                        })();
                     </script>
                     <?php
                     }
