@@ -165,22 +165,144 @@ if (isset($_GET['new']))
     <button type="button" id="closeReceipt" class="btn btn-default">Bon Sluiten</button>
     <?php if (!isset($_SESSION['receipt']['customer'])) { ?><button type="button" id="selectCustomer" class="btn btn-info">Selecteer klant</button> <?php } ?>
     <?php if (isset($_SESSION['receipt']['customer'])) { ?><button type="button" id="deselectCustomer" class="btn btn-danger">Verwijder klant van bon</button> <?php } ?>
-    <button type="button" id="payBtn" class="btn btn-primary pull-right">Betalen</button>
+    <button type="button" id="payBtn" class="btn btn-primary pull-right" data-toggle="modal" data-target="#printAmount">Betalen</button>
 
     <div class="form-group pull-right" style="width: 256px; padding-right: 32px;">
-        <select class="combobox form-control">
+        <select class="combobox form-control" id="paymentMethod">
             <option value="" selected="selected">Selecteer betaal methode</option>
             <option value="CASH">Kontant</option>
             <option value="PIN">Pin</option>
             <option value="PC">Pin & Kontant</option>
             <option value="BANK">Op rekening</option>
         </select>
-
     </div>
 
+    <div class="pull-right" id="statusText"></div>
+
+    <br /><br />
+
+    <div class="form-group pull-right" id="pinValDiv" style="display: none; padding-left: 32px;">
+        <label for="pinVal">Pin bedrag:</label>
+        <input class="form-control" id="pinVal">
+    </div>
+
+    <div class="form-group pull-right" id="cashValDiv" style="display: none;">
+        <label for="cashVal">Kontant bedrag:</label>
+        <input class="form-control" id="cashVal">
+    </div>
+
+    <br /><br /><br /><br />
+    <div class="pull-right">
+        <?php
+            $total = 0;
+            foreach ($_SESSION['receipt']['items'] as $key => $val)
+            {
+                $price = Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . str_replace(",", ".", Items::getField("priceModifier", $key)));
+                $price *= $val;
+                $total += $price;
+            }
+        ?>
+        <h3>Totaal: &euro; <?php echo str_replace(".", ",", number_format ($total, 2)); ?></h3>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="printAmount" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Bon printen?</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Wil de klant een bon?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="printReceipt" data-dismiss="modal">Bon printen</button>
+                    <button type="button" class="btn btn-warning" id="printNoReceipt" data-dismiss="modal">Geen bon printen</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script type="text/javascript">
         $(document).ready(function(){
+            var printAmount = 0;
+
+            $('#paymentMethod').on('change', function() {
+                if (this.value != "PC")
+                {
+                    $('#cashValDiv').css("display", "none");
+                    $('#pinValDiv').css("display", "none");
+                }
+                else
+                {
+                    $('#cashValDiv').css("display", "inline");
+                    $('#pinValDiv').css("display", "inline");
+                }
+            });
+
+            $('#printAmount').on('hidden.bs.modal', function () {
+                if ($( "#paymentMethod" ).val() != "")
+                {
+                    if ($('#paymentMethod').val() == "PC")
+                    {
+                        var pinVal = $('#pinVal').val();
+                        var cashVal = $('#cashVal').val();
+
+                        $.get(
+                           "receipt/processReceipt.php",
+                           {
+                               receiptId: '<?php echo $_SESSION['receipt']['id']; ?>',
+                               print: printAmount,
+                               paymentMethod: $( "#paymentMethod" ).val(),
+                               pin: pinVal,
+                               cash: cashVal
+                           },
+                           function (data)
+                           {
+                               $("#pageLoaderIndicator").fadeIn();
+                               $("#PageContent").load("print.php?receipt=<?php echo str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT); ?>", function () {
+                                   $("#pageLoaderIndicator").fadeOut();
+                               });
+                           }
+                       );
+                   }
+                   else
+                   {
+                       $.get(
+                          "receipt/processReceipt.php",
+                          {
+                              receiptId: '<?php echo $_SESSION['receipt']['id']; ?>',
+                              print: printAmount,
+                              paymentMethod: $( "#paymentMethod" ).val()
+                          },
+                          function (data)
+                          {
+                              $("#pageLoaderIndicator").fadeIn();
+                              $("#PageContent").load("print.php?receipt=<?php echo str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT); ?>", function () {
+                                  $("#pageLoaderIndicator").fadeOut();
+                              });
+                          }
+                      );
+                   }
+                }
+                else
+                {
+                    $( "#statusText" ).html("<p style=\"color: orange !important;\">Selecteer een betaal optie >> &nbsp;&nbsp;</p>");
+                }
+            });
+
+            $('#printReceipt').click(function() {
+                printAmount = 1;
+                $('#printAmount').modal('hide');
+            });
+
+            $('#printNoReceipt').click(function() {
+                printAmount = 0;
+                $('#printAmount').modal('hide');
+            });
+
             $('.combobox').combobox();
 
 
