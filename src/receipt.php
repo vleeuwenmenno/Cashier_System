@@ -75,17 +75,76 @@ if (isset($_GET['new']))
                             echo '<th><button id="trash' .  $key . '" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" style="font-size: 12px;"></span></button></th>';
                             echo '<th><a style="color: black;" href="javascript:void(0);" id="editAmount' . $key . '">' . $val['count'] . '</a></th>';
                             echo '<th>' . urldecode(Items::getField("itemName", $key)) . '</th>';
-                            echo '<th><span class="priceClickable" id="' . $key . '" data-toggle="popover" title="Prijs berekening" data-content="'. Items::getField("priceExclVat", $key) . '&nbsp;excl. ' . Items::getField("priceModifier", $key) . ' = ' . str_replace(".", ",", round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . str_replace(",", ".", Items::getField("priceModifier", $key))), 2)) . '&nbsp;&euro;"><a style="color: black;" href="javascript:void(0);" id="editPrice' . $key . '">' . str_replace(".", ",", round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . str_replace(",", ".", Items::getField("priceModifier", $key))), 2)) . ' &euro; </a></span></th>';
+                            echo '<th><span class="priceClickable" id="' . $key . '" data-toggle="popover" title="Prijs berekening" data-content="'. Items::getField("priceExclVat", $key) . '&nbsp;excl. ' . Items::getField("priceModifier", $key) . ' = &euro;&nbsp;' . str_replace(".", ",", round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . str_replace(",", ".", Items::getField("priceModifier", $key))), 2)) . '"><a style="color: black;" href="javascript:void(0);" id="editPrice' . $key . '">&euro;&nbsp;' . str_replace(".", ",", round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . str_replace(",", ".", Items::getField("priceModifier", $key))), 2)) . '</a></span></th>';
                             echo '</tr>';
+
+                            echo '
+                            <!-- Modal -->
+                            <div class="modal fade" id="priceChange' .  $key . '" role="dialog">
+                                <div class="modal-dialog">
+
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title">Prijs aanpasssen</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="priceExclVat' .  $key . '">Prijs exclusief BTW: </label>
+                                                <input type="text" class="form-control" id="priceExclVat' .  $key . '" placeholder="26,66" value="' . Items::getField("priceExclVat", $key) . '" />
+                                            </div>
+                                            <label for="priceModifier' .  $key . '">Prijs berekening: </label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon" id="priceModifierLabel' .  $key . '">' . Items::getField("priceExclVat", $key) . '</span>
+                                                <input type="text" class="form-control" id="priceModifier' .  $key . '" aria-describedby="priceModifierLabel" placeholder="* 1.575" value="' . Items::getField("priceModifier", $key) . '" />
+                                                <span class="input-group-addon" id="priceModifierLabelOutCome' .  $key . '">' . Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key) . ' =  &euro;&nbsp;' . str_replace(".", ",", round(Misc::calculate(Items::getField("priceExclVat", $key) . ' '
+                                                . str_replace(",", ".", Items::getField("priceModifier", $key))), 2)) . '</span>
+                                            </div>
+                                            <div class="checkbox">
+                                              <label><input type="checkbox" value="" id="itemIdUse" checked>Artikel prijs aanpassen voor alleen deze bon.</label>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer" id="stockWarningFooter">
+                                            <button id="update' .  $key . '" type="button" class="btn btn-primary">Opslaan</button>
+                                            <button type="button" data-dismiss="modal" class="btn btn-default">Annuleren</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>';
+                            //TODO:0 Make event handler for update$key and a php script to update the price depending on the checkbox it being global or for only this receipt.
 
                             echo '<script>
                             $(document).ready(function() {
+                                $(\'#priceModifier' .  $key . '\').on(\'input\', function () {
+            				        var resultSum = "";
+            				        $.get(
+                                        "item/calcString.php",
+                                        {
+                                            sum: encodeURIComponent($(\'#priceExclVat' .  $key . '\').val() + " " + $("#priceModifier' .  $key . '").val())
+                                        },
+                                        function (data) {
+                                            if ($(\'#priceExclVat\').val() == "")
+                                                $("#priceModifierLabel' .  $key . '").text("26,66");
+                                            else
+                                            {
+                                                $("#priceModifierLabel' .  $key . '").text($(\'#priceExclVat' .  $key . '\').val());
+                                                $("#priceModifierLabelOutCome' .  $key . '").html($(\'#priceExclVat' .  $key . '\').val() + " " + $("#priceModifier' .  $key . '").val() + " = &euro;&nbsp;" + data + "");
+                                            }
+                                        }
+                                    );
+            				    });
+
                                 $( "#' . $key . '" ).hover(function() {
                                     $(\'#' . $key . '\').popover(\'show\');
                                 });
 
                                 $( "#' . $key . '" ).mouseout(function() {
                                     $(\'#' . $key . '\').popover(\'hide\');
+                                });
+
+                                $("#' . $key . '").on("click", function() {
+                                    $(\'#priceChange' . $key . '\').modal(\'show\');
                                 });
 
                                 $("#trash' . $key . '").on("click", function() {
@@ -109,9 +168,6 @@ if (isset($_GET['new']))
                                             placement: {
                                                 from: "bottom",
                                                 align: "right"
-                                            },
-                                            onClosed: function () {
-                                                //TODO: Send delete to SQL
                                             }
                                         });
 
@@ -144,9 +200,6 @@ if (isset($_GET['new']))
                                             placement: {
                                                 from: "bottom",
                                                 align: "right"
-                                            },
-                                            onClosed: function () {
-                                                //TODO: Send delete to SQL
                                             }
                                         });
                                       }

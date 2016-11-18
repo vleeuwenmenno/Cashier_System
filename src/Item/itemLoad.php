@@ -38,7 +38,7 @@ if (isset($_GET['sTerm']))
                 echo '            <td>' . $row['factoryId'] . '</td>';
                 echo '            <td>' . $row['itemStock'] . '</td>';
 
-                echo '            <td><span class="priceClickable" id="' . $row['nativeId'] . '" data-toggle="popover" title="Prijs berekening" data-content="'. $row['priceExclVat'] . '&nbsp;excl. ' . $row['priceModifier'] . ' = ' . str_replace(".", ",", round(Misc::calculate($row['priceExclVat'] . ' ' . str_replace(",", ".", $row['priceModifier'])), 2)) . '&nbsp;&euro;">' . str_replace(".", ",", round(Misc::calculate($row['priceExclVat'] . ' ' . str_replace(",", ".", $row['priceModifier'])), 2)) . ' &euro; </span></td>';
+                echo '            <td><span class="priceClickable" id="' . $row['nativeId'] . '" data-toggle="popover" title="Prijs berekening" data-content="'. $row['priceExclVat'] . '&nbsp;excl. ' . $row['priceModifier'] . ' = ' . str_replace(".", ",", round(Misc::calculate($row['priceExclVat'] . ' ' . str_replace(",", ".", $row['priceModifier'])), 2)) . '&nbsp;&euro;"> &euro;&nbsp;' . str_replace(".", ",", round(Misc::calculate($row['priceExclVat'] . ' ' . str_replace(",", ".", $row['priceModifier'])), 2)) . '</span></td>';
 
                 if (isset($_SESSION['receipt']['status']) && $_SESSION['receipt']['status'] == "open")
                 {
@@ -83,9 +83,6 @@ if (isset($_GET['sTerm']))
                                             placement: {
                                                 from: "bottom",
                                                 align: "right"
-                                            },
-                                            onClosed: function () {
-                                                //TODO: Send delete to SQL
                                             }
                                         });
                                     });
@@ -116,9 +113,6 @@ if (isset($_GET['sTerm']))
                                         placement: {
                                             from: "bottom",
                                             align: "right"
-                                        },
-                                        onClosed: function () {
-                                            //TODO: Send delete to SQL
                                         }
                                     });
                                 });';

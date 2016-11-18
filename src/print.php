@@ -37,6 +37,7 @@ if (isset($_GET['openReport']))
             echo '<br />Kas-in: &euro; ' . str_replace(".", ",", $row['cashIn']);
         echo '</div>';
         echo '</div>';
+        echo '<center><button id="printAgain" type="button" class="btn btn-default">Nogmaals Afdrukken</button></center>';
     }
 }
 else if (isset($_GET['closeReport']))
@@ -62,4 +63,5 @@ else if (isset($_GET['receipt']))
         echo 'Bon nummer: ' . $_GET['receipt'];
     echo '</div>';
     echo '</div>';
+    echo '<center><button id="printAgain" type="button" class="btn btn-default">Afdrukken</button></center>';
 }
