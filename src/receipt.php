@@ -12,7 +12,7 @@ if (isset($_GET['new']))
             die('Unable to connect to database [' . $db->connect_error . ']');
         }
 
-        $sql = "INSERT INTO receipt (creator, items, customerId, paymentMethod) VALUES ('1', '', '', 'PIN')";
+        $sql = "INSERT INTO receipt (creator, items, paymentMethod) VALUES ('1', '', 'PIN')";
 
         if(!$result = $db->query($sql))
         {
@@ -30,11 +30,12 @@ if (isset($_GET['new']))
                 <?php
                 if (isset($_SESSION['receipt']['customer']))
                 {
-                    echo $_SESSION['receipt']['customer']['initials']. ' ' . $_SESSION['receipt']['customer']['familyName'] . '<br />';
-                    echo $_SESSION['receipt']['customer']['companyName'] . '<br />';
-                    echo $_SESSION['receipt']['customer']['streetName'] . '<br />';
-                    echo $_SESSION['receipt']['customer']['postalCode'] . ' ';
-                    echo $_SESSION['receipt']['customer']['city'] . '<br />';
+                    echo Misc::sqlGet("initials", "customers", "customerId", $_SESSION['receipt']['customer'])['initials'] . ' ' . Misc::sqlGet("familyName", "customers", "customerId", $_SESSION['receipt']['customer'])['familyName'] . '<br />';
+                    echo Misc::sqlGet("companyName", "customers", "customerId", $_SESSION['receipt']['customer'])['companyName'] . '<br />';
+                    echo Misc::sqlGet("streetName", "customers", "customerId", $_SESSION['receipt']['customer'])['streetName'] . '<br />';
+                    echo Misc::sqlGet("postalCode", "customers", "customerId", $_SESSION['receipt']['customer'])['postalCode'] . ' ';
+                    echo Misc::sqlGet("city", "customers", "customerId", $_SESSION['receipt']['customer'])['city'] . '<br />';
+
                 }
                 ?>
             </div>
@@ -204,6 +205,7 @@ if (isset($_GET['new']))
         ?>
         <h3>Totaal: &euro; <?php echo str_replace(".", ",", number_format ($total, 2)); ?></h3>
     </div>
+
     <!-- Modal -->
     <div class="modal fade" id="printAmount" role="dialog">
         <div class="modal-dialog">
@@ -226,8 +228,70 @@ if (isset($_GET['new']))
     </div>
 
     <script type="text/javascript">
+        function checkTotalValue()
+        {
+            var totalPrice = "<?php echo number_format ($total, 2) ?>";
+
+            //TODO: MAKE PINVAL OR CASHVAL THE TOTAL VAL WHEN paymentMethod IS PIN OR CASH
+            $('#pinVal').val(totalPrice);
+
+
+            if (Number( $("#pinVal").val().replace(",", ".")) > totalPrice || Number( $("#cashVal").val().replace(",", ".")) > totalPrice || $("#pinVal").val() == "" || $("#cashVal").val() == "")
+            {
+                $("#payBtn").prop("disabled", true);
+
+                $("#cashVal").css("border-color", "red");
+                $("#cashVal").css("box-shadow", "0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6)");
+                $("#cashVal").css("outline", "0 none");
+
+                $("#pinVal").css("border-color", "red");
+                $("#pinVal").css("box-shadow", "0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6)");
+                $("#pinVal").css("outline", "0 none");
+            }
+            else
+            {
+                $("#payBtn").prop("disabled", false);
+
+                $("#cashVal").css("border-color", "");
+                $("#cashVal").css("box-shadow", "");
+                $("#cashVal").css("outline", "");
+
+                $("#pinVal").css("border-color", "");
+                $("#pinVal").css("box-shadow", "");
+                $("#pinVal").css("outline", "");
+            }
+        }
+
         $(document).ready(function(){
+            var totalPrice = "<?php echo number_format ($total, 2) ?>";
+            $('#cashVal').keyup(function() {
+                if (this.value != "")
+                {
+                    var half = totalPrice - Number( $("#cashVal").val().replace(",", "."));
+                    $('#pinVal').prop("readonly", true);
+                    $('#pinVal').val(half.toFixed(2).replace(".", ","));
+                }
+                else
+                    $('#pinVal').prop("readonly", false);
+
+                checkTotalValue();
+            });
+
+            $('#pinVal').keyup(function() {
+                if (this.value != "")
+                {
+                    var half = totalPrice - Number( $("#pinVal").val().replace(",", "."));
+                    $('#cashVal').prop("readonly", true);
+                    $('#cashVal').val(half.toFixed(2).replace(".", ","));
+                }
+                else
+                    $('#cashVal').prop("readonly", false);
+
+                checkTotalValue();
+            });
+
             var printAmount = 0;
+            var isButtonClick = false;
 
             $('#paymentMethod').on('change', function() {
                 if (this.value != "PC")
@@ -240,66 +304,53 @@ if (isset($_GET['new']))
                     $('#cashValDiv').css("display", "inline");
                     $('#pinValDiv').css("display", "inline");
                 }
+
+                $('#statusText').html('');
+
+                checkTotalValue();
             });
 
             $('#printAmount').on('hidden.bs.modal', function () {
-                if ($( "#paymentMethod" ).val() != "")
+                if (isButtonClick)
                 {
-                    if ($('#paymentMethod').val() == "PC")
-                    {
-                        var pinVal = $('#pinVal').val();
-                        var cashVal = $('#cashVal').val();
+                    isButtonClick = false;
 
-                        $.get(
-                           "receipt/processReceipt.php",
-                           {
-                               receiptId: '<?php echo $_SESSION['receipt']['id']; ?>',
-                               print: printAmount,
-                               paymentMethod: $( "#paymentMethod" ).val(),
-                               pin: pinVal,
-                               cash: cashVal
-                           },
-                           function (data)
-                           {
-                               $("#pageLoaderIndicator").fadeIn();
-                               $("#PageContent").load("print.php?receipt=<?php echo str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT); ?>", function () {
-                                   $("#pageLoaderIndicator").fadeOut();
-                               });
-                           }
-                       );
-                   }
-                   else
-                   {
-                       $.get(
-                          "receipt/processReceipt.php",
-                          {
-                              receiptId: '<?php echo $_SESSION['receipt']['id']; ?>',
-                              print: printAmount,
-                              paymentMethod: $( "#paymentMethod" ).val()
-                          },
-                          function (data)
-                          {
-                              $("#pageLoaderIndicator").fadeIn();
-                              $("#PageContent").load("print.php?receipt=<?php echo str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT); ?>", function () {
-                                  $("#pageLoaderIndicator").fadeOut();
-                              });
-                          }
-                      );
-                   }
-                }
-                else
-                {
-                    $( "#statusText" ).html("<p style=\"color: orange !important;\">Selecteer een betaal optie >> &nbsp;&nbsp;</p>");
+                    if ($( "#paymentMethod" ).val() != "")
+                    {
+                        if ($('#paymentMethod').val() == "PC")
+                        {
+                            var pinVal = $('#pinVal').val();
+                            var cashVal = $('#cashVal').val();
+
+                            $("#pageLoaderIndicator").fadeIn();
+                            $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&print=" + printAmount + "&paymentMethod=" + $( "#paymentMethod" ).val() + "&pin=" + pinVal + "&cash=" + cashVal, function () {
+                                $("#pageLoaderIndicator").fadeOut();
+                            });
+                       }
+                       else
+                       {
+                           $("#pageLoaderIndicator").fadeIn();
+                           $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&print=" + printAmount + "&paymentMethod=" + $( "#paymentMethod" ).val(), function () {
+                               $("#pageLoaderIndicator").fadeOut();
+                           });
+                       }
+                    }
+                    else
+                    {
+                        $( "#statusText" ).html("<p style=\"color: orange !important;\">Selecteer een betaal optie >> &nbsp;&nbsp;</p>");
+                    }
                 }
             });
 
             $('#printReceipt').click(function() {
                 printAmount = 1;
+                isButtonClick = true;
                 $('#printAmount').modal('hide');
             });
 
             $('#printNoReceipt').click(function() {
                 printAmount = 0;
+                isButtonClick = true;
                 $('#printAmount').modal('hide');
             });
 
