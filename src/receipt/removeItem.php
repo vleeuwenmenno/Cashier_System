@@ -4,11 +4,11 @@ include_once("../includes.php");
 if (isset($_GET['itemId']) && isset($_GET['itemCount']))
 {
     if (array_key_exists($_GET['itemId'], $_SESSION['receipt']['items']))
-        $_SESSION['receipt']['items'][$_GET['itemId']] -= $_GET['itemCount'];
+        $_SESSION['receipt']['items'][$_GET['itemId']]['count'] -= $_GET['itemCount'];
     else
         unset($_SESSION['receipt']['items'][$_GET['itemId']]);
 
-    if ($_SESSION['receipt']['items'][$_GET['itemId']] <= 0)
+    if ($_SESSION['receipt']['items'][$_GET['itemId']]['count'] <= 0)
         unset($_SESSION['receipt']['items'][$_GET['itemId']]);
 
     $json = json_encode($_SESSION['receipt']['items']);

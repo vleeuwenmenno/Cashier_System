@@ -4,9 +4,15 @@ include_once("../includes.php");
 if (isset($_GET['itemId']) && isset($_GET['itemCount']))
 {
     if (array_key_exists($_GET['itemId'], $_SESSION['receipt']['items']))
-        $_SESSION['receipt']['items'][$_GET['itemId']] += 1;
+        $_SESSION['receipt']['items'][$_GET['itemId']]['count'] += 1;
     else
-        $_SESSION['receipt']['items'][$_GET['itemId']] = $_GET['itemCount'];
+    {
+        $priceApiece['priceExclVat'] = Misc::sqlGet("priceExclVat", "items", "nativeId", $_GET['itemId'])['priceExclVat'];
+        $priceApiece['priceModifier'] = Misc::sqlGet("priceModifier", "items", "nativeId", $_GET['itemId'])['priceModifier'];
+
+        $_SESSION['receipt']['items'][$_GET['itemId']]['count'] = $_GET['itemCount'];
+        $_SESSION['receipt']['items'][$_GET['itemId']]['priceAPiece'] = $priceApiece;
+    }
 
     $json = json_encode($_SESSION['receipt']['items']);
 

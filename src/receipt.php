@@ -57,7 +57,7 @@ if (isset($_GET['new']))
                                 <input type="text" class="form-control" placeholder="Item" disabled />
                             </a>
                         </th>
-                        <th width="128px">
+                        <th width="160px">
                             <a href="#" class="mustFocus">
                                 <input type="text" class="form-control" placeholder="Verkoop prijs" disabled />
                             </a>
@@ -69,11 +69,13 @@ if (isset($_GET['new']))
                     <?php
                         foreach ($_SESSION['receipt']['items'] as $key => $val)
                         {
+                            //editPrice$key
+                            //editAmount$key
                             echo '<tr>';
                             echo '<th><button id="trash' .  $key . '" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" style="font-size: 12px;"></span></button></th>';
-                            echo '<th>' . $val . '</th>';
+                            echo '<th><a style="color: black;" href="#" id="editAmount' . $key . '">' . $val['count'] . '</a></th>';
                             echo '<th>' . urldecode(Items::getField("itemName", $key)) . '</th>';
-                            echo '<th><span class="priceClickable" id="' . $key . '" data-toggle="popover" title="Prijs berekening" data-content="'. Items::getField("priceExclVat", $key) . '&nbsp;excl. ' . Items::getField("priceModifier", $key) . ' = ' . str_replace(".", ",", round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . str_replace(",", ".", Items::getField("priceModifier", $key))), 2)) . '&nbsp;&euro;">' . str_replace(".", ",", round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . str_replace(",", ".", Items::getField("priceModifier", $key))), 2)) . ' &euro; </span></th>';
+                            echo '<th><span class="priceClickable" id="' . $key . '" data-toggle="popover" title="Prijs berekening" data-content="'. Items::getField("priceExclVat", $key) . '&nbsp;excl. ' . Items::getField("priceModifier", $key) . ' = ' . str_replace(".", ",", round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . str_replace(",", ".", Items::getField("priceModifier", $key))), 2)) . '&nbsp;&euro;"><a style="color: black;" href="#" id="editPrice' . $key . '">' . str_replace(".", ",", round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . str_replace(",", ".", Items::getField("priceModifier", $key))), 2)) . ' &euro; </a></span></th>';
                             echo '</tr>';
 
                             echo '<script>
@@ -199,7 +201,7 @@ if (isset($_GET['new']))
             foreach ($_SESSION['receipt']['items'] as $key => $val)
             {
                 $price = Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . str_replace(",", ".", Items::getField("priceModifier", $key)));
-                $price *= $val;
+                $price *= $val['count'];
                 $total += $price;
             }
         ?>
@@ -276,7 +278,12 @@ if (isset($_GET['new']))
             }
         }
 
-        $(document).ready(function(){
+        $(document).ready(function() {
+
+            $(".spoiler-trigger").click(function() {
+            	$(this).parent().next().collapse('toggle');
+            });
+
             var totalPrice = "<?php echo number_format ($total, 2) ?>";
             $('#cashVal').keyup(function() {
                 if (this.value != "")
