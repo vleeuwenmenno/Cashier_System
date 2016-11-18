@@ -1,4 +1,4 @@
-<?php 
+<?php
 include_once("includes.php");
 
 if (isset($_GET['openReport']))
@@ -23,7 +23,7 @@ if (isset($_GET['openReport']))
         // This is 2/3 of a A4 paper size
         //height: 19.8cm;
         //width: 14cm;
-                    
+
         echo '<br /><br />
         <div style="background: white;
                     display: block;
@@ -45,5 +45,21 @@ else if (isset($_GET['closeReport']))
 }
 else if (isset($_GET['receipt']))
 {
+    // This is 2/3 of a A4 paper size
+    //height: 19.8cm;
+    //width: 14cm;
 
+    echo '<br /><br />
+    <div style="background: white;
+                display: block;
+                margin: 0 auto;
+                margin-bottom: 0.5cm;
+                box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+                width: 14cm;
+                height: 19.8cm;">';
+    echo '<div style="margin-left: 12px; padding-top: 12px;">';
+        //GET RECEIPT FROM MYSQL AND SHOW IT HERE!
+        echo 'Bon nummer: ' . $_GET['receipt'];
+    echo '</div>';
+    echo '</div>';
 }

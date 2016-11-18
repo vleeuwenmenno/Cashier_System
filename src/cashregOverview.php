@@ -180,17 +180,28 @@ else
 
                             if (Misc::crIsActive())
                             {
+                                $sql = "SELECT * FROM cashsession ORDER BY cashSessionId DESC LIMIT 1;";
+
+                                if(!$result = $db->query($sql))
+                                {
+                                    die('Er was een fout tijdens het verwerken van de klant gegevens. (' . $db->error . ')');
+                                }
+
+                                $cashOut = 0.0;
+                                while($row = $result->fetch_assoc())
+                                {
                                     ?>
-                                    <b>Kas-in:</b> NaN &euro;<br /> <!-- kas-in is het bedrag in cash wat er in de kassa zit op het moment van kassa/winkel opening -->
-                                    <b>Bruto-omzet:</b> NaN &euro;<br /> <!-- Bruto omzet is de totale omzet. (Omzet is de optelsom van alle inkomsten) -->
-                                    <b>Netto-omzet:</b> NaN &euro;<br /> <!-- De netto omzet wordt berekend aan de hand van de bruto omzet met aftrek van teruggenomen artikelen, schadevergoedingen en achteraf toegekende kortingen. -->
-                                    <b>Marge:</b> NaN &euro;<br /><br /> <!-- De marge is het verschil tussen inkoop- en verkoopprijs. -->
-                                    <b>Kassa geopend op:</b> 00-00-0000 00:00:00<br />
-                                    <b>Geopend door:</b> NAME<br />
+                                    <b>Kas-in:</b> &euro; <?php echo '' . str_replace(".", ",", $row['cashIn']); ?><br /> <!-- kas-in is het bedrag in cash wat er in de kassa zit op het moment van kassa/winkel opening -->
+                                    <b>Bruto-omzet:</b> &euro;<br /> <!-- Bruto omzet is de totale omzet. (Omzet is de optelsom van alle inkomsten) -->
+                                    <b>Netto-omzet:</b> &euro;<br /> <!-- De netto omzet wordt berekend aan de hand van de bruto omzet met aftrek van teruggenomen artikelen, schadevergoedingen en achteraf toegekende kortingen. -->
+                                    <b>Marge:</b> &euro;<br /><br /> <!-- De marge is het verschil tussen inkoop- en verkoopprijs. -->
+                                    <b>Kassa geopend op:</b> <?php echo $row['openDate']; ?><br />
+                                    <b>Geopend door:</b> <?php echo $_SESSION['login_ok']['nickName']; ?><br />
                                 </div> 
                                 <button type="button" class="btn btn-primary">Sluiten</button>
                                 <button type="button" class="btn btn-default" id="printReport">Afdrukken</button><br /><br />
                                 <?php
+                                }
                             }
                             else
                             {
