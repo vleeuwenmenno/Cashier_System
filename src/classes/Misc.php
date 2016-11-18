@@ -43,6 +43,25 @@ class Misc
 		}
 	}
 
+    public static function sql($sql)
+	{
+        global $config;
+        
+		$db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
+
+		if($db->connect_errno > 0)
+		{
+			return 'Unable to connect to database [' . $db->connect_error . ']';
+		}
+
+		if(!$result = $db->query($sql))
+		{
+			return 'Er was een fout tijdens het uitvoeren van deze query (' . $db->error . ') (' . $sql . ')';
+		}
+
+        return true;
+	}
+
 	public static function crIsActive()
 	{
 		global $config;

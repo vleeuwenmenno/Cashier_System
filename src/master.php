@@ -1,5 +1,5 @@
-<?php 
-include_once("includes.php"); 
+<?php
+include_once("includes.php");
 
 Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 ?>
@@ -93,11 +93,11 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
                                                 });
                                             });
                                         </script>
-                                        
+
                                         <div id="dropdown-lvl2" class="panel-collapse collapse">
                                             <div class="panel-body">
                                                 <ul class="nav navbar-nav">
-                                                    <?php 
+                                                    <?php
                                                     if ($_SESSION['receipt']['status'] == 'open')
                                                     {
                                                         echo '<li><a href="#" id="newReceipt"><span class="glyphicon glyphicon-file"></span> Bon #' . str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT) .'</a></li>';
@@ -249,7 +249,7 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
                             </div>
                         </div>
                     </li>
-                    
+
                     <li><a href="logout.php"><span class="glyphicon glyphicon-user"></span> Uitloggen</a></li>
                     <div class="loader mainLoader" id="pageLoaderIndicator" style="display: none;"></div>
                 </ul>
@@ -258,11 +258,11 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
         </div>
         <div class="row">
             <div class="col-sm-3">
-            
+
             </div>
             <div class="col-sm-8">
                 <div id="PageContent">
-                    
+
                 </div>
 			</div>
         </div>

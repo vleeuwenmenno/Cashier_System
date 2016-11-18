@@ -12,7 +12,7 @@ if (isset($_GET['new']))
             die('Unable to connect to database [' . $db->connect_error . ']');
         }
 
-        $sql = "INSERT INTO receipt (creator, items, paymentMethod) VALUES ('1', '', 'PIN')";
+        $sql = "INSERT INTO receipt (creator, items, paymentMethod, createDt) VALUES ('1', '', 'PIN', '" .  date("d-m-Y H:i:s") . "')";
 
         if(!$result = $db->query($sql))
         {
@@ -231,10 +231,24 @@ if (isset($_GET['new']))
         function checkTotalValue()
         {
             var totalPrice = "<?php echo number_format ($total, 2) ?>";
-
-            //TODO: MAKE PINVAL OR CASHVAL THE TOTAL VAL WHEN paymentMethod IS PIN OR CASH
-            $('#pinVal').val(totalPrice);
-
+            if ($('#paymentMethod').val() != "PC")
+            {
+                if ($('#paymentMethod').val() != "PIN")
+                {
+                    $('#pinVal').val(totalPrice);
+                    $('#cashVal').val("0,00");
+                }
+                else if ($('#paymentMethod').val() != "CASH")
+                {
+                    $('#cashVal').val(totalPrice);
+                    $('#pinVal').val("0,00");
+                }
+                else if ($('#paymentMethod').val() != "BANK")
+                {
+                    $('#pinVal').val(0);
+                    $('#cashVal').val(0);
+                }
+            }
 
             if (Number( $("#pinVal").val().replace(",", ".")) > totalPrice || Number( $("#cashVal").val().replace(",", ".")) > totalPrice || $("#pinVal").val() == "" || $("#cashVal").val() == "")
             {
