@@ -73,9 +73,9 @@ if (isset($_GET['new']))
                             //editAmount$key
                             echo '<tr>';
                             echo '<th><button id="trash' .  $key . '" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" style="font-size: 12px;"></span></button></th>';
-                            echo '<th><a style="color: black;" href="#" id="editAmount' . $key . '">' . $val['count'] . '</a></th>';
+                            echo '<th><a style="color: black;" href="javascript:void(0);" id="editAmount' . $key . '">' . $val['count'] . '</a></th>';
                             echo '<th>' . urldecode(Items::getField("itemName", $key)) . '</th>';
-                            echo '<th><span class="priceClickable" id="' . $key . '" data-toggle="popover" title="Prijs berekening" data-content="'. Items::getField("priceExclVat", $key) . '&nbsp;excl. ' . Items::getField("priceModifier", $key) . ' = ' . str_replace(".", ",", round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . str_replace(",", ".", Items::getField("priceModifier", $key))), 2)) . '&nbsp;&euro;"><a style="color: black;" href="#" id="editPrice' . $key . '">' . str_replace(".", ",", round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . str_replace(",", ".", Items::getField("priceModifier", $key))), 2)) . ' &euro; </a></span></th>';
+                            echo '<th><span class="priceClickable" id="' . $key . '" data-toggle="popover" title="Prijs berekening" data-content="'. Items::getField("priceExclVat", $key) . '&nbsp;excl. ' . Items::getField("priceModifier", $key) . ' = ' . str_replace(".", ",", round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . str_replace(",", ".", Items::getField("priceModifier", $key))), 2)) . '&nbsp;&euro;"><a style="color: black;" href="javascript:void(0);" id="editPrice' . $key . '">' . str_replace(".", ",", round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . str_replace(",", ".", Items::getField("priceModifier", $key))), 2)) . ' &euro; </a></span></th>';
                             echo '</tr>';
 
                             echo '<script>
@@ -207,6 +207,22 @@ if (isset($_GET['new']))
         ?>
         <h3>Totaal: &euro; <?php echo str_replace(".", ",", number_format ($total, 2)); ?></h3>
     </div>
+
+    <!-- =====DEBUG STUFF===== -->
+    <br /><br /><br /><br />
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <button type="button" class="btn btn-info spoiler-trigger" data-toggle="collapse">Debug Info</button>
+        </div>
+        <div class="panel-collapse collapse out">
+            <div class="panel-body">
+                <pre>
+                    <?php print_r($_SESSION);?>
+                </pre>
+            </div>
+        </div>
+    </div>
+    <!-- ^^^^^DEBUG STUFF^^^^^ -->
 
     <!-- Modal -->
     <div class="modal fade" id="printAmount" role="dialog">

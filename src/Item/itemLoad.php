@@ -42,7 +42,10 @@ if (isset($_GET['sTerm']))
 
                 if (isset($_SESSION['receipt']['status']) && $_SESSION['receipt']['status'] == "open")
                 {
-                    echo '            <td><button id="add' .  $row['nativeId'] . '" type="button" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span></button></td>';
+                    if ($row['itemStock'] == "0")
+                        echo '            <td><button id="add' .  $row['nativeId'] . 'Warn" type="button" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span></button></td>';
+                    else
+                        echo '            <td><button id="add' .  $row['nativeId'] . '" type="button" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span></button></td>';
                 }
 
                 echo '    </tr>';
@@ -51,35 +54,75 @@ if (isset($_GET['sTerm']))
 					    {';
                 if (isset($_SESSION['receipt']['status']) && $_SESSION['receipt']['status'] == "open")
                 {
-                    echo ' $("#add' . $row['nativeId'] . '").on("click", function() {
-                                $.get(
-                                    "receipt/addItem.php",
-                                    {
-                                        itemId: \'' . $row['nativeId'] . '\',
-                                        itemCount: \'1\'
-                                    },
-                                    function (data)
-                                    { }
-                                );
+                    if ($row['itemStock'] == "0")
+                    {
+                        echo '
+                        $("#add' . $row['nativeId'] . 'Warn").on("click", function() {
+                            $("#stockWarningFooter").html(\'<button type="button" class="btn btn-warning" id="add' .  $row['nativeId'] . '" data-dismiss="modal">Doorgaan</button><button type="button" class="btn btn-info" id="stockWarning.cancelBtn" data-dismiss="modal">Annuleren</button>\');
+                            $("#stockWarning").modal("show");
+                            $("#add' . $row['nativeId'] . '").on("click", function() {
+                                        $.get(
+                                            "receipt/addItem.php",
+                                            {
+                                                itemId: \'' . $row['nativeId'] . '\',
+                                                itemCount: \'1\'
+                                            },
+                                            function (data)
+                                            { }
+                                        );
 
-                                $.notify({
-                                    icon: \'glyphicon glyphicon-trash\',
-                                    title: \'' . urldecode($row['itemName']) . '\',
-                                    message: \'<br />Toegevoegt aan bon.\'
-                                }, {
-                                    // settings
-                                    type: \'success\',
-                                    delay: 5000,
-                                    timer: 10,
-                                    placement: {
-                                        from: "bottom",
-                                        align: "right"
-                                    },
-                                    onClosed: function () {
-                                        //TODO: Send delete to SQL
-                                    }
-                                });
-                            });';
+                                        $.notify({
+                                            icon: \'glyphicon glyphicon-trash\',
+                                            title: \'' . urldecode($row['itemName']) . '\',
+                                            message: \'<br />Toegevoegt aan bon.\'
+                                        }, {
+                                            // settings
+                                            type: \'success\',
+                                            delay: 5000,
+                                            timer: 10,
+                                            placement: {
+                                                from: "bottom",
+                                                align: "right"
+                                            },
+                                            onClosed: function () {
+                                                //TODO: Send delete to SQL
+                                            }
+                                        });
+                                    });
+                        });';
+                    }
+                    else
+                    {
+                        echo ' $("#add' . $row['nativeId'] . '").on("click", function() {
+                                    $.get(
+                                        "receipt/addItem.php",
+                                        {
+                                            itemId: \'' . $row['nativeId'] . '\',
+                                            itemCount: \'1\'
+                                        },
+                                        function (data)
+                                        { }
+                                    );
+
+                                    $.notify({
+                                        icon: \'glyphicon glyphicon-trash\',
+                                        title: \'' . urldecode($row['itemName']) . '\',
+                                        message: \'<br />Toegevoegt aan bon.\'
+                                    }, {
+                                        // settings
+                                        type: \'success\',
+                                        delay: 5000,
+                                        timer: 10,
+                                        placement: {
+                                            from: "bottom",
+                                            align: "right"
+                                        },
+                                        onClosed: function () {
+                                            //TODO: Send delete to SQL
+                                        }
+                                    });
+                                });';
+                    }
                 }
 
                 echo       '$( "#' . $row['nativeId'] . '" ).hover(function() {

@@ -230,6 +230,25 @@ else
         $(".js-example-basic-multiple").select2();
 </script>
 
+<!-- Modal -->
+<div class="modal fade" id="stockWarning" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">De voorraad voor dit item is 0, doorgaan zal de voorraad -1 maken.</h4>
+            </div>
+            <div class="modal-body">
+                <p>Weet je zeker dat je door wilt gaan? Dit zal de integriteit van het voorraad register verzwakken.</p>
+            </div>
+            <div class="modal-footer" id="stockWarningFooter">
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-lg-offset-3 col-lg-6">
         <div class="input-group">
@@ -373,7 +392,7 @@ else
             </script>
 
             <tbody id="listContents">
-                
+
             </tbody>
         </table>
         <?php
