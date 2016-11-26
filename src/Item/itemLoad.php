@@ -30,12 +30,12 @@ if (isset($_GET['sTerm']))
                 else
                     $EAN = $row['EAN'];
 
-                echo '    <tr>';
+                echo '    <tr id="' . $row['nativeId'] . '">';
 
                 echo '            <td><a href="#" id="item' . $row['nativeId'] . 'Btn">' . $EAN . '</a></td>';
 
                 echo '            <td>' . urldecode($row['itemName']) . '</td>';
-                echo '            <td>' . $row['factoryId'] . '</td>';
+                echo '            <td>' . $row['nativeId'] . '</td>';
                 echo '            <td>' . $row['itemStock'] . '</td>';
 
                 echo '            <td><span class="priceClickable" id="' . $row['nativeId'] . '" data-toggle="popover" title="Prijs berekening" data-content="'. $row['priceExclVat'] . '&nbsp;excl. ' . $row['priceModifier'] . ' = ' . round(Misc::calculate($row['priceExclVat'] . ' ' . $row['priceModifier']), 2) . '&nbsp;&euro;">'
@@ -48,7 +48,6 @@ if (isset($_GET['sTerm']))
                     else
                         echo '            <td><button id="add' .  $row['nativeId'] . '" type="button" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span></button></td>';
                 }
-
                 echo '    </tr>';
                 echo '    <script>';
                 echo '    	$(document).ready(function ()

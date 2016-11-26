@@ -27,7 +27,7 @@ else
     {
         $cashValue = $_GET['cash'];
         $pinValue = $_GET['pin'];
-        
+
     }
 
     //Create a document for the paper receipt
@@ -43,7 +43,7 @@ else
     <script>
         $(document).ready(function() {
             $("#pageLoaderIndicator").fadeIn();
-            $("#PageContent").load("print.php?receipt=' . str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT) . '", function () {
+            $("#PageContent").load("print.php?receipt=' . str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT) . '&print=' . $_GET['print'] . '", function () {
                 $("#pageLoaderIndicator").fadeOut();
             });
         });

@@ -46,7 +46,7 @@ class Misc
     public static function sql($sql)
 	{
         global $config;
-        
+
 		$db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
 		if($db->connect_errno > 0)

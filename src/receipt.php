@@ -75,7 +75,11 @@ if (isset($_GET['new']))
                             echo '<th><button id="trash' .  $key . '" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" style="font-size: 12px;"></span></button></th>';
                             echo '<th><a style="color: black;" href="javascript:void(0);" id="editAmount' . $key . '">' . $val['count'] . '</a></th>';
                             echo '<th>' . urldecode(Items::getField("itemName", $key)) . '</th>';
-                            echo '<th><span class="priceClickable" id="' . $key . '" data-toggle="popover" title="Prijs berekening" data-content="'. Items::getField("priceExclVat", $key) . '&nbsp;excl. ' . Items::getField("priceModifier", $key) . ' = &euro;&nbsp;' . round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key)), 2) . '"><a style="color: black;" href="javascript:void(0);" id="editPrice' . $key . '">&euro;&nbsp;' . round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key)), 2) . '</a></span></th>';
+                            echo '<th><span class="priceClickable" id="' . $key . '" data-toggle="popover" title="Prijs berekening" data-content="&euro;&nbsp;'. number_format (Items::getField("priceExclVat", $key), 2, ',', '.') . '&nbsp;excl. ' . number_format(Items::getField("priceModifier", $key), 2, ',', '.') . ' =
+                            &euro;&nbsp;' . number_format(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key)), 2, ',', '.') . '">
+                            <a style="color: black;" href="javascript:void(0);" id="editPrice' . $key . '">
+                                &euro;&nbsp;' . number_format(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key)), 2, ',', '.') . '
+                            </a></span></th>';
                             echo '</tr>';
 
                             echo '
@@ -92,14 +96,14 @@ if (isset($_GET['new']))
                                         <div class="modal-body">
                                             <div class="form-group">
                                                 <label for="priceExclVat' .  $key . '">Prijs exclusief BTW: </label>
-                                                <input type="text" class="form-control" id="priceExclVat' .  $key . '" placeholder="26,66" value="' . Items::getField("priceExclVat", $key) . '" />
+                                                <input type="text" class="form-control" id="priceExclVat' .  $key . '" placeholder="26,66" value="' . number_format(Items::getField("priceExclVat", $key), 2, ',', '.') . '" />
                                             </div>
                                             <label for="priceModifier' .  $key . '">Prijs berekening: </label>
                                             <div class="input-group">
-                                                <span class="input-group-addon" id="priceModifierLabel' .  $key . '">' . Items::getField("priceExclVat", $key) . '</span>
-                                                <input type="text" class="form-control" id="priceModifier' .  $key . '" aria-describedby="priceModifierLabel" placeholder="* 1.575" value="' . Items::getField("priceModifier", $key) . '" />
-                                                <span class="input-group-addon" id="priceModifierLabelOutCome' .  $key . '">' . Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key) . ' =  &euro;&nbsp;' .
-                                                round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key)), 2) . '</span>
+                                                <span class="input-group-addon" id="priceModifierLabel' .  $key . '">' . number_format(Items::getField("priceExclVat", $key), 2, ',', '.') . '</span>
+                                                <input type="text" class="form-control" id="priceModifier' .  $key . '" aria-describedby="priceModifierLabel" placeholder="* 1,575" value="' . number_format(Items::getField("priceModifier", $key), 2, ',', '.') . '" />
+                                                <span class="input-group-addon" id="priceModifierLabelOutCome' .  $key . '">' . number_format(Items::getField("priceExclVat", $key), 2, ',', '.') . ' ' . number_format(Items::getField("priceModifier", $key), 2, ',', '.') . ' =  &euro;&nbsp;' .
+                                                number_format(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key)), 2, ',', '.') . '</span>
                                             </div>
                                             <div class="checkbox">
                                               <label><input type="checkbox" value="" id="itemIdUse" checked>Artikel prijs aanpassen voor alleen deze bon.</label>
@@ -116,6 +120,27 @@ if (isset($_GET['new']))
 
                             echo '<script>
                             $(document).ready(function() {
+                                $("#priceExclVat' .  $key . '").on(\'input\', function() {
+                                    $("#priceModifierLabel' .  $key . '").html($("#priceExclVat' .  $key . '").val());
+
+                                    var resultSum = "";
+            				        $.get(
+                                        "item/calcString.php",
+                                        {
+                                            sum: encodeURIComponent($(\'#priceExclVat' .  $key . '\').val() + " " + $("#priceModifier' .  $key . '").val())
+                                        },
+                                        function (data) {
+                                            if ($(\'#priceExclVat\').val() == "")
+                                                $("#priceModifierLabel' .  $key . '").text("26,66");
+                                            else
+                                            {
+                                                $("#priceModifierLabel' .  $key . '").text($(\'#priceExclVat' .  $key . '\').val());
+                                                $("#priceModifierLabelOutCome' .  $key . '").html($(\'#priceExclVat' .  $key . '\').val() + " " + $("#priceModifier' .  $key . '").val() + " = &euro;&nbsp;" + data + "");
+                                            }
+                                        }
+                                    );
+                                });
+
                                 $(\'#priceModifier' .  $key . '\').on(\'input\', function () {
             				        var resultSum = "";
             				        $.get(
@@ -258,7 +283,7 @@ if (isset($_GET['new']))
                 $total += $price;
             }
         ?>
-        <h3>Totaal: &euro; <?php echo number_format ($total, 2); ?></h3>
+        <h3>Totaal: &euro; <?php echo number_format ($total, 2, ',', '.'); ?></h3>
     </div>
 
     <!-- =====DEBUG STUFF===== -->
@@ -301,7 +326,7 @@ if (isset($_GET['new']))
     <script type="text/javascript">
         function checkTotalValue()
         {
-            var totalPrice = "<?php echo number_format ($total, 2) ?>";
+            var totalPrice = "<?php echo number_format ($total, 2, ',', '.') ?>";
             if ($('#paymentMethod').val() != "PC")
             {
                 if ($('#paymentMethod').val() != "PIN")
@@ -353,7 +378,7 @@ if (isset($_GET['new']))
             	$(this).parent().next().collapse('toggle');
             });
 
-            var totalPrice = "<?php echo number_format ($total, 2) ?>";
+            var totalPrice = "<?php echo number_format ($total, 2, ',', '.') ?>";
             $('#cashVal').keyup(function() {
                 if (this.value != "")
                 {

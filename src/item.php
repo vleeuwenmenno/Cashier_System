@@ -19,7 +19,7 @@ if (isset($_GET['new']))
         <input type="text" class="form-control" id="supplier" placeholder="Com Today" />
     </div>
     <div class="form-group">
-        <label for="street">Fabrieks artikel nummer: </label>
+        <label for="street">Artikel nummer: </label>
         <input type="text" class="form-control" id="factoryId" placeholder="C6615DE" />
     </div>
     <div class="form-group">
@@ -238,10 +238,10 @@ else
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">De voorraad voor dit item is 0, doorgaan zal de voorraad -1 maken.</h4>
+                <h4 class="modal-title">Waarschuwing</h4>
             </div>
             <div class="modal-body">
-                <p>Weet je zeker dat je door wilt gaan? Dit zal de integriteit van het voorraad register verzwakken.</p>
+                <p>Weet je zeker dat je door wilt gaan?<br />De voorraad voor dit item is 0, doorgaan zal de voorraad -1 maken en dit het voorraad register .</p>
             </div>
             <div class="modal-footer" id="stockWarningFooter">
             </div>
@@ -258,6 +258,9 @@ else
                     <span class="glyphicon glyphicon-search"></span>
                 </button>
             </span>
+        </div>
+        <div class="checkbox">
+            <label><input type="checkbox" id="isBarCodeMode" value="" disabled readonly>Barcode scanner modus</label>
         </div>
     </div>
 </div>
@@ -297,19 +300,74 @@ else
 
                         $("#listContents").append(data);
                         startLocation += 25;
+
+                        if (barCodemode)
+                        {
+                            var row = $("#listContents").closest('table').find(' tbody tr:first').attr('id');
+
+                            if(row === undefined)
+                                $('#searchBar').prop('placeholder', 'Kon geen artikel vinden met deze EAN code :(');
+                        }
                     }
                 );
             });
 
-            $('#searchBar').keypress(function (e)
+            var barCodemode = false;
+
+            $('#searchBar').on('keydown', function ( e )
             {
-                var key = e.which;
-                if (key == 13)  // the enter key code
+                if (e.which == 13)  // the enter key code
                 {
-                    $('#searchBtn').click();
+                    if (!barCodemode)
+                    {
+                        $('#searchBtn').click();
+                        $('#searchBar').prop('placeholder', "Zoek term... (EAN, artikel naam, prijs, enz.)");
+                    }
+                    else
+                    {
+                        barCodemode = false;
+                        $("#isBarCodeMode").prop('checked', false);
+
+                        var row = $("#listContents").closest('table').find(' tbody tr:first').attr('id');
+                        alert(row);
+                    }
+
                     return false;
                 }
+                else
+                {
+                    barCodemode = false;
+                    $("#isBarCodeMode").prop('checked', false);
+
+                    $('#searchBar').prop('placeholder', "Zoek term... (EAN, artikel naam, prijs, enz.)");
+                }
             });
+
+            document.onkeydown = function (e)
+            {
+                e = e || window.event;//Get event
+                if (e.ctrlKey)
+                {
+                    var c = e.which || e.keyCode;//Get key code
+                    switch (c) {
+                        case 83://Block Ctrl+S
+                        case 74://Block Ctrl+J
+                        {
+                            var row = $("#listContents").closest('table').find(' tbody tr:first').attr('id');
+
+                            $('#searchBar').val('');
+                            $("#isBarCodeMode").prop('checked', true);
+
+                            $('#searchBar').prop('placeholder', 'Druk op enter om het artikel toe tevoegen aan de bon...');
+                            barCodemode = true;
+
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
+                        break;
+                    }
+                }
+            };
         });
 </script>
 
@@ -338,7 +396,7 @@ else
                     </th>
                     <th width="20%">
                         <a href="#" class="mustFocus">
-                            <input type="text" class="form-control" placeholder="Fabriek ID" disabled />
+                            <input type="text" class="form-control" placeholder="Artikel Nummer" disabled />
                         </a>
                     </th>
                     <th width="10%">

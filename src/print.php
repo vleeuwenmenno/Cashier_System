@@ -63,5 +63,10 @@ else if (isset($_GET['receipt']))
         echo 'Bon nummer: ' . $_GET['receipt'];
     echo '</div>';
     echo '</div>';
-    echo '<center><button id="printAgain" type="button" class="btn btn-default">Afdrukken</button></center>';
+    echo '<center><button id="printAgain" type="button" class="btn btn-default">';
+    if ($_GET['print'] > 0)
+    {
+        echo 'Nogmaals ';
+    }
+    echo 'Afdrukken</button></center>';
 }
