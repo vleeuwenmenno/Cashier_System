@@ -59,7 +59,7 @@ if (isset($_GET['id']))
     <div class="input-group">
         <span class="input-group-addon" id="priceModifierLabel"><?php echo $row["priceExclVat"]; ?></span>
         <input type="text" class="form-control" id="priceModifier" aria-describedby="priceModifierLabel" placeholder="* 1.575" value="<?php echo $row["priceModifier"]; ?>" readonly/ />
-        <span class="input-group-addon" id="priceModifierLabelOutCome"><?php echo $row["priceExclVat"] . $row["priceModifier"] . ' = ' . str_replace(".", ",", round(Misc::calculate($row['priceExclVat'] . ' ' . str_replace(",", ".", $row['priceModifier'])), 2)) . ' &euro;'; ?></span>
+        <span class="input-group-addon" id="priceModifierLabelOutCome"><?php echo $row["priceExclVat"] . $row["priceModifier"] . ' = ' . round(Misc::calculate($row['priceExclVat'] . ' ' . $row['priceModifier']), 2) . ' &euro;'; ?></span>
     </div>
     <br />
 

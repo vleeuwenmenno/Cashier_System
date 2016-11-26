@@ -20,7 +20,7 @@ if (isset($_GET['cashIn']))
     else
     {
         $sqls = "UPDATE cash_registers SET cash_registers.status='LoggedOn' WHERE crStaticIP='$thisIp'";
-        
+
         if(!$results = $db->query($sqls))
         {
             die('Er was een fout tijdens het openen van de kassa. (' . $db->error . ')');
@@ -56,11 +56,11 @@ else if (isset($_GET['open']))
     <div class="container container-table">
         <div class="row vertical-center-row">
             <div class="text-center col-md-4 col-md-offset-4" style="margin-top: 32px;">
-                <div class="panel panel-info"> 
-                    <div class="panel-heading"> 
-                        <h3 class="panel-title">Kassa overzicht</h3> 
-                    </div> 
-                    <div class="panel-body" style="display: inline-block; text-align: left"> 
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Kassa overzicht</h3>
+                    </div>
+                    <div class="panel-body" style="display: inline-block; text-align: left">
                         <b>Tijd en datum:</b> <div id="time" style="display: inline-block;"><?php echo date("d-m-Y H:i:s"); ?></div><br />
                         <b>Medewerker:</b> <?php echo $_SESSION['login_ok']['nickName'];?><br /><br />
                         <div class="input-group">
@@ -68,9 +68,9 @@ else if (isset($_GET['open']))
                             <input type="text" class="form-control" id="cashInTxt" placeholder="<?php echo $cashOut; ?>">
                             <span class="input-group-addon">&euro;</span>
                         </div>
-                    </div> 
+                    </div>
                     <button type="button" id="openCr" class="btn btn-primary">Kassa openen</button>
-                    <button type="button" id="cancelCr" class="btn btn-default">Annuleren</button><br /><br /> 
+                    <button type="button" id="cancelCr" class="btn btn-default">Annuleren</button><br /><br />
                     <script>
                         $( document ).ready(function() {
                             setInterval(function() {
@@ -91,7 +91,7 @@ else if (isset($_GET['open']))
                                         cashIn: $('#cashInTxt').val()
                                     },
                                     function (data)
-                                    { 
+                                    {
                                         if (data.includes("LOG_OK"))
                                         {
                                             window.open("master.php","_self");
@@ -137,12 +137,12 @@ else
     <div class="container container-table">
         <div class="row vertical-center-row">
             <div class="text-center col-md-4 col-md-offset-4" style="margin-top: 32px;">
-                <div class="panel panel-info"> 
-                    <div class="panel-heading"> 
-                        <h3 class="panel-title">Kassa overzicht</h3> 
-                    </div> 
-                    <div class="panel-body" style="display: inline-block; text-align: left"> 
-                        <?php   
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Kassa overzicht</h3>
+                    </div>
+                    <div class="panel-body" style="display: inline-block; text-align: left">
+                        <?php
                             $ok = false;
                             $thisIp = $_SERVER['REMOTE_ADDR'];
 
@@ -171,9 +171,9 @@ else
 
                                 $ok = true;
                             }
-                            
-                            if (!$ok) 
-                            { 
+
+                            if (!$ok)
+                            {
                                 echo 'U bevindt zich niet op een kassa systeem!';
                                 return;
                             }
@@ -191,13 +191,13 @@ else
                                 while($row = $result->fetch_assoc())
                                 {
                                     ?>
-                                    <b>Kas-in:</b> &euro; <?php echo '' . str_replace(".", ",", $row['cashIn']); ?><br /> <!-- kas-in is het bedrag in cash wat er in de kassa zit op het moment van kassa/winkel opening -->
+                                    <b>Kas-in:</b> &euro; <?php echo '' . $row['cashIn'] ?><br /> <!-- kas-in is het bedrag in cash wat er in de kassa zit op het moment van kassa/winkel opening -->
                                     <b>Bruto-omzet:</b> &euro;<br /> <!-- Bruto omzet is de totale omzet. (Omzet is de optelsom van alle inkomsten) -->
                                     <b>Netto-omzet:</b> &euro;<br /> <!-- De netto omzet wordt berekend aan de hand van de bruto omzet met aftrek van teruggenomen artikelen, schadevergoedingen en achteraf toegekende kortingen. -->
                                     <b>Marge:</b> &euro;<br /><br /> <!-- De marge is het verschil tussen inkoop- en verkoopprijs. -->
                                     <b>Kassa geopend op:</b> <?php echo $row['openDate']; ?><br />
                                     <b>Geopend door:</b> <?php echo $_SESSION['login_ok']['nickName']; ?><br />
-                                </div> 
+                                </div>
                                 <button type="button" class="btn btn-primary">Sluiten</button>
                                 <button type="button" class="btn btn-default" id="printReport">Afdrukken</button><br /><br />
                                 <?php
@@ -208,7 +208,7 @@ else
                                     ?>
                                     <b>Tijd en datum:</b> <div id="time" style="display: inline-block;"><?php echo date("d-m-Y H:i:s"); ?></div><br />
                                     <b>Medewerker:</b> <?php echo $_SESSION['login_ok']['nickName'];?><br />
-                                </div> 
+                                </div>
                                 <button type="button" id="openCr" class="btn btn-primary">Kassa openen</button><br /><br />
                                 <?php
                             }

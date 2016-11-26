@@ -34,7 +34,7 @@ if (isset($_GET['openReport']))
                     height: 19.8cm;">';
         echo '<div style="margin-left: 12px; padding-top: 12px;">';
             echo Misc::sqlGet("crName", "cash_registers", "id", $row['cashRegisterId'])['crName'] . ' geopend door ' . $_SESSION['login_ok']['nickName'] . ' op ' .  $row['openDate'];
-            echo '<br />Kas-in: &euro; ' . str_replace(".", ",", $row['cashIn']);
+            echo '<br />Kas-in: &euro; ' . $row['cashIn'];
         echo '</div>';
         echo '</div>';
         echo '<center><button id="printAgain" type="button" class="btn btn-default">Nogmaals Afdrukken</button></center>';
