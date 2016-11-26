@@ -75,7 +75,7 @@ if (isset($_GET['new']))
                             echo '<th><button id="trash' .  $key . '" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" style="font-size: 12px;"></span></button></th>';
                             echo '<th><a style="color: black;" href="javascript:void(0);" id="editAmount' . $key . '">' . $val['count'] . '</a></th>';
                             echo '<th>' . urldecode(Items::getField("itemName", $key)) . '</th>';
-                            echo '<th><span class="priceClickable" id="' . $key . '" data-toggle="popover" title="Prijs berekening" data-content="'. Items::getField("priceExclVat", $key) . '&nbsp;excl. ' . Items::getField("priceModifier", $key) . ' = &euro;&nbsp;' . round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . str_replace(",", ".", Items::getField("priceModifier", $key))), 2) . '"><a style="color: black;" href="javascript:void(0);" id="editPrice' . $key . '">&euro;&nbsp;' . round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . str_replace(",", ".", Items::getField("priceModifier", $key))), 2) . '</a></span></th>';
+                            echo '<th><span class="priceClickable" id="' . $key . '" data-toggle="popover" title="Prijs berekening" data-content="'. Items::getField("priceExclVat", $key) . '&nbsp;excl. ' . Items::getField("priceModifier", $key) . ' = &euro;&nbsp;' . round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key)), 2) . '"><a style="color: black;" href="javascript:void(0);" id="editPrice' . $key . '">&euro;&nbsp;' . round(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key)), 2) . '</a></span></th>';
                             echo '</tr>';
 
                             echo '
@@ -253,7 +253,7 @@ if (isset($_GET['new']))
             $total = 0;
             foreach ($_SESSION['receipt']['items'] as $key => $val)
             {
-                $price = Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . str_replace(",", ".", Items::getField("priceModifier", $key)));
+                $price = Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key));
                 $price *= $val['count'];
                 $total += $price;
             }

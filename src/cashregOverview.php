@@ -11,7 +11,7 @@ if (isset($_GET['cashIn']))
         die('Unable to connect to database [' . $db->connect_error . ']');
     }
 
-    $sql = "INSERT INTO `cashsession` (`openedBy`, `cashIn`, `openDate`) VALUES ('" . $_SESSION['login_ok']['userId'] . "', '" . str_replace(",", ".", $_GET['cashIn']) . "', '" . date("d-m-Y H:i:s") . "');";
+    $sql = "INSERT INTO `cashsession` (`openedBy`, `cashIn`, `openDate`) VALUES ('" . $_SESSION['login_ok']['userId'] . "', '" . $_GET['cashIn'] . "', '" . date("d-m-Y H:i:s") . "');";
 
     if(!$result = $db->query($sql))
     {
