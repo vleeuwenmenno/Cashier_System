@@ -38,8 +38,14 @@ if (isset($_GET['sTerm']))
                 echo '            <td>' . $row['nativeId'] . '</td>';
                 echo '            <td>' . $row['itemStock'] . '</td>';
 
-                echo '            <td><span class="priceClickable" id="' . $row['nativeId'] . '" data-toggle="popover" title="Prijs berekening" data-content="'. $row['priceExclVat'] . '&nbsp;excl. ' . $row['priceModifier'] . ' = ' . round(Misc::calculate($row['priceExclVat'] . ' ' . $row['priceModifier']), 2) . '&nbsp;&euro;">'
-                . '&euro;&nbsp;' . round(Misc::calculate($row['priceExclVat'] . ' ' . $row['priceModifier']), 2) . '</span></td>';
+                echo '            <td>
+                <span id="popoverData' . $row['nativeId'] . '" class="btn"
+                data-content="&euro;&nbsp;'. number_format($row['priceExclVat'], 2, ',', ' ') . ' ' . $row['priceModifier'] . ' = &euro;&nbsp;' .
+                number_format(Misc::calculate($row['priceExclVat'] . ' ' . $row['priceModifier']), 2, ',', ' ') . '"
+                rel="popover"
+                data-placement="bottom"
+                data-original-title="Prijs Berekening"
+                data-trigger="hover">&euro;&nbsp;' . number_format(Misc::calculate($row['priceExclVat'] . ' ' . $row['priceModifier']), 2, ',', ' ') . '</span></td>';
 
                 if (isset($_SESSION['receipt']['status']) && $_SESSION['receipt']['status'] == "open")
                 {
@@ -57,6 +63,7 @@ if (isset($_GET['sTerm']))
                     if ($row['itemStock'] == "0")
                     {
                         echo '
+                        $("#popoverData' . $row['nativeId'] . '").popover();
                         $("#add' . $row['nativeId'] . 'Warn").on("click", function() {
                             $("#stockWarningFooter").html(\'<button type="button" class="btn btn-warning" id="add' .  $row['nativeId'] . '" data-dismiss="modal">Doorgaan</button><button type="button" class="btn btn-info" id="stockWarning.cancelBtn" data-dismiss="modal">Annuleren</button>\');
                             $("#stockWarning").modal("show");

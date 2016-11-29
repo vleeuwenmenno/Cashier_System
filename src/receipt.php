@@ -73,12 +73,13 @@ if (isset($_GET['new']))
                             //editAmount$key
                             echo '<tr>';
                             echo '<th><button id="trash' .  $key . '" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" style="font-size: 12px;"></span></button></th>';
-                            echo '<th><a style="color: black;" href="javascript:void(0);" id="editAmount' . $key . '">' . $val['count'] . '</a></th>';
+                            echo '<th><input class="form-control" style="width: 156px; display: none;" id="editable' . $key . '" value="' . $val['count'] . '" type="text" name="type"/><a style="color: black; float: left;" href="javascript:void(0);" id="editAmount' . $key . '">' . $val['count'] . '</a></th>';
                             echo '<th>' . urldecode(Items::getField("itemName", $key)) . '</th>';
-                            echo '<th><span class="priceClickable" id="' . $key . '" data-toggle="popover" title="Prijs berekening" data-content="&euro;&nbsp;'. number_format (Items::getField("priceExclVat", $key), 2, ',', '.') . '&nbsp;excl. ' . number_format(Items::getField("priceModifier", $key), 2, ',', '.') . ' =
-                            &euro;&nbsp;' . number_format(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key)), 2, ',', '.') . '">
+                            echo '<th><span class="priceClickable" id="' . $key . '" data-placement="bottom" data-toggle="popover" title="Prijs berekening" data-content="&euro;&nbsp;'. number_format (Items::getField("priceExclVat", $key), 2, ',', ' ') . '&nbsp;excl. ' . number_format(Items::getField("priceModifier", $key), 2, ',', ' ') . ' =
+                            &euro;&nbsp;' . number_format(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key)), 2, ',', ' ') . ' * ' . $_SESSION['receipt']['items'][$key]['count'] . ' = ' .
+                            '&euro;&nbsp;' . number_format(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key) . ' * ' . $_SESSION['receipt']['items'][$key]['count']), 2, ',', ' ') . '">
                             <a style="color: black;" href="javascript:void(0);" id="editPrice' . $key . '">
-                                &euro;&nbsp;' . number_format(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key)), 2, ',', '.') . '
+                                &euro;&nbsp;' . number_format(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key) . ' * ' . $_SESSION['receipt']['items'][$key]['count']), 2, ',', ' ') . '
                             </a></span></th>';
                             echo '</tr>';
 
@@ -101,9 +102,10 @@ if (isset($_GET['new']))
                                             <label for="priceModifier' .  $key . '">Prijs berekening: </label>
                                             <div class="input-group">
                                                 <span class="input-group-addon" id="priceModifierLabel' .  $key . '">' . number_format(Items::getField("priceExclVat", $key), 2, ',', '.') . '</span>
-                                                <input type="text" class="form-control" id="priceModifier' .  $key . '" aria-describedby="priceModifierLabel" placeholder="* 1,575" value="' . number_format(Items::getField("priceModifier", $key), 2, ',', '.') . '" />
-                                                <span class="input-group-addon" id="priceModifierLabelOutCome' .  $key . '">' . number_format(Items::getField("priceExclVat", $key), 2, ',', '.') . ' ' . number_format(Items::getField("priceModifier", $key), 2, ',', '.') . ' =  &euro;&nbsp;' .
+                                                <input type="text" class="form-control" id="priceModifier' .  $key . '" aria-describedby="priceModifierLabel" placeholder="* 1,575" value="' . Items::getField("priceModifier", $key) . '" />
+                                                <span class="input-group-addon" id="priceModifierLabelOutCome' .  $key . '">&euro;&nbsp;' .
                                                 number_format(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key)), 2, ',', '.') . '</span>
+                                                <span class="input-group-addon" id="priceModifierLabelOutCome' .  $key . 'Full">' . number_format(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key) . ' * ' . $val['count']), 2, ',', '.') . '</span>
                                             </div>
                                             <div class="checkbox">
                                               <label><input type="checkbox" value="" id="itemIdUse" checked>Artikel prijs aanpassen voor alleen deze bon.</label>
@@ -116,10 +118,61 @@ if (isset($_GET['new']))
                                     </div>
                                 </div>
                             </div>';
-                            //TODO:0 Make event handler for update$key and a php script to update the price depending on the checkbox it being global or for only this receipt.
 
                             echo '<script>
                             $(document).ready(function() {
+                                $("#editAmount' . $key . '").click(function() {
+                                    var $this = $(this);
+                                    var text = $this.text();
+
+                                    if(text == "Aanpassen")
+                                    {
+                                        if ($("#editable' . $key . '").val() != "0")
+                                        {
+                                            $("#editable' . $key . '").css("display", "none");
+                                            $this.text($("#editable' . $key . '").val());
+
+                                            $.get(
+                                                "receipt/updateAmount.php",
+                                                {
+                                                    amount: $("#editable' . $key . '").val(),
+                                                    nativeId: "' . $key . '"
+                                                },
+                                                function (data)
+                                                {
+                                                    $("#pageLoaderIndicator").fadeIn();
+                                                    $("#PageContent").load("receipt.php?new", function () {
+                                                        $("#pageLoaderIndicator").fadeOut();
+                                                    });
+                                                }
+                                            );
+
+                                            var priceOne = ' . Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key)) . ';
+                                            var total = priceOne * Number($("#editable' . $key . '").val());
+                                            $("#editPrice' . $key . '").val(total);
+                                        }
+                                        else
+                                        {
+                                            $.get(
+                                                "receipt/updateAmount.php",
+                                                {
+                                                    amount: 1,
+                                                    nativeId: "' . $key . '"
+                                                },
+                                                function (data)
+                                                {
+                                                    $("#trash' .  $key . '").click();
+                                                }
+                                            );
+                                        }
+                                    }
+                                    else
+                                    {
+                                         $this.text("Aanpassen");
+                                         $("#editable' . $key . '").toggle();
+                                    }
+                                });
+
                                 $("#priceExclVat' .  $key . '").on(\'input\', function() {
                                     $("#priceModifierLabel' .  $key . '").html($("#priceExclVat' .  $key . '").val());
 
@@ -143,19 +196,46 @@ if (isset($_GET['new']))
 
                                 $(\'#priceModifier' .  $key . '\').on(\'input\', function () {
             				        var resultSum = "";
+
             				        $.get(
                                         "item/calcString.php",
                                         {
                                             sum: encodeURIComponent($(\'#priceExclVat' .  $key . '\').val() + " " + $("#priceModifier' .  $key . '").val())
                                         },
                                         function (data) {
+                                            dataTwo = data;
                                             if ($(\'#priceExclVat\').val() == "")
                                                 $("#priceModifierLabel' .  $key . '").text("26,66");
                                             else
                                             {
                                                 $("#priceModifierLabel' .  $key . '").text($(\'#priceExclVat' .  $key . '\').val());
-                                                $("#priceModifierLabelOutCome' .  $key . '").html($(\'#priceExclVat' .  $key . '\').val() + " " + $("#priceModifier' .  $key . '").val() + " = &euro;&nbsp;" + data + "");
+                                                $("#priceModifierLabelOutCome' .  $key . '").html("&euro;&nbsp;" + data);
                                             }
+                                        }
+                                    );
+                                    $.get(
+                                        "item/calcString.php",
+                                        {
+                                            sum: encodeURIComponent("(" + $(\'#priceExclVat' .  $key . '\').val() + " " + $("#priceModifier' .  $key . '").val() + ") * " + "' . $val['count'] . '")
+                                        },
+                                        function (data)
+                                        {
+                                            $.get(
+                                                "item/calcString.php",
+                                                {
+                                                    sum: encodeURIComponent($(\'#priceExclVat' .  $key . '\').val() + " " + $("#priceModifier' .  $key . '").val())
+                                                },
+                                                function (dataTwo)
+                                                {
+                                                    if ($(\'#priceExclVat\').val() == "")
+                                                        $("#priceModifierLabel' .  $key . '").text("26,66");
+                                                    else
+                                                    {
+                                                        $("#priceModifierLabel' .  $key . '").text($(\'#priceExclVat' .  $key . '\').val());
+                                                        $("#priceModifierLabelOutCome' .  $key . 'Full").html("&euro;&nbsp;" + data);
+                                                    }
+                                                }
+                                            );
                                         }
                                     );
             				    });
@@ -197,9 +277,9 @@ if (isset($_GET['new']))
                                         });
 
                                         $("#pageLoaderIndicator").fadeIn();
-      															    $("#PageContent").load("receipt.php?new", function () {
-      															        $("#pageLoaderIndicator").fadeOut();
-      															    });
+        							    $("#PageContent").load("receipt.php?new", function () {
+        							        $("#pageLoaderIndicator").fadeOut();
+        							    });
                                       }
                                   );
                                 });
@@ -283,7 +363,7 @@ if (isset($_GET['new']))
                 $total += $price;
             }
         ?>
-        <h3>Totaal: &euro; <?php echo number_format ($total, 2, ',', '.'); ?></h3>
+        <h3>Totaal: &euro; <?php echo number_format ($total, 2, ',', ' '); ?></h3>
     </div>
 
     <!-- =====DEBUG STUFF===== -->
@@ -326,7 +406,7 @@ if (isset($_GET['new']))
     <script type="text/javascript">
         function checkTotalValue()
         {
-            var totalPrice = "<?php echo number_format ($total, 2, ',', '.') ?>";
+            var totalPrice = "<?php echo number_format ($total, 2, ',', ' ') ?>";
             if ($('#paymentMethod').val() != "PC")
             {
                 if ($('#paymentMethod').val() != "PIN")
@@ -346,7 +426,7 @@ if (isset($_GET['new']))
                 }
             }
 
-            if (Number( $("#pinVal").val().replace(",", ".")) > totalPrice || Number( $("#cashVal").val().replace(",", ".")) > totalPrice || $("#pinVal").val() == "" || $("#cashVal").val() == "")
+            if (Number( $("#pinVal").val()) > totalPrice || Number( $("#cashVal").val()) > totalPrice || $("#pinVal").val() == "" || $("#cashVal").val() == "")
             {
                 $("#payBtn").prop("disabled", true);
 
@@ -378,13 +458,13 @@ if (isset($_GET['new']))
             	$(this).parent().next().collapse('toggle');
             });
 
-            var totalPrice = "<?php echo number_format ($total, 2, ',', '.') ?>";
+            var totalPrice = "<?php echo number_format ($total, 2, ',', ' ') ?>";
             $('#cashVal').keyup(function() {
                 if (this.value != "")
                 {
-                    var half = totalPrice - Number( $("#cashVal").val().replace(",", "."));
+                    var half = totalPrice - Number( $("#cashVal").val());
                     $('#pinVal').prop("readonly", true);
-                    $('#pinVal').val(half.toFixed(2).replace(".", ","));
+                    $('#pinVal').val(half.toFixed(2));
                 }
                 else
                     $('#pinVal').prop("readonly", false);
@@ -395,9 +475,9 @@ if (isset($_GET['new']))
             $('#pinVal').keyup(function() {
                 if (this.value != "")
                 {
-                    var half = totalPrice - Number( $("#pinVal").val().replace(",", "."));
+                    var half = totalPrice - Number( $("#pinVal").val());
                     $('#cashVal').prop("readonly", true);
-                    $('#cashVal').val(half.toFixed(2).replace(".", ","));
+                    $('#cashVal').val(half.toFixed(2));
                 }
                 else
                     $('#cashVal').prop("readonly", false);

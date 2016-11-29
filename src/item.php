@@ -284,7 +284,7 @@ else
                     "item/itemLoad.php",
                     {
                         start: 0,
-                        count: 25,
+                        count: 50,
                         sTerm: $("#searchBar").val()
                     },
                     function (data)
@@ -299,7 +299,7 @@ else
                         }
 
                         $("#listContents").append(data);
-                        startLocation += 25;
+                        startLocation += 50;
 
                         if (barCodemode)
                         {
@@ -454,7 +454,7 @@ else
             </tbody>
         </table>
         <?php
-    if ($i >= 25)
+    if ($i >= 50)
     {
         ?>
         <button type="button" class="btn btn-info center-block" id="loadMore">Laad Meer</button>
@@ -472,7 +472,7 @@ else
                                     "item/itemLoad.php",
                                     {
                                         start: startLocation,
-                                        count: 25,
+                                        count: 50,
                                         sTerm: $("#searchBar").val()
                                     },
                                     function (data)
@@ -483,7 +483,7 @@ else
                                         }
 
                                         $("#listContents").append(data);
-                                        startLocation += 25;
+                                        startLocation += 50;
                                     }
                                 );
                             });

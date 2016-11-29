@@ -17,6 +17,7 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
         <script src="js/bootstrap.min.js"></script>
         <script src="js/bootstrap-notify.min.js"></script>
         <script src="js/select2.full.min.js"></script>
+        <script src="js/jqeury.jeditable.js"></script>
         <script src="js/bootstrap-combobox.js"></script>
     </head>
     <body>
