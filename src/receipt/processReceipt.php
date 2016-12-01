@@ -27,7 +27,6 @@ else
     {
         $cashValue = $_GET['cash'];
         $pinValue = $_GET['pin'];
-
     }
 
     //Create a document for the paper receipt
@@ -49,6 +48,13 @@ else
     if(!$result = $db->query($sql))
     {
         die('There was an error running the query [' . $db->error . ']');
+    }
+
+    //Foreach item in the receipt remove amount from the items Register
+    $json = json_decode(urldecode(Misc::sqlGet("items", "receipt", "receiptId", $receiptId)['items']), TRUE);
+    foreach ($json as $key => $val)
+    {
+        Misc::sqlUpdate("items", "itemStock", "itemStock - " . $val['count'], "nativeId", "" . $key);
     }
 
     //Move receipt data in session to OLD

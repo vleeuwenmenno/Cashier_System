@@ -109,11 +109,11 @@ if (isset($_GET['new']))
                                                 <span class="input-group-addon" id="priceModifierLabelOutCome' .  $key . 'Full">Totaal<br />&nbsp;&euro;&nbsp;' . number_format(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key) . ' * ' . $val['count']), 2, ',', '.') . '</span>
                                             </div>
                                             <div class="checkbox">
-                                              <label><input type="checkbox" value="" id="itemIdUse" checked>Artikel prijs aanpassen voor alleen deze bon.</label>
+                                              <label><input type="checkbox" value="" id="global' . $key . '" checked>Artikel prijs aanpassen voor alleen deze bon.</label>
                                             </div>
                                         </div>
                                         <div class="modal-footer" id="stockWarningFooter">
-                                            <button id="update' .  $key . '" type="button" class="btn btn-primary">Opslaan</button>
+                                            <button id="update' .  $key . '" type="button" class="btn btn-primary" data-dismiss="modal">Opslaan</button>
                                             <button type="button" data-dismiss="modal" class="btn btn-default">Annuleren</button>
                                         </div>
                                     </div>
@@ -122,6 +122,20 @@ if (isset($_GET['new']))
 
                             echo '<script>
                             $(document).ready(function() {
+                                $("#update' .  $key . '").click(function() {
+                                    $.get(
+                                        "receipt/updateModifier.php",
+                                        {
+                                            modifier: $("#priceModifier' . $key . '").val(),
+                                            global: $("#global' . $key . '").is(\':checked\'),
+                                            nativeId: "' . $key . '",
+                                            priceExclVat: "' . Items::getField("priceExclVat", $key) . '"
+                                        },
+                                        function (data)
+                                        { }
+                                    );
+                                });
+
                                 $("#editAmount' . $key . '").click(function() {
                                     var $this = $(this);
                                     var text = $this.text();
@@ -364,7 +378,7 @@ if (isset($_GET['new']))
                 $total += $price;
             }
         ?>
-        <h3>Totaal: &euro; <?php echo Calculate::getReceiptTotal($_SESSION['receipt']['id'])['inclVat']; ?></h3>
+        <h3>Totaal: &euro; <?php echo Calculate::getReceiptTotal($_SESSION['receipt']['id'])['total']; ?></h3>
     </div>
 
     <!-- =====DEBUG STUFF===== -->

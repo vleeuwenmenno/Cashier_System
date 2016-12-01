@@ -329,7 +329,11 @@ else
                         $("#isBarCodeMode").prop('checked', false);
 
                         var row = $("#listContents").closest('table').find(' tbody tr:first').attr('id');
-                        alert(row);
+
+                        if($("#add" + row).length == 0)
+                            $("#add" + row + "Warn").click();
+                        else
+                            $("#add" + row).click();
                     }
 
                     return false;

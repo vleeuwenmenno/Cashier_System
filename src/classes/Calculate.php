@@ -13,73 +13,296 @@ class Calculate
 {
     public static function getGrossTurnover($identifier)
     {
+        global $config;
+
         if ($identifier == PaymentMethod::All)
         {
-            $sql = "SELECT * FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod IS NOT NULL";
+            $sql = "SELECT receiptId FROM receipt WHERE paidDt IS NOT NULL AND paymentMethod IS NOT NULL";
+            $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
+            if($db->connect_errno > 0)
+            {
+                die('Unable to connect to database [' . $db->connect_error . ']');
+            }
 
+            if(!$result = $db->query($sql))
+            {
+                die('Er was een fout tijdens het ophalen van bruto-omzet (PaymentMethod::All) (' . $db->error . ')');
+            }
+
+            $final = 0.00;
+            while($row = $result->fetch_assoc())
+            {
+                $final += Calculate::getReceiptTotal($row['receiptId'])['total'];
+            }
+            return $final;
         }
         else if ($identifier == PaymentMethod::Pin)
         {
-            $sql = "SELECT * FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='PIN' AND paymentMethod IS NOT NULL";
+            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='PIN' AND paymentMethod IS NOT NULL";
+            $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
+            if($db->connect_errno > 0)
+            {
+                die('Unable to connect to database [' . $db->connect_error . ']');
+            }
 
+            if(!$result = $db->query($sql))
+            {
+                die('Er was een fout tijdens het ophalen van bruto-omzet (PaymentMethod::Pin) (' . $db->error . ')');
+            }
+
+            $final = 0.00;
+            while($row = $result->fetch_assoc())
+            {
+                $final += Calculate::getReceiptTotal($row['receiptId'])['total'];
+            }
+            return $final;
         }
         else if ($identifier == PaymentMethod::Cash)
         {
-            $sql = "SELECT * FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='CASH' AND paymentMethod IS NOT NULL";
+            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='CASH' AND paymentMethod IS NOT NULL";
+            $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
+            if($db->connect_errno > 0)
+            {
+                die('Unable to connect to database [' . $db->connect_error . ']');
+            }
 
+            if(!$result = $db->query($sql))
+            {
+                die('Er was een fout tijdens het ophalen van bruto-omzet (PaymentMethod::Cash) (' . $db->error . ')');
+            }
+
+            $final = 0.00;
+            while($row = $result->fetch_assoc())
+            {
+                $final += Calculate::getReceiptTotal($row['receiptId'])['total'];
+            }
+            return $final;
         }
         else if ($identifier == PaymentMethod::BankTransfer)
         {
-            $sql = "SELECT * FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='BANK' AND paymentMethod IS NOT NULL";
+            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='BANK' AND paymentMethod IS NOT NULL";
+            $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
+            if($db->connect_errno > 0)
+            {
+                die('Unable to connect to database [' . $db->connect_error . ']');
+            }
 
+            if(!$result = $db->query($sql))
+            {
+                die('Er was een fout tijdens het ophalen van bruto-omzet (PaymentMethod::BankTransfer) (' . $db->error . ')');
+            }
+
+            $final = 0.00;
+            while($row = $result->fetch_assoc())
+            {
+                $final += Calculate::getReceiptTotal($row['receiptId'])['total'];
+            }
+            return $final;
         }
     }
 
     public static function getNetTurnover($identifier)
     {
+        global $config;
+
         if ($identifier == PaymentMethod::All)
         {
+            $sql = "SELECT receiptId FROM receipt WHERE paidDt IS NOT NULL AND paymentMethod IS NOT NULL";
+            $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
+            if($db->connect_errno > 0)
+            {
+                die('Unable to connect to database [' . $db->connect_error . ']');
+            }
+
+            if(!$result = $db->query($sql))
+            {
+                die('Er was een fout tijdens het ophalen van bruto-omzet (PaymentMethod::All) (' . $db->error . ')');
+            }
+
+            $final = 0.00;
+            while($row = $result->fetch_assoc())
+            {
+                $final += Calculate::getReceiptTotal($row['receiptId'])['exclVat'];
+            }
+            return $final;
         }
         else if ($identifier == PaymentMethod::Pin)
         {
+            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='PIN' AND paymentMethod IS NOT NULL";
+            $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
+            if($db->connect_errno > 0)
+            {
+                die('Unable to connect to database [' . $db->connect_error . ']');
+            }
+
+            if(!$result = $db->query($sql))
+            {
+                die('Er was een fout tijdens het ophalen van bruto-omzet (PaymentMethod::Pin) (' . $db->error . ')');
+            }
+
+            $final = 0.00;
+            while($row = $result->fetch_assoc())
+            {
+                $final += Calculate::getReceiptTotal($row['receiptId'])['exclVat'];
+            }
+            return $final;
         }
         else if ($identifier == PaymentMethod::Cash)
         {
+            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='CASH' AND paymentMethod IS NOT NULL";
+            $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
+            if($db->connect_errno > 0)
+            {
+                die('Unable to connect to database [' . $db->connect_error . ']');
+            }
+
+            if(!$result = $db->query($sql))
+            {
+                die('Er was een fout tijdens het ophalen van bruto-omzet (PaymentMethod::Cash) (' . $db->error . ')');
+            }
+
+            $final = 0.00;
+            while($row = $result->fetch_assoc())
+            {
+                $final += Calculate::getReceiptTotal($row['receiptId'])['exclVat'];
+            }
+            return $final;
         }
         else if ($identifier == PaymentMethod::BankTransfer)
         {
+            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='BANK' AND paymentMethod IS NOT NULL";
+            $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
+            if($db->connect_errno > 0)
+            {
+                die('Unable to connect to database [' . $db->connect_error . ']');
+            }
+
+            if(!$result = $db->query($sql))
+            {
+                die('Er was een fout tijdens het ophalen van bruto-omzet (PaymentMethod::BankTransfer) (' . $db->error . ')');
+            }
+
+            $final = 0.00;
+            while($row = $result->fetch_assoc())
+            {
+                $final += Calculate::getReceiptTotal($row['receiptId'])['exclVat'];
+            }
+            return $final;
         }
     }
 
     public static function getMargin($identifier)
     {
+        global $config;
+        global $_CFG;
+
         if ($identifier == PaymentMethod::All)
         {
+            $sql = "SELECT receiptId FROM receipt WHERE paidDt IS NOT NULL AND paymentMethod IS NOT NULL";
+            $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
+            if($db->connect_errno > 0)
+            {
+                die('Unable to connect to database [' . $db->connect_error . ']');
+            }
+
+            if(!$result = $db->query($sql))
+            {
+                die('Er was een fout tijdens het ophalen van bruto-omzet (PaymentMethod::All) (' . $db->error . ')');
+            }
+
+            $final = 0.00;
+            while($row = $result->fetch_assoc())
+            {
+                //Marge is totale prijs min belasting min inkoop prijs
+                $receipt = Calculate::getReceiptTotal($row['receiptId']);
+                $final += ($receipt['total'] - $receipt['exclVat']) / $_CFG['VAT'];
+            }
+            return $final;
         }
         else if ($identifier == PaymentMethod::Pin)
         {
+            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='PIN' AND paymentMethod IS NOT NULL";
+            $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
+            if($db->connect_errno > 0)
+            {
+                die('Unable to connect to database [' . $db->connect_error . ']');
+            }
+
+            if(!$result = $db->query($sql))
+            {
+                die('Er was een fout tijdens het ophalen van bruto-omzet (PaymentMethod::All) (' . $db->error . ')');
+            }
+
+            $final = 0.00;
+            while($row = $result->fetch_assoc())
+            {
+                //Marge is totale prijs min belasting min inkoop prijs
+                $receipt = Calculate::getReceiptTotal($row['receiptId']);
+                $final += ($receipt['total'] - $receipt['exclVat']) / $_CFG['VAT'];
+            }
+            return $final;
         }
         else if ($identifier == PaymentMethod::Cash)
         {
+            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='CASH' AND paymentMethod IS NOT NULL";
+            $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
+            if($db->connect_errno > 0)
+            {
+                die('Unable to connect to database [' . $db->connect_error . ']');
+            }
+
+            if(!$result = $db->query($sql))
+            {
+                die('Er was een fout tijdens het ophalen van bruto-omzet (PaymentMethod::All) (' . $db->error . ')');
+            }
+
+            $final = 0.00;
+            while($row = $result->fetch_assoc())
+            {
+                //Marge is totale prijs min belasting min inkoop prijs
+                $receipt = Calculate::getReceiptTotal($row['receiptId']);
+                $final += ($receipt['total'] - $receipt['exclVat']) / $_CFG['VAT'];
+            }
+            return $final;
         }
         else if ($identifier == PaymentMethod::BankTransfer)
         {
+            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='BANK' AND paymentMethod IS NOT NULL";
+            $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
+            if($db->connect_errno > 0)
+            {
+                die('Unable to connect to database [' . $db->connect_error . ']');
+            }
+
+            if(!$result = $db->query($sql))
+            {
+                die('Er was een fout tijdens het ophalen van bruto-omzet (PaymentMethod::All) (' . $db->error . ')');
+            }
+
+            $final = 0.00;
+            while($row = $result->fetch_assoc())
+            {
+                //Marge is totale prijs min belasting min inkoop prijs
+                $receipt = Calculate::getReceiptTotal($row['receiptId']);
+                $final += ($receipt['total'] - $receipt['exclVat']) / $_CFG['VAT'];
+            }
+            return $final;
         }
     }
 
-    public static function getReceiptTotal($identifier)
+    public static function getReceiptTotal($identifier, $session = false)
     {
         global $config;
 
@@ -90,12 +313,12 @@ class Calculate
             die('Unable to connect to database [' . $db->connect_error . ']');
         }
 
-        $sql = "SELECT * FROM receipt WHERE receiptId='1165241646';";
+        $sql = "SELECT * FROM receipt WHERE receiptId='$identifier';";
         $json = array();
 
         if(!$result = $db->query($sql))
         {
-            die('Er was een fout tijdens het verwerken van de klant gegevens. (' . $db->error . ')');
+            die('Er was een fout tijdens het ophalen van het totaal van bonNr:' . $identifier . ' (' . $db->error . ')');
         }
 
         while($row = $result->fetch_assoc())
@@ -104,15 +327,20 @@ class Calculate
             $json = json_decode($decoded, TRUE);
         }
 
+        if ($session == true)
+        {
+            $json = $_SESSION['receipt']['items'];
+        }
+
         $final = array();
         foreach ($json as $key => $val)
         {
 
-            $final['exclVat'] += $val['priceAPiece']['priceExclVat'];
-            $final['inclVat'] += Misc::calculate($val['priceAPiece']['priceExclVat'] . ' ' . $val['priceAPiece']['priceModifier']);
+            $final['exclVat'] += ($val['priceAPiece']['priceExclVat'] *  $val['count']);
+            $final['total'] += (Misc::calculate($val['priceAPiece']['priceExclVat'] . ' ' . $val['priceAPiece']['priceModifier']) * $val['count']);
         }
-        $final['inclVat']= number_format($final['inclVat'], 2, '.', '');
 
+        $final['total'] = number_format($final['total'], 2, '.', '');
         return $final;
     }
 }
