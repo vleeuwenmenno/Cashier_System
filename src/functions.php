@@ -15,5 +15,5 @@ else
 include('classes/Misc.php');
 include('classes/permissions.php');
 include('classes/Items.php');
-
+include('classes/Calculate.php');
 ?>

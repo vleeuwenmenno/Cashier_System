@@ -1,7 +1,7 @@
 <?php
-include_once("includes.php");
+    include_once("includes.php");
 
-Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
+    Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 ?>
 <html>
     <head>
