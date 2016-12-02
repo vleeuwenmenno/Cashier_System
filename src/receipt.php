@@ -90,7 +90,7 @@ if (isset($_GET['new']))
                                               Btw. : &nbsp;&nbsp;&nbsp;&euro;&nbsp;' . number_format($vatOnly, 2, ',', ' ') . '<br />
                                               Marge: &euro;&nbsp;' . number_format($total - (number_format($purchase, 2) + number_format($vatOnly, 2)), 2, ',', ' ') . '<br />
                                               P.S: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&euro;&nbsp; ' . number_format($total, 2, ',', ' ') . '<br />
-                                              Totaal:&nbsp; &euro;&nbsp;' . number_format(number_format($total, 2) * $_SESSION['receipt']['items'][$key]['count'], 2, ',', ' ') . '<br />';
+                                              Totaal:&nbsp; &euro;&nbsp;' . number_format(number_format($total, 2, '.', '') * $_SESSION['receipt']['items'][$key]['count'], 2, ',', ' ') . '<br />';
                             echo '            </div>';
                             echo '        </div>';
                             echo '    </th>';
