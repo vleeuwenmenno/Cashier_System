@@ -79,18 +79,18 @@ if (isset($_GET['new']))
                             echo '    <th>' . urldecode(Items::getField("itemName", $key)) . '</th>';
                             echo '    <th><span class="priceClickable" id="' . $key . '" data-placement="bottom" data-trigger="hover">';
                             echo '        <a style="color: black;" href="javascript:void(0);" id="editPrice' . $key . '">';
-                            echo '            &euro;&nbsp;' . number_format(number_format($total, 2, '.', '') * $_SESSION['receipt']['items'][$key]['count'], 2, ',', ' ') . '</a>';
+                            echo '            &euro;&nbsp;' . number_format(number_format($total, 2, '.', '') * $_SESSION['receipt']['items'][$key]['count'], 2, ',', '') . '</a>';
                             echo '        </span>';
                             echo '        <div id="popover-title' . $key . '" class="hidden">';
                             echo '            <b>Prijs berekening</b>';
                             echo '        </div>';
                             echo '        <div id="popover-content' . $key . '" class="hidden">';
                             echo '            <div>';
-                            echo '            Inkoop: &euro;&nbsp;' . number_format($purchase, 2, ',', ' ') . '<br/>
-                                              Btw. : &nbsp;&nbsp;&nbsp;&euro;&nbsp;' . number_format($vatOnly, 2, ',', ' ') . '<br />
-                                              Marge: &euro;&nbsp;' . number_format($total - (number_format($purchase, 2) + number_format($vatOnly, 2)), 2, ',', ' ') . '<br />
-                                              P.S: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&euro;&nbsp; ' . number_format($total, 2, ',', ' ') . '<br />
-                                              Totaal:&nbsp; &euro;&nbsp;' . number_format(number_format($total, 2, '.', '') * $_SESSION['receipt']['items'][$key]['count'], 2, ',', ' ') . '<br />';
+                            echo '            Inkoop: &euro;&nbsp;' . number_format($purchase, 2, ',', '') . '<br/>
+                                              Btw. : &nbsp;&nbsp;&nbsp;&euro;&nbsp;' . number_format($vatOnly, 2, ',', '') . '<br />
+                                              Marge: &euro;&nbsp;' . number_format($total - (number_format($purchase, 2) + number_format($vatOnly, 2)), 2, ',', '') . '<br />
+                                              P.S: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&euro;&nbsp; ' . number_format($total, 2, ',', '') . '<br />
+                                              Totaal:&nbsp; &euro;&nbsp;' . number_format(number_format($total, 2, '.', '') * $_SESSION['receipt']['items'][$key]['count'], 2, ',', '') . '<br />';
                             echo '            </div>';
                             echo '        </div>';
                             echo '    </th>';
@@ -110,7 +110,7 @@ if (isset($_GET['new']))
                                         <div class="modal-body">
                                             <div class="form-group">
                                                 <label for="priceExclVat' .  $key . '">Inkoop prijs: </label>
-                                                <input type="text" class="form-control" id="priceExclVat' . $key . '" placeholder="26,66" value="' . number_format($_SESSION['receipt']['items'][$key]['priceAPiece']['priceExclVat'], 2, ',', ' ') . '" />
+                                                <input type="text" class="form-control" id="priceExclVat' . $key . '" placeholder="26,66" value="' . number_format($_SESSION['receipt']['items'][$key]['priceAPiece']['priceExclVat'], 2, ',', '') . '" />
                                             </div>
                                             <label for="priceModifier' .  $key . '">Prijs berekening: </label>
                                             <div class="input-group">
@@ -460,7 +460,7 @@ if (isset($_GET['new']))
 
     <br /><br /><br /><br />
     <div class="pull-right">
-        <h3>Totaal: &euro; <?php echo number_format(Calculate::getReceiptTotal($_SESSION['receipt']['id'], true)['total'], 2, ',', ' '); ?></h3>
+        <h3>Totaal: &euro; <?php echo number_format(Calculate::getReceiptTotal($_SESSION['receipt']['id'], true)['total'], 2, ',', ''); ?></h3>
     </div>
 
     <!-- =====DEBUG STUFF===== -->
@@ -511,7 +511,7 @@ if (isset($_GET['new']))
     <script type="text/javascript">
         function checkTotalValue()
         {
-            var totalPrice = "<?php echo number_format ($total, 2, ',', ' ') ?>";
+            var totalPrice = "<?php echo number_format(Calculate::getReceiptTotal($_SESSION['receipt']['id'], true)['total'], 2, ',', ''); ?>";
             if ($('#paymentMethod').val() != "PC")
             {
                 if ($('#paymentMethod').val() != "PIN")
@@ -563,7 +563,7 @@ if (isset($_GET['new']))
             	$(this).parent().next().collapse('toggle');
             });
 
-            var totalPrice = "<?php echo number_format ($total, 2, ',', ' ') ?>";
+            var totalPrice = "<?php echo number_format(Calculate::getReceiptTotal($_SESSION['receipt']['id'], true)['total'], 2, ',', ''); ?>";
             $('#cashVal').keyup(function() {
                 if (this.value != "")
                 {
