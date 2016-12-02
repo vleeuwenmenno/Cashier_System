@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 19, 2016 at 12:53 AM
--- Server version: 10.1.16-MariaDB
--- PHP Version: 7.0.9
+-- Generation Time: Dec 03, 2016 at 12:39 AM
+-- Server version: 10.1.19-MariaDB
+-- PHP Version: 7.0.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -52,15 +52,16 @@ CREATE TABLE `cash_registers` (
   `id` int(11) NOT NULL,
   `crName` varchar(255) NOT NULL,
   `crStaticIP` varchar(16) NOT NULL DEFAULT '0.0.0.0',
-  `status` varchar(96) NOT NULL DEFAULT 'LoggedOff'
+  `status` varchar(96) NOT NULL DEFAULT 'LoggedOff',
+  `currentSession` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `cash_registers`
 --
 
-INSERT INTO `cash_registers` (`id`, `crName`, `crStaticIP`, `status`) VALUES
-(0, 'Kassa 1', '::1', 'LoggedOn');
+INSERT INTO `cash_registers` (`id`, `crName`, `crStaticIP`, `status`, `currentSession`) VALUES
+(0, 'Kassa 1', '::1', 'LoggedOff', NULL);
 
 -- --------------------------------------------------------
 
@@ -105,7 +106,7 @@ CREATE TABLE `items` (
   `itemCategory` varchar(256) NOT NULL,
   `itemStock` int(11) NOT NULL,
   `priceExclVat` decimal(18,2) NOT NULL,
-  `priceModifier` varchar(255) NOT NULL DEFAULT '* 1.575'
+  `priceModifier` varchar(255) NOT NULL DEFAULT '* 1.375'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -117,11 +118,12 @@ CREATE TABLE `items` (
 CREATE TABLE `receipt` (
   `receiptId` bigint(20) NOT NULL,
   `creator` int(11) NOT NULL,
+  `parentSession` int(11) NOT NULL,
   `items` varchar(8192) NOT NULL,
   `createDt` varchar(128) NOT NULL,
-  `paidDt` varchar(128) NOT NULL,
+  `paidDt` varchar(128) DEFAULT NULL,
   `customerId` int(11) NOT NULL,
-  `paymentMethod` varchar(128) NOT NULL
+  `paymentMethod` varchar(128) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -136,6 +138,13 @@ CREATE TABLE `sessions` (
   `lastPing` datetime NOT NULL,
   `validUntil` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `sessions`
+--
+
+INSERT INTO `sessions` (`sessionId`, `userId`, `lastPing`, `validUntil`) VALUES
+('mITezUlwc13olhTPAobi0ALLez0HkzJ3', '0', '2016-12-03 00:37:07', '2016-12-03 01:36:58');
 
 -- --------------------------------------------------------
 
@@ -168,7 +177,8 @@ INSERT INTO `users` (`userId`, `username`, `nickName`, `hash`, `salt`, `manageme
 -- Indexes for table `cashsession`
 --
 ALTER TABLE `cashsession`
-  ADD PRIMARY KEY (`cashSessionId`);
+  ADD PRIMARY KEY (`cashSessionId`),
+  ADD UNIQUE KEY `cashSessionId` (`cashSessionId`);
 
 --
 -- Indexes for table `cash_registers`
@@ -209,7 +219,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `cashsession`
 --
 ALTER TABLE `cashsession`
-  MODIFY `cashSessionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `cashSessionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 --
 -- AUTO_INCREMENT for table `customers`
 --
@@ -219,12 +229,12 @@ ALTER TABLE `customers`
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `nativeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7726;
+  MODIFY `nativeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9082;
 --
 -- AUTO_INCREMENT for table `receipt`
 --
 ALTER TABLE `receipt`
-  MODIFY `receiptId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `receiptId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1165362041;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
