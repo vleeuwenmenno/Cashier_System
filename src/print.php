@@ -60,7 +60,19 @@ else if (isset($_GET['receipt']))
                 height: 19.8cm;">';
     echo '<div style="margin-left: 12px; padding-top: 12px;">';
         //GET RECEIPT FROM MYSQL AND SHOW IT HERE!
-        echo 'Bon nummer: ' . $_GET['receipt'];
+    echo 'Bon<span id="barcodeEan"></span>';
+    echo '<script>
+    $.get(
+        "barcode/getBarcode.php",
+        {
+            EAN: "' . $_GET['receipt'] . '"
+        },
+        function (data)
+        {
+            $("#barcodeEan").html(data);
+        }
+    );
+    </script>';
     echo '</div>';
     echo '</div>';
     echo '<center><button id="printAgain" type="button" class="btn btn-default">';

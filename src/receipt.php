@@ -5,6 +5,7 @@ if (isset($_GET['new']))
 {
     if (!isset($_SESSION['receipt']['status']) || $_SESSION['receipt']['status'] != 'open')
     {
+        $thisIp = $_SERVER['REMOTE_ADDR'];
         $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
         if($db->connect_errno > 0)
@@ -12,7 +13,7 @@ if (isset($_GET['new']))
             die('Unable to connect to database [' . $db->connect_error . ']');
         }
 
-        $sql = "INSERT INTO receipt (receiptId, creator, items, createDt) VALUES ((UNIX_TIMESTAMP() - 315360000) + " . rand(0, 300) . ", '1', '', '" .  date("d-m-Y H:i:s") . "')";
+        $sql = "INSERT INTO receipt (receiptId, creator, items, createDt, parentSession) VALUES ((UNIX_TIMESTAMP() - 315360000) + " . rand(0, 300) . ", '1', '', '" .  date("d-m-Y H:i:s") . "', '" . Misc::sqlGet("currentSession", "cash_registers", "crStaticIP", $thisIp)['currentSession'] . "')";
 
         if(!$result = $db->query($sql))
         {
@@ -25,6 +26,7 @@ if (isset($_GET['new']))
 ?>
 <div id="cartForm">
         <span id="receiptNo"><h2>Bon #<?php echo str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT); ?></h2></span>
+
         <div class="panel panel filterable">
             <div class="panel-heading">
                 <?php
@@ -139,7 +141,7 @@ if (isset($_GET['new']))
                                             </div>
 
                                             <div class="checkbox">
-                                              <label><input type="checkbox" value="" id="global' . $key . '" disabled readonly checked>Artikel prijs aanpassen voor alleen deze bon.</label>
+                                              <label><input type="checkbox" value="" id="global' . $key . '" checked>Artikel prijs aanpassen voor alleen deze bon.</label>
                                             </div>
                                         </div>
                                         <div class="modal-footer" id="stockWarningFooter">
@@ -461,7 +463,12 @@ if (isset($_GET['new']))
     <br /><br /><br /><br />
     <div class="pull-right">
         <h3>Totaal: &euro; <?php echo number_format(Calculate::getReceiptTotal($_SESSION['receipt']['id'], true)['total'], 2, ',', ''); ?></h3>
+        <span id="barcodeEan">
+
+        </span>
+
     </div>
+    <br /><br /><br /><br />
 
     <!-- =====DEBUG STUFF===== -->
     <br /><br /><br /><br />
@@ -558,6 +565,17 @@ if (isset($_GET['new']))
         }
 
         $(document).ready(function() {
+
+            $.get(
+                "barcode/getBarcode.php",
+                {
+                    EAN: "<?php echo str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT); ?>"
+                },
+                function (data)
+                {
+                    $("#barcodeEan").html(data);
+                }
+            );
 
             $(".spoiler-trigger").click(function() {
             	$(this).parent().next().collapse('toggle');

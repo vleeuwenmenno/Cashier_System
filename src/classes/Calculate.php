@@ -11,24 +11,13 @@ abstract class PaymentMethod
 
 class Calculate
 {
-    public static function calculatePrice($excl, $modifier)
-    {
-        global $_CFG;
-        $modifier = str_replace('$INKOOP', $excl, $modifier);
-        $modifier = str_replace('$BTW', $_CFG['VAT'], $modifier);
-        $modifier = str_replace(',', '.', $modifier);
-
-        $output['sum'] = $modifier;
-        $output['ans'] = Misc::calculate($modifier);
-    }
-
-    public static function getGrossTurnover($identifier)
+    public static function getGrossTurnover($identifier, $sessionID)
     {
         global $config;
 
         if ($identifier == PaymentMethod::All)
         {
-            $sql = "SELECT receiptId FROM receipt WHERE paidDt IS NOT NULL AND paymentMethod IS NOT NULL";
+            $sql = "SELECT receiptId FROM receipt WHERE paidDt IS NOT NULL AND paymentMethod IS NOT NULL AND parentSession='$sessionID'";
             $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
             if($db->connect_errno > 0)
@@ -50,7 +39,7 @@ class Calculate
         }
         else if ($identifier == PaymentMethod::Pin)
         {
-            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='PIN' AND paymentMethod IS NOT NULL";
+            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='PIN' AND paymentMethod IS NOT NULL AND parentSession='$sessionID'";
             $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
             if($db->connect_errno > 0)
@@ -72,7 +61,7 @@ class Calculate
         }
         else if ($identifier == PaymentMethod::Cash)
         {
-            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='CASH' AND paymentMethod IS NOT NULL";
+            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='CASH' AND paymentMethod IS NOT NULL AND parentSession='$sessionID'";
             $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
             if($db->connect_errno > 0)
@@ -94,7 +83,7 @@ class Calculate
         }
         else if ($identifier == PaymentMethod::BankTransfer)
         {
-            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='BANK' AND paymentMethod IS NOT NULL";
+            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='BANK' AND paymentMethod IS NOT NULL AND parentSession='$sessionID'";
             $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
             if($db->connect_errno > 0)
@@ -116,13 +105,13 @@ class Calculate
         }
     }
 
-    public static function getNetTurnover($identifier)
+    public static function getNetTurnover($identifier, $sessionID)
     {
         global $config;
 
         if ($identifier == PaymentMethod::All)
         {
-            $sql = "SELECT receiptId FROM receipt WHERE paidDt IS NOT NULL AND paymentMethod IS NOT NULL";
+            $sql = "SELECT receiptId FROM receipt WHERE paidDt IS NOT NULL AND paymentMethod IS NOT NULL AND parentSession='$sessionID'";
             $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
             if($db->connect_errno > 0)
@@ -144,7 +133,7 @@ class Calculate
         }
         else if ($identifier == PaymentMethod::Pin)
         {
-            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='PIN' AND paymentMethod IS NOT NULL";
+            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='PIN' AND paymentMethod IS NOT NULL AND parentSession='$sessionID'";
             $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
             if($db->connect_errno > 0)
@@ -166,7 +155,7 @@ class Calculate
         }
         else if ($identifier == PaymentMethod::Cash)
         {
-            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='CASH' AND paymentMethod IS NOT NULL";
+            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='CASH' AND paymentMethod IS NOT NULL AND parentSession='$sessionID'";
             $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
             if($db->connect_errno > 0)
@@ -188,7 +177,7 @@ class Calculate
         }
         else if ($identifier == PaymentMethod::BankTransfer)
         {
-            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='BANK' AND paymentMethod IS NOT NULL";
+            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='BANK' AND paymentMethod IS NOT NULL AND parentSession='$sessionID'";
             $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
             if($db->connect_errno > 0)
@@ -210,14 +199,14 @@ class Calculate
         }
     }
 
-    public static function getMargin($identifier)
+    public static function getMargin($identifier, $sessionID)
     {
         global $config;
         global $_CFG;
 
         if ($identifier == PaymentMethod::All)
         {
-            $sql = "SELECT receiptId FROM receipt WHERE paidDt IS NOT NULL AND paymentMethod IS NOT NULL";
+            $sql = "SELECT receiptId FROM receipt WHERE paidDt IS NOT NULL AND paymentMethod IS NOT NULL AND parentSession='$sessionID'";
             $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
             if($db->connect_errno > 0)
@@ -241,7 +230,7 @@ class Calculate
         }
         else if ($identifier == PaymentMethod::Pin)
         {
-            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='PIN' AND paymentMethod IS NOT NULL";
+            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='PIN' AND paymentMethod IS NOT NULL AND parentSession='$sessionID'";
             $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
             if($db->connect_errno > 0)
@@ -265,7 +254,7 @@ class Calculate
         }
         else if ($identifier == PaymentMethod::Cash)
         {
-            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='CASH' AND paymentMethod IS NOT NULL";
+            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='CASH' AND paymentMethod IS NOT NULL AND parentSession='$sessionID'";
             $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
             if($db->connect_errno > 0)
@@ -289,7 +278,7 @@ class Calculate
         }
         else if ($identifier == PaymentMethod::BankTransfer)
         {
-            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='BANK' AND paymentMethod IS NOT NULL";
+            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='BANK' AND paymentMethod IS NOT NULL AND parentSession='$sessionID'";
             $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
             if($db->connect_errno > 0)
@@ -348,10 +337,8 @@ class Calculate
         foreach ($json as $key => $val)
         {
             $final['exclVat'] += ($val['priceAPiece']['priceExclVat'] *  $val['count']);
-            $final['total'] += (Misc::calculate("(" . number_format($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . ") " . $val['priceAPiece']['priceModifier']) * $val['count']);
+            $final['total'] += (Misc::calculate(number_format($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier']) * $val['count']);
         }
-
-        $final['total'] = number_format($final['total'], 2, '.', '');
         return $final;
     }
 }

@@ -19,7 +19,8 @@ if (isset($_GET['cashIn']))
     }
     else
     {
-        $sqls = "UPDATE cash_registers SET cash_registers.status='LoggedOn' WHERE crStaticIP='$thisIp'";
+        $id = mysqli_insert_id($db);
+        $sqls = "UPDATE cash_registers SET cash_registers.status='LoggedOn', `currentSession` = '" . $id . "' WHERE crStaticIP='$thisIp'";
 
         if(!$results = $db->query($sqls))
         {
@@ -190,11 +191,12 @@ else
                                 $cashOut = 0.0;
                                 while($row = $result->fetch_assoc())
                                 {
+                                    $cashSessionId = Misc::sqlGet("currentSession", "cash_registers", "crStaticIP", $thisIp)['currentSession'];
                                     ?>
                                     <b>Kas-in:</b> &euro; <?php echo '' . number_format($row['cashIn'], 2, ',', '') ?><br /> <!-- kas-in is het bedrag in cash wat er in de kassa zit op het moment van kassa/winkel opening -->
-                                    <b>Bruto-omzet:</b> &euro;&nbsp;<?php echo number_format(Calculate::getGrossTurnover(PaymentMethod::All), 2, ',', ''); ?><br /> <!-- Bruto omzet is de totale omzet. (Omzet is de optelsom van alle inkomsten) -->
-                                    <b>Netto-omzet:</b> &euro;&nbsp;<?php echo number_format(Calculate::getNetTurnover(PaymentMethod::All), 2, ',', ''); ?><br /> <!-- De netto omzet wordt berekend aan de hand van de bruto omzet met aftrek van teruggenomen artikelen, schadevergoedingen en achteraf toegekende kortingen. -->
-                                    <b>Marge:</b> &euro;&nbsp;<?php echo number_format(Calculate::getMargin(PaymentMethod::All), 2, ',', ''); ?><br /><br /> <!-- De marge is het verschil tussen inkoop- en verkoopprijs. -->
+                                    <b>Bruto-omzet:</b> &euro;&nbsp;<?php echo number_format(Calculate::getGrossTurnover(PaymentMethod::All, $cashSessionId), 2, ',', ''); ?><br /> <!-- Bruto omzet is de totale omzet. (Omzet is de optelsom van alle inkomsten) -->
+                                    <b>Netto-omzet:</b> &euro;&nbsp;<?php echo number_format(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2, ',', ''); ?><br /> <!-- De netto omzet wordt berekend aan de hand van de bruto omzet met aftrek van teruggenomen artikelen, schadevergoedingen en achteraf toegekende kortingen. -->
+                                    <b>Marge:</b> &euro;&nbsp;<?php echo number_format(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2, ',', ''); ?><br /><br /> <!-- De marge is het verschil tussen inkoop- en verkoopprijs. -->
                                     <b>Kassa geopend op:</b> <?php echo $row['openDate']; ?><br />
                                     <b>Geopend door:</b> <?php echo $_SESSION['login_ok']['nickName']; ?><br />
                                 </div>
