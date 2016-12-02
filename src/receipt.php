@@ -79,7 +79,7 @@ if (isset($_GET['new']))
                             echo '    <th>' . urldecode(Items::getField("itemName", $key)) . '</th>';
                             echo '    <th><span class="priceClickable" id="' . $key . '" data-placement="bottom" data-trigger="hover">';
                             echo '        <a style="color: black;" href="javascript:void(0);" id="editPrice' . $key . '">';
-                            echo '            &euro;&nbsp;' . number_format(number_format($total, 2) * $_SESSION['receipt']['items'][$key]['count'], 2, ',', ' ') . '</a>';
+                            echo '            &euro;&nbsp;' . number_format(number_format($total, 2, '.', '') * $_SESSION['receipt']['items'][$key]['count'], 2, ',', ' ') . '</a>';
                             echo '        </span>';
                             echo '        <div id="popover-title' . $key . '" class="hidden">';
                             echo '            <b>Prijs berekening</b>';
