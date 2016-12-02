@@ -11,6 +11,17 @@ abstract class PaymentMethod
 
 class Calculate
 {
+    public static function calculatePrice($excl, $modifier)
+    {
+        global $_CFG;
+        $modifier = str_replace('$INKOOP', $excl, $modifier);
+        $modifier = str_replace('$BTW', $_CFG['VAT'], $modifier);
+        $modifier = str_replace(',', '.', $modifier);
+
+        $output['sum'] = $modifier;
+        $output['ans'] = Misc::calculate($modifier);
+    }
+
     public static function getGrossTurnover($identifier)
     {
         global $config;
@@ -305,6 +316,7 @@ class Calculate
     public static function getReceiptTotal($identifier, $session = false)
     {
         global $config;
+        global $_CFG;
 
         $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
@@ -335,9 +347,8 @@ class Calculate
         $final = array();
         foreach ($json as $key => $val)
         {
-
             $final['exclVat'] += ($val['priceAPiece']['priceExclVat'] *  $val['count']);
-            $final['total'] += (Misc::calculate($val['priceAPiece']['priceExclVat'] . ' ' . $val['priceAPiece']['priceModifier']) * $val['count']);
+            $final['total'] += (Misc::calculate("(" . number_format($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . ") " . $val['priceAPiece']['priceModifier']) * $val['count']);
         }
 
         $final['total'] = number_format($final['total'], 2, '.', '');

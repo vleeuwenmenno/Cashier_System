@@ -46,22 +46,49 @@ if (isset($_GET['id']))
         <label for="postalCode">Artikel categorie: </label>
         <input type="text" class="form-control" id="itemCategory" placeholder="Inkt origineel" value="<?php echo $row["itemCategory"]; ?>" readonly/ />
     </div>
-    <div class="form-group">
-        <label for="phonehome">Voorraad: </label>
-        <input type="text" class="form-control" id="itemStock" placeholder="0-1000000" value="<?php echo $row["itemStock"]; ?>" readonly/ />
-    </div>
-    <div class="form-group">
-        <label for="phonemobile">Prijs exclusief BTW: </label>
-        <input type="text" class="form-control" id="priceExclVat" placeholder="26,66" value="<?php echo $row["priceExclVat"]; ?>" readonly/ />
-    </div>
-
-    <label for="priceModifier">Prijs berekening: </label>
+	<label for="priceModifier">Voorraad: </label>
     <div class="input-group">
-        <span class="input-group-addon" id="priceModifierLabel"><?php echo $row["priceExclVat"]; ?></span>
-        <input type="text" class="form-control" id="priceModifier" aria-describedby="priceModifierLabel" placeholder="* 1.575" value="<?php echo $row["priceModifier"]; ?>" readonly/ />
-        <span class="input-group-addon" id="priceModifierLabelOutCome"><?php echo $row["priceExclVat"] . $row["priceModifier"] . ' = ' . round(Misc::calculate($row['priceExclVat'] . ' ' . $row['priceModifier']), 2) . ' &euro;'; ?></span>
+		<?php
+		$stock = $row["itemStock"];
+		if ($row["itemStock"] == 2147483647)
+			$stock = "&infin;";
+		?>
+        <input type="text" class="form-control" id="itemStock" placeholder="0-1000000 of &infin;" value="<?php echo $stock; ?>" readonly/ />
+		<span class="input-group-addon" id="makeInfinite">
+			<input type="checkbox" id="stockInfiniteCheck" <?php if ($row["itemStock"] == 2147483647) echo "checked"; ?> disabled readonly /><span style="display: inline; font-size: 20px;">&nbsp;&infin; </span>
+		</span>
     </div>
-    <br />
+	<br />
+	<div class="form-group">
+		<label for="priceExclVat">Inkoop prijs: </label>
+		<input type="text" class="form-control" id="priceExclVat" placeholder="26,66" value="<?php echo number_format($row["priceExclVat"], 2, ",", " "); ?>" readonly />
+	</div>
+	<label for="priceModifier">Prijs berekening: </label>
+	<div class="input-group">
+		<span class="input-group-addon" id="priceExclVatLabel" style="min-width: 96px; border-bottom-left-radius: 0px !important;">
+			Inkoop<br />
+			&euro;&nbsp;
+		</span>
+		<span class="input-group-addon" id="priceVatOnly" style="border-bottom-right-radius: 0px !important;">
+			Btw<br />
+			&nbsp;&euro;&nbsp;
+		</span>
+		<span class="input-group-addon" id="priceMarginOnly" style="border-bottom-right-radius: 0px !important;">
+			Marge<br />
+			&nbsp;&euro;&nbsp;
+		</span>
+		<span class="input-group-addon" id="priceResell" style="border-bottom-right-radius: 0px !important;">
+			Verkoop<br />
+			&nbsp;&euro;&nbsp;
+		</span>
+	</div>
+	<div class="input-group">
+		<span class="input-group-addon" id="" style="border-top-left-radius: 0px !important;">
+			($INKOOP * $BTW)<br />
+		</span>
+		<input type="text" style="height: 42px; border-top-right-radius: 0px !important;" class="form-control" id="priceModifier" aria-describedby="priceModifierLabel" placeholder=" * 1.375" value="<?php echo str_replace(".", ",", $row["priceModifier"]); ?>" readonly />
+	</div>
+	<br />
 
     <input type="hidden" name="customerIdInput" id="customerIdInput" value="<?php echo $_GET['id'];?>" />
 
@@ -72,23 +99,135 @@ if (isset($_GET['id']))
     <script>
 				$(document).ready(function ()
 				{
-				    $('#priceModifier').on('input', function () {
-				        var resultSum = "";
-				        $.get(
-                            "item/calcString.php",
-                            {
-                                sum: encodeURIComponent($('#priceExclVat').val() + " " + $("#priceModifier").val())
-                            },
-                            function (data) {
-                                if ($('#priceExclVat').val() == "")
-                                    $("#priceModifierLabel").text("26,66");
-                                else {
-                                    $("#priceModifierLabel").text($('#priceExclVat').val());
-                                    $("#priceModifierLabelOutCome").html($('#priceExclVat').val() + " " + $("#priceModifier").val() + " = " + data + " &euro;");
-                                }
-                            }
-                        );
-				    });
+					//~~~~~~~~~~~~~~~ LOAD EVERYTHING ONCE FOR THE PAGE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+					var vat = "<?php echo $_CFG['VAT']; ?>";
+
+					//Set price excl vat label
+					$("#priceExclVatLabel").html("Inkoop<br />&euro;&nbsp;" + $('#priceExclVat').val().replace(".", ","));
+
+					//Set vat price
+					$.get(
+						"item/calcString.php",
+						{
+							sum: encodeURIComponent($('#priceExclVat').val().replace(",", ".") + " * " + vat)
+						},
+						function (data)
+						{
+							$('#priceVatOnly').html("Btw<br />&nbsp;&euro;&nbsp;" + parseFloat(data.replace(",", ".") - $('#priceExclVat').val().replace(",", ".")).toFixed(2).replace(".", ","));
+						}
+					);
+
+					//Set resell price and margin only price
+					$.get(
+						"item/calcString.php",
+						{
+							sum: encodeURIComponent("(" +  $('#priceExclVat').val().replace(",", ".") + " * " + vat  + ") " + $("#priceModifier").val())
+						},
+						function (data)
+						{
+							$("#priceResell").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
+
+							$.get(
+								"item/calcString.php",
+								{
+									sum: encodeURIComponent(data + " - " + "(" +  $('#priceExclVat').val().replace(",", ".") + " * " + vat  + ")")
+								},
+								function (dataTwo)
+								{
+									$("#priceMarginOnly").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
+								}
+							);
+						}
+					);
+					//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ END OF LOAD
+
+					$('#priceModifier').on('input', function ()
+					{
+						var vat = "<?php echo $_CFG['VAT']; ?>";
+
+						$.get(
+							"item/calcString.php",
+							{
+								sum: encodeURIComponent("(" +  $('#priceExclVat').val().replace(",", ".") + " * " + vat  + ") " + $("#priceModifier").val())
+							},
+							function (data)
+							{
+								$("#priceResell").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
+
+								$.get(
+									"item/calcString.php",
+									{
+										sum: encodeURIComponent(data + " - " + "(" +  $('#priceExclVat').val().replace(",", ".") + " * " + vat  + ")")
+									},
+									function (dataTwo)
+									{
+										$("#priceMarginOnly").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
+									}
+								);
+							}
+						);
+					});
+
+					$('#priceExclVat').on('input', function ()
+					{
+						var vat = "<?php echo $_CFG['VAT']; ?>";
+
+						//Set price excl vat label
+						$("#priceExclVatLabel").html("Inkoop<br />&euro;&nbsp;" + $('#priceExclVat').val().replace(".", ","));
+
+						//Set vat price
+						$.get(
+							"item/calcString.php",
+							{
+								sum: encodeURIComponent($('#priceExclVat').val().replace(",", ".") + " * " + vat)
+							},
+							function (data)
+							{
+								$('#priceVatOnly').html("Btw<br />&nbsp;&euro;&nbsp;" + parseFloat(data.replace(",", ".") - $('#priceExclVat').val().replace(",", ".")).toFixed(2).replace(".", ","));
+							}
+						);
+
+						//Set resell price and margin only price
+						$.get(
+							"item/calcString.php",
+							{
+								sum: encodeURIComponent("(" +  $('#priceExclVat').val().replace(",", ".") + " * " + vat  + ") " + $("#priceModifier").val())
+							},
+							function (data)
+							{
+								$("#priceResell").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
+
+								$.get(
+									"item/calcString.php",
+									{
+										sum: encodeURIComponent(data + " - " + "(" +  $('#priceExclVat').val().replace(",", ".") + " * " + vat  + ")")
+									},
+									function (dataTwo)
+									{
+										$("#priceMarginOnly").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
+									}
+								);
+							}
+						);
+					});
+
+					$("#itemStock").on("input", function() {
+						if ($("#itemStock").val() != "∞")
+							$("#stockInfiniteCheck").prop("checked", false);
+						else
+							$("#stockInfiniteCheck").prop("checked", true);
+					});
+
+					$("#stockInfiniteCheck").change(function() {
+						if($(this).is(":checked"))
+						{
+							$("#itemStock").val("∞");
+				        }
+						else
+						{
+							$("#itemStock").val("0");
+						}
+					});
 
 				    $("#cancelEditBtn").on("click", function ()
 				    {
@@ -106,6 +245,8 @@ if (isset($_GET['id']))
 				            $("#cancelEditBtn").fadeIn();
 				        });
 
+						$("#stockInfiniteCheck").attr("readonly", false);
+						$("#stockInfiniteCheck").attr("disabled", false);
 				        $("#itemId").attr("readonly", false);
 				        $("#EAN").attr("readonly", false);
 				        $("#supplier").attr("readonly", false);
@@ -123,7 +264,10 @@ if (isset($_GET['id']))
 					        $("#loaderAnimation").fadeIn();
 					    });
 
-                		$.get(
+						if ($("#itemStock").val() == "∞")
+							$("#itemStock").val("2147483647");
+
+						$.get(
                             "item/itemUpdate.php",
                             {
                                 itemId: "<?php if ($row['EAN'] != "") echo $row['EAN']; else echo $row['itemId']; ?>",
@@ -133,7 +277,7 @@ if (isset($_GET['id']))
                                 itemName: $("#itemName").val(),
                                 itemCategory: $("#itemCategory").val(),
                                 itemStock: $("#itemStock").val(),
-                                priceExclVat: $("#priceExclVat").val(),
+                                priceExclVat: $("#priceExclVat").val().replace(",", "."),
                                 priceModifier: $("#priceModifier").val(),
                             },
 							function(data)
@@ -150,6 +294,8 @@ if (isset($_GET['id']))
 							            $("#changeBtn").fadeIn();
 							        });
 
+									$("#stockInfiniteCheck").attr("readonly", true);
+									$("#stockInfiniteCheck").attr("disabled", true);
 							        $("#itemId").attr("readonly", true);
 							        $("#EAN").attr("readonly", true);
 							        $("#supplier").attr("readonly", true);
@@ -159,6 +305,9 @@ if (isset($_GET['id']))
 							        $("#itemStock").attr("readonly", true);
 							        $("#priceExclVat").attr("readonly", true);
 							        $("#priceModifier").attr("readonly", true);
+
+									if ($("#itemStock").val() == "2147483647")
+										$("#itemStock").val("∞");
 							    }
 							    else
 							    {
@@ -167,14 +316,6 @@ if (isset($_GET['id']))
 							    }
 							}
                         );
-					});
-
-					document.getElementById('phonemobile').addEventListener('input', function (e) {
-						e.target.value = e.target.value.replace(/[^\dA-Z]/g, '').replace(/(.{2})/g, '$1 ').trim();
-					});
-
-					document.getElementById('phonehome').addEventListener('input', function (e) {
-						e.target.value = e.target.value.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, "$1-$2-$3").trim();
 					});
 				});
     </script>

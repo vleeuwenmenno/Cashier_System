@@ -69,18 +69,31 @@ if (isset($_GET['new']))
                     <?php
                         foreach ($_SESSION['receipt']['items'] as $key => $val)
                         {
-                            //editPrice$key
-                            //editAmount$key
+                            $total = Misc::calculate(number_format($_SESSION['receipt']['items'][$key]['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2, '.', '') . " " . $_SESSION['receipt']['items'][$key]['priceAPiece']['priceModifier']);
+                            $purchase = $_SESSION['receipt']['items'][$key]['priceAPiece']['priceExclVat'];
+                            $vatOnly = (($_SESSION['receipt']['items'][$key]['priceAPiece']['priceExclVat'] * $_CFG['VAT']) - $_SESSION['receipt']['items'][$key]['priceAPiece']['priceExclVat']);
+
                             echo '<tr>';
-                            echo '<th><button id="trash' .  $key . '" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" style="font-size: 12px;"></span></button></th>';
-                            echo '<th><input class="form-control" style="width: 156px; display: none;" id="editable' . $key . '" value="' . $val['count'] . '" type="text" name="type"/><a style="color: black; float: left;" href="javascript:void(0);" id="editAmount' . $key . '">' . $val['count'] . '</a></th>';
-                            echo '<th>' . urldecode(Items::getField("itemName", $key)) . '</th>';
-                            echo '<th><span class="priceClickable" id="' . $key . '" data-placement="bottom" data-toggle="popover" title="Prijs berekening" data-content="&euro;&nbsp;'. number_format (Items::getField("priceExclVat", $key), 2, ',', ' ') . '&nbsp;excl. ' . number_format(Items::getField("priceModifier", $key), 2, ',', ' ') . ' =
-                            &euro;&nbsp;' . number_format(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key)), 2, ',', ' ') . ' * ' . $_SESSION['receipt']['items'][$key]['count'] . ' = ' .
-                            '&euro;&nbsp;' . number_format(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key) . ' * ' . $_SESSION['receipt']['items'][$key]['count']), 2, ',', ' ') . '">
-                            <a style="color: black;" href="javascript:void(0);" id="editPrice' . $key . '">
-                                &euro;&nbsp;' . number_format(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key) . ' * ' . $_SESSION['receipt']['items'][$key]['count']), 2, ',', ' ') . '
-                            </a></span></th>';
+                            echo '    <th><button id="trash' .  $key . '" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" style="font-size: 12px;"></span></button></th>';
+                            echo '    <th><input class="form-control" style="width: 156px; display: none;" id="editable' . $key . '" value="' . $val['count'] . '" type="text" name="type"/><a style="color: black; float: left;" href="javascript:void(0);" id="editAmount' . $key . '">' . $val['count'] . '</a></th>';
+                            echo '    <th>' . urldecode(Items::getField("itemName", $key)) . '</th>';
+                            echo '    <th><span class="priceClickable" id="' . $key . '" data-placement="bottom" data-trigger="hover">';
+                            echo '        <a style="color: black;" href="javascript:void(0);" id="editPrice' . $key . '">';
+                            echo '            &euro;&nbsp;' . number_format(number_format($total, 2) * $_SESSION['receipt']['items'][$key]['count'], 2, ',', ' ') . '</a>';
+                            echo '        </span>';
+                            echo '        <div id="popover-title' . $key . '" class="hidden">';
+                            echo '            <b>Prijs berekening</b>';
+                            echo '        </div>';
+                            echo '        <div id="popover-content' . $key . '" class="hidden">';
+                            echo '            <div>';
+                            echo '            Inkoop: &euro;&nbsp;' . number_format($purchase, 2, ',', ' ') . '<br/>
+                                              Btw. : &nbsp;&nbsp;&nbsp;&euro;&nbsp;' . number_format($vatOnly, 2, ',', ' ') . '<br />
+                                              Marge: &euro;&nbsp;' . number_format($total - (number_format($purchase, 2) + number_format($vatOnly, 2)), 2, ',', ' ') . '<br />
+                                              P.S: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&euro;&nbsp; ' . number_format($total, 2, ',', ' ') . '<br />
+                                              Totaal:&nbsp; &euro;&nbsp;' . number_format(number_format($total, 2) * $_SESSION['receipt']['items'][$key]['count'], 2, ',', ' ') . '<br />';
+                            echo '            </div>';
+                            echo '        </div>';
+                            echo '    </th>';
                             echo '</tr>';
 
                             echo '
@@ -96,20 +109,37 @@ if (isset($_GET['new']))
                                         </div>
                                         <div class="modal-body">
                                             <div class="form-group">
-                                                <label for="priceExclVat' .  $key . '">Prijs exclusief BTW: </label>
-                                                <input type="text" class="form-control" id="priceExclVat' .  $key . '" placeholder="26,66" value="' . number_format(Items::getField("priceExclVat", $key), 2, ',', '.') . '" />
+                                                <label for="priceExclVat' .  $key . '">Inkoop prijs: </label>
+                                                <input type="text" class="form-control" id="priceExclVat' . $key . '" placeholder="26,66" value="' . number_format($_SESSION['receipt']['items'][$key]['priceAPiece']['priceExclVat'], 2, ',', ' ') . '" />
                                             </div>
                                             <label for="priceModifier' .  $key . '">Prijs berekening: </label>
                                             <div class="input-group">
-                                                <span class="input-group-addon" style="min-width: 96px;" id="priceModifierLabel' .  $key . '">Excl. Btw<br />&euro;&nbsp;' . number_format(Items::getField("priceExclVat", $key), 2, ',', '.') . '</span>
-                                                <input type="text" style="height: 42px;" class="form-control" id="priceModifier' .  $key . '" aria-describedby="priceModifierLabel" placeholder="* 1,575" value="' . Items::getField("priceModifier", $key) . '" />
-                                                <span class="input-group-addon" id="pricModEq' .  $key . '">=</span>
-                                                <span class="input-group-addon" id="priceModifierLabelOutCome' .  $key . '">Sub-totaal:<br />&nbsp;&euro;&nbsp;' .
-                                                number_format(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key)), 2, ',', '.') . '</span>
-                                                <span class="input-group-addon" id="priceModifierLabelOutCome' .  $key . 'Full">Totaal<br />&nbsp;&euro;&nbsp;' . number_format(Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key) . ' * ' . $val['count']), 2, ',', '.') . '</span>
+                                                <span class="input-group-addon" id="priceExclVatLabel' .  $key . '" style="min-width: 96px; border-bottom-left-radius: 0px !important;">
+                                                    Inkoop<br />
+                                                    &euro;&nbsp;
+                                                </span>
+                                                <span class="input-group-addon" id="priceVatOnly' .  $key . '" style="border-bottom-right-radius: 0px !important;">
+                                                    Btw<br />
+                                                    &nbsp;&euro;&nbsp;
+                                                </span>
+                                                <span class="input-group-addon" id="priceMarginOnly' .  $key . '" style="border-bottom-right-radius: 0px !important;">
+                                                    Marge<br />
+                                                    &nbsp;&euro;&nbsp;
+                                                </span>
+                                                <span class="input-group-addon" id="priceResell' .  $key . '" style="border-bottom-right-radius: 0px !important;">
+                                                    Verkoop<br />
+                                                    &nbsp;&euro;&nbsp;
+                                                </span>
                                             </div>
+                                            <div class="input-group">
+                                                <span class="input-group-addon" id="" style="border-top-left-radius: 0px !important;">
+                                                    ($INKOOP * $BTW)<br />
+                                                </span>
+                                                <input type="text" style="height: 42px; border-top-right-radius: 0px !important;" class="form-control" id="priceModifier' .  $key . '" aria-describedby="priceModifierLabel" placeholder=" * 1.375" value="' . str_replace('.',',', $_SESSION['receipt']['items'][$key]['priceAPiece']['priceModifier']) . '" />
+                                            </div>
+
                                             <div class="checkbox">
-                                              <label><input type="checkbox" value="" id="global' . $key . '" checked>Artikel prijs aanpassen voor alleen deze bon.</label>
+                                              <label><input type="checkbox" value="" id="global' . $key . '" disabled readonly checked>Artikel prijs aanpassen voor alleen deze bon.</label>
                                             </div>
                                         </div>
                                         <div class="modal-footer" id="stockWarningFooter">
@@ -122,18 +152,84 @@ if (isset($_GET['new']))
 
                             echo '<script>
                             $(document).ready(function() {
+
+                                $("#' . $key . '").popover({
+                                    html : true,
+                                    content: function() {
+                                      return $("#popover-content' . $key . '").html();
+                                    },
+                                    title: function() {
+                                      return $("#popover-title' . $key . '").html();
+                                    }
+                                });
+
+                                //SET THE VALUES ONCE!!!!!!
+                                var vat = "' . $_CFG['VAT'] . '";
+
+                                //Set price excl vat label
+                                $("#priceExclVatLabel' . $key . '").html("Inkoop<br />&euro;&nbsp;" + $(\'#priceExclVat' . $key . '\').val().replace(".", ","));
+
+                                //Set vat price
+                                $.get(
+                                    "item/calcString.php",
+                                    {
+                                        sum: encodeURIComponent($(\'#priceExclVat' . $key . '\').val().replace(",", ".") + " * " + vat)
+                                    },
+                                    function (data)
+                                    {
+                                        $(\'#priceVatOnly' . $key . '\').html("Btw<br />&nbsp;&euro;&nbsp;" + parseFloat(data.replace(",", ".") - $(\'#priceExclVat' . $key . '\').val().replace(",", ".")).toFixed(2).replace(".", ","));
+                                    }
+                                );
+
+                                //Set resell price and margin only price
+                                $.get(
+                                    "item/calcString.php",
+                                    {
+                                        sum: encodeURIComponent("(" +  $(\'#priceExclVat' . $key . '\').val().replace(",", ".") + " * " + vat  + ") " + $("#priceModifier' . $key . '").val())
+                                    },
+                                    function (data)
+                                    {
+                                        $("#priceResell' . $key . '").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
+
+                                        $.get(
+                                            "item/calcString.php",
+                                            {
+                                                sum: encodeURIComponent(data + " - " + "(" +  $(\'#priceExclVat' . $key . '\').val().replace(",", ".") + " * " + vat  + ")")
+                                            },
+                                            function (dataTwo)
+                                            {
+                                                $("#priceMarginOnly' . $key . '").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
+                                            }
+                                        );
+                                    }
+                                );
+                                //END!!!!!!!
+
                                 $("#update' .  $key . '").click(function() {
-                                    $.get(
-                                        "receipt/updateModifier.php",
-                                        {
-                                            modifier: $("#priceModifier' . $key . '").val(),
-                                            global: $("#global' . $key . '").is(\':checked\'),
-                                            nativeId: "' . $key . '",
-                                            priceExclVat: "' . Items::getField("priceExclVat", $key) . '"
-                                        },
-                                        function (data)
-                                        { }
-                                    );
+                                    shouldReload = true;
+                                });
+
+                                $("#priceChange' .  $key . '").on(\'hidden.bs.modal\', function () {
+                                    if (shouldReload)
+                                    {
+                                        shouldReload = false;
+                                        $.get(
+                                            "receipt/updateModifier.php",
+                                            {
+                                                modifier: $("#priceModifier' . $key . '").val(),
+                                                global: $("#global' . $key . '").is(\':checked\'),
+                                                nativeId: "' . $key . '",
+                                                priceExclVat: $("#priceExclVat' . $key . '").val().replace(",", ".")
+                                            },
+                                            function (data)
+                                            {
+                                                $("#pageLoaderIndicator").fadeIn();
+                                                $("#PageContent").load("receipt.php?new", function () {
+                                                    $("#pageLoaderIndicator").fadeOut();
+                                                });
+                                            }
+                                        );
+                                    }
                                 });
 
                                 $("#editAmount' . $key . '").click(function() {
@@ -162,7 +258,7 @@ if (isset($_GET['new']))
                                                 }
                                             );
 
-                                            var priceOne = ' . Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key)) . ';
+                                            var priceOne = ' . Misc::calculate($_SESSION['receipt']['items'][$key]['priceAPiece']['priceExclVat'] . ' ' . $_SESSION['receipt']['items'][$key]['priceAPiece']['priceModifier']) . ';
                                             var total = priceOne * parseInt($("#editable' . $key . '").val());
                                             $("#editPrice' . $key . '").val(total);
                                         }
@@ -188,80 +284,75 @@ if (isset($_GET['new']))
                                     }
                                 });
 
-                                $("#priceExclVat' .  $key . '").on(\'input\', function() {
-                                    $("#priceModifierLabel' .  $key . '").html("Excl. Btw<br />&euro;&nbsp;"+$("#priceExclVat' .  $key . '").val());
-
-                                    var resultSum = "";
-            				        $.get(
-                                        "item/calcString.php",
-                                        {
-                                            sum: encodeURIComponent($(\'#priceExclVat' .  $key . '\').val() + " " + $("#priceModifier' .  $key . '").val())
-                                        },
-                                        function (data) {
-                                            if ($(\'#priceExclVat\').val() == "")
-                                                $("#priceModifierLabel' .  $key . '").text("26,66");
-                                            else
-                                            {
-                                                $("#priceModifierLabel' .  $key . '").html("Excl. Btw<br />&euro;&nbsp;"+$(\'#priceExclVat' .  $key . '\').val());
-                                                $("#priceModifierLabelOutCome' .  $key . '").html($(\'#priceExclVat' .  $key . '\').val() + " " + $("#priceModifier' .  $key . '").val() + " = &euro;&nbsp;" + data + "");
-                                            }
-                                        }
-                                    );
-                                });
-
-                                $(\'#priceModifier' .  $key . '\').on(\'input\', function () {
-            				        var resultSum = "";
+                                $(\'#priceModifier' . $key . '\').on(\'input\', function ()
+            				    {
+                                    var vat = "' . $_CFG['VAT'] . '";
 
             				        $.get(
                                         "item/calcString.php",
                                         {
-                                            sum: encodeURIComponent($(\'#priceExclVat' .  $key . '\').val() + " " + $("#priceModifier' .  $key . '").val())
-                                        },
-                                        function (data) {
-                                            dataTwo = data;
-                                            if ($(\'#priceExclVat\').val() == "")
-                                                $("#priceModifierLabel' .  $key . '").text("26,66");
-                                            else
-                                            {
-                                                $("#priceModifierLabel' .  $key . '").html("Excl. Btw<br />&euro;&nbsp;"+$(\'#priceExclVat' .  $key . '\').val());
-                                                $("#priceModifierLabelOutCome' .  $key . '").html("Sub-totaal<br />&euro;&nbsp;" + data);
-                                            }
-                                        }
-                                    );
-                                    $.get(
-                                        "item/calcString.php",
-                                        {
-                                            sum: encodeURIComponent("(" + $(\'#priceExclVat' .  $key . '\').val() + " " + $("#priceModifier' .  $key . '").val() + ") * " + "' . $val['count'] . '")
+                                            sum: encodeURIComponent("(" +  $(\'#priceExclVat' . $key . '\').val().replace(",", ".") + " * " + vat  + ") " + $("#priceModifier' . $key . '").val())
                                         },
                                         function (data)
                                         {
+                                            $("#priceResell' . $key . '").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
+
                                             $.get(
                                                 "item/calcString.php",
                                                 {
-                                                    sum: encodeURIComponent($(\'#priceExclVat' .  $key . '\').val() + " " + $("#priceModifier' .  $key . '").val())
+                                                    sum: encodeURIComponent(data + " - " + "(" +  $(\'#priceExclVat' . $key . '\').val().replace(",", ".") + " * " + vat  + ")")
                                                 },
                                                 function (dataTwo)
                                                 {
-                                                    if ($(\'#priceExclVat\').val() == "")
-                                                        $("#priceModifierLabel' .  $key . '").text("26,66");
-                                                    else
-                                                    {
-                                                        $("#priceModifierLabel' .  $key . '").html("Excl. Btw<br />&euro;&nbsp;"+$(\'#priceExclVat' .  $key . '\').val());
-                                                        $("#priceModifierLabelOutCome' .  $key . 'Full").html("Totaal<br />&euro;&nbsp;" + data);
-                                                    }
+                                                    $("#priceMarginOnly' . $key . '").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
                                                 }
                                             );
                                         }
                                     );
             				    });
 
-                                $( "#' . $key . '" ).hover(function() {
-                                    $(\'#' . $key . '\').popover(\'show\');
-                                });
+            				    $(\'#priceExclVat' . $key . '\').on(\'input\', function ()
+            				    {
+                                    var vat = "' . $_CFG['VAT'] . '";
 
-                                $( "#' . $key . '" ).mouseout(function() {
-                                    $(\'#' . $key . '\').popover(\'hide\');
-                                });
+                                    //Set price excl vat label
+                                    $("#priceExclVatLabel' . $key . '").html("Inkoop<br />&euro;&nbsp;" + $(\'#priceExclVat' . $key . '\').val().replace(".", ","));
+
+                                    //Set vat price
+                					$.get(
+                						"item/calcString.php",
+                						{
+                							sum: encodeURIComponent($(\'#priceExclVat' . $key . '\').val().replace(",", ".") + " * " + vat)
+                						},
+                						function (data)
+                						{
+                							$(\'#priceVatOnly' . $key . '\').html("Btw<br />&nbsp;&euro;&nbsp;" + parseFloat(data.replace(",", ".") - $(\'#priceExclVat' . $key . '\').val().replace(",", ".")).toFixed(2).replace(".", ","));
+                						}
+                					);
+
+                                    //Set resell price and margin only price
+                                    $.get(
+                                        "item/calcString.php",
+                                        {
+                                            sum: encodeURIComponent("(" +  $(\'#priceExclVat' . $key . '\').val().replace(",", ".") + " * " + vat  + ") " + $("#priceModifier' . $key . '").val())
+                                        },
+                                        function (data)
+                                        {
+                                            $("#priceResell' . $key . '").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
+
+                                            $.get(
+                                                "item/calcString.php",
+                                                {
+                                                    sum: encodeURIComponent(data + " - " + "(" +  $(\'#priceExclVat' . $key . '\').val().replace(",", ".") + " * " + vat  + ")")
+                                                },
+                                                function (dataTwo)
+                                                {
+                                                    $("#priceMarginOnly' . $key . '").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
+                                                }
+                                            );
+                                        }
+                                    );
+            				    });
 
                                 $("#' . $key . '").on("click", function() {
                                     $(\'#priceChange' . $key . '\').modal(\'show\');
@@ -369,16 +460,7 @@ if (isset($_GET['new']))
 
     <br /><br /><br /><br />
     <div class="pull-right">
-        <?php
-            $total = 0;
-            foreach ($_SESSION['receipt']['items'] as $key => $val)
-            {
-                $price = Misc::calculate(Items::getField("priceExclVat", $key) . ' ' . Items::getField("priceModifier", $key));
-                $price *= $val['count'];
-                $total += $price;
-            }
-        ?>
-        <h3>Totaal: &euro; <?php echo Calculate::getReceiptTotal($_SESSION['receipt']['id'])['total']; ?></h3>
+        <h3>Totaal: &euro; <?php echo number_format(Calculate::getReceiptTotal($_SESSION['receipt']['id'], true)['total'], 2, ',', ' '); ?></h3>
     </div>
 
     <!-- =====DEBUG STUFF===== -->
@@ -417,7 +499,15 @@ if (isset($_GET['new']))
             </div>
         </div>
     </div>
-
+    <?php
+        $total = 0;
+        foreach ($_SESSION['receipt']['items'] as $key => $val)
+        {
+            $price = Misc::calculate($_SESSION['receipt']['items'][$key]['priceAPiece']['priceExclVat'] . ' ' . $_SESSION['receipt']['items'][$key]['priceAPiece']['priceModifier']);
+            $price *= $val['count'];
+            $total += $price;
+        }
+    ?>
     <script type="text/javascript">
         function checkTotalValue()
         {
@@ -876,31 +966,7 @@ else
             </script>
 
             <tbody id="listContents">
-                <?php
-    $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
-    if($db->connect_errno > 0)
-    {
-        die('Unable to connect to database [' . $db->connect_error . ']');
-    }
-
-    $sql = "SELECT * FROM receipt WHERE 1;";
-
-    if(!$result = $db->query($sql))
-    {
-        die('There was an error running the query [' . $db->error . ']');
-    }
-
-    $i = 0;
-    while($row = $result->fetch_assoc())
-    {
-        $i++;
-        if ($i < 25)
-        {
-
-        }
-    }
-                ?>
             </tbody>
         </table>
         <?php

@@ -54,7 +54,8 @@ else
     $json = json_decode(urldecode(Misc::sqlGet("items", "receipt", "receiptId", $receiptId)['items']), TRUE);
     foreach ($json as $key => $val)
     {
-        Misc::sqlUpdate("items", "itemStock", "itemStock - " . $val['count'], "nativeId", "" . $key);
+        if (intval(Misc::sqlGet("itemStock", "items", "nativeId", $key)['itemStock']) != 2147483647)
+            Misc::sqlUpdate("items", "itemStock", "itemStock - " . $val['count'], "nativeId", "" . $key);
     }
 
     //Move receipt data in session to OLD

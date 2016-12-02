@@ -30,62 +30,132 @@ if (isset($_GET['new']))
         <label for="postalCode">Artikel categorie: </label>
         <input type="text" class="form-control" id="itemCategory" placeholder="Inkt origineel" />
     </div>
-    <div class="form-group">
-        <label for="phonehome">Voorraad: </label>
-        <input type="text" class="form-control" id="itemStock" placeholder="0-1000000" />
+    <label for="priceModifier">Voorraad: </label>
+    <div class="input-group">
+        <input type="text" class="form-control" id="itemStock" placeholder="0-1000000 of &infin;" />
+		<span class="input-group-addon" id="makeInfinite">
+			<input type="checkbox" id="stockInfiniteCheck" /><span style="display: inline; font-size: 20px;">&nbsp;&infin; </span>
+		</span>
     </div>
+    <br />
     <div class="form-group">
-        <label for="phonemobile">Prijs exclusief BTW: </label>
-        <input type="text" class="form-control" id="priceExclVat" placeholder="26,66" />
+        <label for="priceExclVat">Inkoop prijs: </label>
+        <input type="text" class="form-control" id="priceExclVat" placeholder="26,66" value="" />
     </div>
-
     <label for="priceModifier">Prijs berekening: </label>
     <div class="input-group">
-        <span class="input-group-addon" id="priceModifierLabel">26,66</span>
-        <input type="text" class="form-control" id="priceModifier" aria-describedby="priceModifierLabel" placeholder="* 1.575" />
-        <span class="input-group-addon" id="priceModifierLabelOutCome">26,66 * 1.575 = &euro;</span>
+        <span class="input-group-addon" id="priceExclVatLabel" style="min-width: 96px; border-bottom-left-radius: 0px !important;">
+            Inkoop<br />
+            &euro;&nbsp;
+        </span>
+        <span class="input-group-addon" id="priceVatOnly" style="border-bottom-right-radius: 0px !important;">
+            Btw<br />
+            &nbsp;&euro;&nbsp;
+        </span>
+        <span class="input-group-addon" id="priceMarginOnly" style="border-bottom-right-radius: 0px !important;">
+            Marge<br />
+            &nbsp;&euro;&nbsp;
+        </span>
+        <span class="input-group-addon" id="priceResell" style="border-bottom-right-radius: 0px !important;">
+            Verkoop<br />
+            &nbsp;&euro;&nbsp;
+        </span>
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon" id="" style="border-top-left-radius: 0px !important;">
+            ($INKOOP * $BTW)<br />
+        </span>
+        <input type="text" style="height: 42px; border-top-right-radius: 0px !important;" class="form-control" id="priceModifier" aria-describedby="priceModifierLabel" placeholder=" * 1.375" value=" * 1.375" />
     </div>
     <br />
     <button type="button" id="applyBtn" class="btn btn-primary">Artikel Toevoegen</button>
     <script>
 				$(document).ready(function ()
 				{
+                    $("#itemStock").on("input", function() {
+                        if ($("#itemStock").val() != "∞")
+                            $("#stockInfiniteCheck").prop("checked", false);
+                        else
+                            $("#stockInfiniteCheck").prop("checked", true);
+                    });
+
+                    $("#stockInfiniteCheck").change(function() {
+                        if($(this).is(":checked"))
+                        {
+                            $("#itemStock").val("∞");
+                        }
+                        else
+                        {
+                            $("#itemStock").val("0");
+                        }
+                    });
+
 				    $('#priceModifier').on('input', function ()
 				    {
-				        var resultSum = "";
+                        var vat = "<?php echo $_CFG['VAT']; ?>";
+
 				        $.get(
                             "item/calcString.php",
                             {
-                                sum: encodeURIComponent($('#priceExclVat').val() + " " + $("#priceModifier").val())
+                                sum: encodeURIComponent("(" +  $('#priceExclVat').val().replace(",", ".") + " * " + vat  + ") " + $("#priceModifier").val())
                             },
                             function (data)
                             {
-                                if ($('#priceExclVat').val() == "")
-                                    $("#priceModifierLabel").text("26,66");
-                                else {
-                                    $("#priceModifierLabel").text($('#priceExclVat').val());
-                                    $("#priceModifierLabelOutCome").html($('#priceExclVat').val() + " " + $("#priceModifier").val() + " = " + data + " &euro;");
-                                }
+                                $("#priceResell").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
+
+                                $.get(
+                                    "item/calcString.php",
+                                    {
+                                        sum: encodeURIComponent(data + " - " + "(" +  $('#priceExclVat').val().replace(",", ".") + " * " + vat  + ")")
+                                    },
+                                    function (dataTwo)
+                                    {
+                                        $("#priceMarginOnly").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
+                                    }
+                                );
                             }
                         );
 				    });
 
 				    $('#priceExclVat').on('input', function ()
 				    {
-				        var resultSum = "";
-				        $.get(
+                        var vat = "<?php echo $_CFG['VAT']; ?>";
+
+                        //Set price excl vat label
+                        $("#priceExclVatLabel").html("Inkoop<br />&euro;&nbsp;" + $('#priceExclVat').val().replace(".", ","));
+
+                        //Set vat price
+                        $.get(
                             "item/calcString.php",
                             {
-                                sum: encodeURIComponent($('#priceExclVat').val() + " " + $("#priceModifier").val())
+                                sum: encodeURIComponent($('#priceExclVat').val().replace(",", ".") + " * " + vat)
                             },
                             function (data)
                             {
-                                if ($('#priceExclVat').val() == "")
-                                    $("#priceModifierLabel").text("26,66");
-                                else {
-                                    $("#priceModifierLabel").text($('#priceExclVat').val());
-                                    $("#priceModifierLabelOutCome").html($('#priceExclVat').val() + " " + $("#priceModifier").val() + " = " + data + " &euro;");
-                                }
+                                $('#priceVatOnly').html("Btw<br />&nbsp;&euro;&nbsp;" + parseFloat(data.replace(",", ".") - $('#priceExclVat').val().replace(",", ".")).toFixed(2).replace(".", ","));
+                            }
+                        );
+
+                        //Set resell price and margin only price
+                        $.get(
+                            "item/calcString.php",
+                            {
+                                sum: encodeURIComponent("(" +  $('#priceExclVat').val().replace(",", ".") + " * " + vat  + ") " + $("#priceModifier").val())
+                            },
+                            function (data)
+                            {
+                                $("#priceResell").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
+
+                                $.get(
+                                    "item/calcString.php",
+                                    {
+                                        sum: encodeURIComponent(data + " - " + "(" +  $('#priceExclVat').val().replace(",", ".") + " * " + vat  + ")")
+                                    },
+                                    function (dataTwo)
+                                    {
+                                        $("#priceMarginOnly").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
+                                    }
+                                );
                             }
                         );
 				    });
@@ -95,6 +165,9 @@ if (isset($_GET['new']))
 					    $("#customerForm").fadeOut("fast", function () {
 					        $("#loaderAnimation").fadeIn();
 					    });
+
+                        if ($("#itemStock").val() == "∞")
+                            $("#itemStock").val("2147483647");
 
 						$.get(
                             "item/itemAdd.php",
@@ -106,7 +179,7 @@ if (isset($_GET['new']))
                                 itemName: $("#itemName").val(),
                                 itemCategory: $("#itemCategory").val(),
                                 itemStock: $("#itemStock").val(),
-                                priceExclVat: $("#priceExclVat").val(),
+                                priceExclVat: $("#priceExclVat").val().replace(",", "."),
                                 priceModifier: $("#priceModifier").val()
                             },
 							function(data)
@@ -122,14 +195,6 @@ if (isset($_GET['new']))
 								}
 							}
                         );
-					});
-
-					document.getElementById('phonemobile').addEventListener('input', function (e) {
-						e.target.value = e.target.value.replace(/[^\dA-Z]/g, '').replace(/(.{2})/g, '$1 ').trim();
-					});
-
-					document.getElementById('phonehome').addEventListener('input', function (e) {
-						e.target.value = e.target.value.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, "$1-$2-$3").trim();
 					});
 				});
     </script>
