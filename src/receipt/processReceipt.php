@@ -43,7 +43,8 @@ else
         die('Unable to connect to database [' . $db->connect_error . ']');
     }
 
-    $sql = "UPDATE `receipt` SET `paidDt` = '" . date("d-m-Y H:i:s") . "', `paymentMethod` = '" . $paymentMethod . "' WHERE `receipt`.`receiptId`='" . $receiptId . "';";
+    $json = json_encode($_SESSION['receipt']['items']);
+    $sql = "UPDATE `receipt` SET `paidDt` = '" . date("d-m-Y H:i:s") . "', `paymentMethod` = '" . $paymentMethod . "', `items` = '" . urlencode($json) . "' WHERE `receipt`.`receiptId`='" . $receiptId . "';";
 
     if(!$result = $db->query($sql))
     {

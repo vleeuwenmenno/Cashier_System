@@ -32,12 +32,44 @@ if (isset($_GET['openReport']))
                     box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
                     width: 14cm;
                     height: 19.8cm;">';
-        echo '<div style="margin-left: 12px; padding-top: 12px;">';
-            echo Misc::sqlGet("crName", "cash_registers", "id", $row['cashRegisterId'])['crName'] . ' geopend door ' . $_SESSION['login_ok']['nickName'] . ' op ' .  $row['openDate'];
+        echo '<div style="margin-left: 12px; padding-top: 12px;" id="printPart">';
+            echo Misc::sqlGet("crName", "cash_registers", "id", $row['cashRegisterId'])['crName'] . ' geopend op ' .  $row['openDate'];
+            echo '<br /><br />Medewerker: ' . $_SESSION['login_ok']['nickName'];
             echo '<br />Kas-in: &euro; ' . $row['cashIn'];
         echo '</div>';
         echo '</div>';
         echo '<center><button id="printAgain" type="button" class="btn btn-default">Nogmaals Afdrukken</button></center>';
+        echo '<script>';
+        echo '
+            function PrintElem(elem)
+            {
+                var mywindow = window.open(\'\', \'PRINT\', \'height=400,width=600\');
+
+                mywindow.document.write(\'<html><head><title>\' + document.title  + \'</title>\');
+
+                mywindow.document.write(\'</head><body >\');
+
+                mywindow.document.write(document.getElementById(elem).innerHTML);
+                mywindow.document.write(\'</body></html>\');
+
+                mywindow.document.close(); // necessary for IE >= 10
+                mywindow.focus(); // necessary for IE >= 10*/
+
+                mywindow.print();
+                mywindow.close();
+
+                return true;
+            }
+
+            $(document).ready(function() {
+                PrintElem("printPart");
+
+                $("#printAgain").on("click", function() {
+                    PrintElem("printPart");
+                });
+            });
+        ';
+        echo '</script>';
     }
 }
 else if (isset($_GET['closeReport']))
