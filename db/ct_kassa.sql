@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 03, 2016 at 05:05 PM
--- Server version: 10.1.16-MariaDB
--- PHP Version: 5.5.38
+-- Generation Time: Dec 03, 2016 at 09:51 PM
+-- Server version: 10.1.19-MariaDB
+-- PHP Version: 7.0.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -47,7 +47,8 @@ CREATE TABLE `cashsession` (
 --
 
 INSERT INTO `cashsession` (`cashSessionId`, `cashRegisterId`, `openedBy`, `cashIn`, `cashOut`, `grossTurnover`, `netTurnover`, `cash`, `pin`, `bankTransfer`, `margin`, `openDate`, `closeDate`) VALUES
-(35, 0, 0, '522.32', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '03-12-2016 10:08:13', NULL);
+(35, 0, 0, '522.32', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '03-12-2016 10:08:13', NULL),
+(36, 0, 0, '522.32', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '03-12-2016 19:15:49', NULL);
 
 -- --------------------------------------------------------
 
@@ -68,7 +69,7 @@ CREATE TABLE `cash_registers` (
 --
 
 INSERT INTO `cash_registers` (`id`, `crName`, `crStaticIP`, `status`, `currentSession`) VALUES
-(0, 'Kassa 1', '::1', 'LoggedOff', NULL);
+(0, 'Kassa 1', '::1', 'LoggedOn', 35);
 
 -- --------------------------------------------------------
 
@@ -127,7 +128,7 @@ INSERT INTO `items` (`nativeId`, `itemId`, `EAN`, `supplier`, `factoryId`, `item
 (9085, '52888', '4008496850631', 'Gistron', '57646101451', 'Varta+Universeel+lader+incl.2x+2100mAh%28AA%29+AA%2FAAA', 'Acculader', 0, '6.50', '* 1.375'),
 (9086, '52889', '4008496850518', 'Gistron', '57642101451', 'Varta+Universeel+lader+incl.4x+2100mAh%28AA%29+AA%2FAAA', 'Acculader', 0, '10.90', '* 1.375'),
 (9087, '51321', '4717677326437', 'Gistron', '90BXG2F01-A10GA0P', 'Asrock+Beebox+N3000%2FB%2FBB+Zwart', 'Barebone', 0, '108.90', '* 1.375'),
-(9088, '51324', '4717677326642', 'Gistron', '90BXG2G01-A10GA1P', 'Asrock+Beebox+N3150%2FW%2FBB+Wit', 'Barebone', 0, '108.90', '* 1.375'),
+(9088, '51324', '4717677326642', 'Gistron', '90BXG2G01-A10GA1P', 'Asrock+Beebox+N3150%2FW%2FBB+Wit', 'Barebone', -1, '108.90', '* 1.375'),
 (9089, '52896', '4712900310078', 'Gistron', '90MS00D1-M02800', 'ASUS+Vivo+VM62-G279M', 'Barebone', 0, '318.49', '* 1.375'),
 (9090, '52897', '4712900310085', 'Gistron', '90MS00D1-M02810', 'ASUS+Vivo+VM62-G280M', 'Barebone', 0, '335.29', '* 1.375'),
 (9091, '52876', '4712900297805', 'Gistron', '90MS00L1-M00140', 'ASUS+VivoMini+UN45-VM014M', 'Barebone', 0, '117.65', '* 1.375'),
@@ -9427,7 +9428,9 @@ INSERT INTO `receipt` (`receiptId`, `creator`, `parentSession`, `items`, `create
 (1165417608, 1, 35, '%7B%2211481%22%3A%7B%22count%22%3A%221%22%2C%22priceAPiece%22%3A%7B%22priceExclVat%22%3A%222.75%22%2C%22priceModifier%22%3A%22%2B+2.17+%2B+10.45%22%7D%7D%7D', '03-12-2016 16:03:24', '03-12-2016 16:04:14', 0, 'PIN'),
 (1165418749, 1, 35, '%7B%2218319%22%3A%7B%22count%22%3A%221%22%2C%22priceAPiece%22%3A%7B%22priceExclVat%22%3A%220.00%22%2C%22priceModifier%22%3A%22%2B+45%22%7D%7D%7D', '03-12-2016 16:22:01', '03-12-2016 16:22:10', 0, 'PIN'),
 (1165420044, 1, 35, '%7B%2210513%22%3A%7B%22count%22%3A%221%22%2C%22priceAPiece%22%3A%7B%22priceExclVat%22%3A%2212.92%22%2C%22priceModifier%22%3A%22%2A+1.3+%2B+0.18%22%7D%7D%7D', '03-12-2016 16:46:19', '03-12-2016 16:46:57', 0, 'PIN'),
-(1165420635, 1, 35, '%7B%2218319%22%3A%7B%22count%22%3A%221%22%2C%22priceAPiece%22%3A%7B%22priceExclVat%22%3A%220.00%22%2C%22priceModifier%22%3A%22%2B+25%22%7D%7D%7D', '03-12-2016 16:54:12', '03-12-2016 16:54:29', 0, 'PIN');
+(1165420635, 1, 35, '%7B%2218319%22%3A%7B%22count%22%3A%221%22%2C%22priceAPiece%22%3A%7B%22priceExclVat%22%3A%220.00%22%2C%22priceModifier%22%3A%22%2B+25%22%7D%7D%7D', '03-12-2016 16:54:12', '03-12-2016 16:54:29', 0, 'PIN'),
+(1165437639, 1, 35, '%7B%229082%22%3A%7B%22count%22%3A%221%22%2C%22priceAPiece%22%3A%7B%22priceExclVat%22%3A%224.37%22%2C%22priceModifier%22%3A%22%2A+1.375%22%7D%7D%7D', '03-12-2016 21:39:57', NULL, 0, NULL),
+(1165437800, 1, 35, '', '03-12-2016 21:43:16', NULL, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -9447,8 +9450,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`sessionId`, `userId`, `lastPing`, `validUntil`) VALUES
-('T9qHrOAj156S92cfLiAMmVuhSwD8Ocd9', '0', '2016-12-03 11:35:56', '2016-12-03 12:35:56'),
-('7ZNBeSRcbxkaWxTRZYM5hsIdi4V5Zp62', '0', '2016-12-03 11:42:04', '2016-12-03 12:36:59');
+('FQJaQNAkeGyTxP7XY6f8hPpvERyFPxaH', '0', '2016-12-03 21:46:46', '2016-12-03 22:43:15');
 
 -- --------------------------------------------------------
 
@@ -9462,6 +9464,7 @@ CREATE TABLE `users` (
   `nickName` varchar(256) NOT NULL,
   `hash` varchar(512) DEFAULT NULL,
   `salt` varchar(512) DEFAULT NULL,
+  `userTheme` varchar(255) NOT NULL DEFAULT 'Default',
   `managementUser` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -9469,9 +9472,9 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`userId`, `username`, `nickName`, `hash`, `salt`, `managementUser`) VALUES
-('0', 'menno', 'Menno', '3ADB8B060DCE1F463452243AD1FE0082044523E71EE6DC20EB81F15855A47085230BBFB260861C5559443575FC8BF34B4C6A1C0444DA6BD650B62B91CBAEB405', 'hkjfhihg3no35giheawfuon4fwpislkdzgnhxn', 1),
-('1', 'rob', 'Rob Mol', '401FD1F85B3F53F7286A9A6D4DE402C5DAF38A379C09AF706EEBD2913BBC7B3BFF3060ED56155EFE9272F34F69CD7FC88371C494BA961268AAB92E8EE102E8AA', 'oiefjow389ru32hfi23fn', 1);
+INSERT INTO `users` (`userId`, `username`, `nickName`, `hash`, `salt`, `userTheme`, `managementUser`) VALUES
+('0', 'menno', 'Menno', '3ADB8B060DCE1F463452243AD1FE0082044523E71EE6DC20EB81F15855A47085230BBFB260861C5559443575FC8BF34B4C6A1C0444DA6BD650B62B91CBAEB405', 'hkjfhihg3no35giheawfuon4fwpislkdzgnhxn', 'Yeti', 1),
+('1', 'rob', 'Rob Mol', '401FD1F85B3F53F7286A9A6D4DE402C5DAF38A379C09AF706EEBD2913BBC7B3BFF3060ED56155EFE9272F34F69CD7FC88371C494BA961268AAB92E8EE102E8AA', 'oiefjow389ru32hfi23fn', 'Default', 1);
 
 --
 -- Indexes for dumped tables
@@ -9523,7 +9526,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `cashsession`
 --
 ALTER TABLE `cashsession`
-  MODIFY `cashSessionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `cashSessionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 --
 -- AUTO_INCREMENT for table `customers`
 --
@@ -9538,7 +9541,7 @@ ALTER TABLE `items`
 -- AUTO_INCREMENT for table `receipt`
 --
 ALTER TABLE `receipt`
-  MODIFY `receiptId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1165420636;
+  MODIFY `receiptId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1165437801;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
