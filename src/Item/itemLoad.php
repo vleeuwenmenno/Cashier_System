@@ -47,7 +47,7 @@ if (isset($_GET['sTerm']))
                 $vatOnly = number_format($row['priceExclVat'] * $_CFG['VAT'], 2) - $row['priceExclVat'];
 
                 echo '    <td><span class="priceClickable" id="popOver' . $row['nativeId'] . '" data-placement="bottom" data-trigger="hover">';
-                echo '        <a style="color: black;">';
+                echo '        <a>';
                 echo '            &euro;&nbsp;' . number_format($total, 2, ',', '') . '</a>';
                 echo '        </span>';
                 echo '        <div id="popover-title' . $row['nativeId'] . '" class="hidden">';

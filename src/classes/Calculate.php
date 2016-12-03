@@ -245,25 +245,110 @@ class Calculate
             while($row = $result->fetch_assoc())
             {
                 //Marge is totale prijs min belasting min inkoop prijs
-                $receipt = Calculate::getReceiptTotal($row['receiptId']);
-                $final += ($receipt['total'] - $receipt['exclVat']) / $_CFG['VAT'];
+                $receipt = Misc::sqlGet("items", "receipt", "receiptId", $row["receiptId"]);
+                $json = json_decode(urldecode($receipt['items']), TRUE);
+
+                foreach ($json as $key => $val)
+                {
+                    $itemPrice = Misc::calculate(($val['priceAPiece']['priceExclVat'] * $_CFG['VAT']) . " " . $val['priceAPiece']['priceModifier']);
+                    $itemMargin = $itemPrice - (($val['priceAPiece']['priceExclVat'] * $_CFG['VAT']) - $val['priceAPiece']['priceExclVat']) - $val['priceAPiece']['priceExclVat'];
+                    $final += $itemMargin;
+                }
             }
             return $final;
         }
         else if ($identifier == PaymentMethod::Pin)
         {
             $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='PIN' AND paymentMethod IS NOT NULL AND parentSession='$sessionID'";
+            $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
+            if($db->connect_errno > 0)
+            {
+                die('Unable to connect to database [' . $db->connect_error . ']');
+            }
+
+            if(!$result = $db->query($sql))
+            {
+                die('Er was een fout tijdens het ophalen van bruto-omzet (PaymentMethod::All) (' . $db->error . ')');
+            }
+
+            $final = 0.00;
+            while($row = $result->fetch_assoc())
+            {
+                //Marge is totale prijs min belasting min inkoop prijs
+                $receipt = Misc::sqlGet("items", "receipt", "receiptId", $row["receiptId"]);
+                $json = json_decode(urldecode($receipt['items']), TRUE);
+
+                foreach ($json as $key => $val)
+                {
+                    $itemPrice = Misc::calculate(($val['priceAPiece']['priceExclVat'] * $_CFG['VAT']) . " " . $val['priceAPiece']['priceModifier']);
+                    $itemMargin = $itemPrice - (($val['priceAPiece']['priceExclVat'] * $_CFG['VAT']) - $val['priceAPiece']['priceExclVat']) - $val['priceAPiece']['priceExclVat'];
+                    $final += $itemMargin;
+                }
+            }
+            return $final;
         }
         else if ($identifier == PaymentMethod::Cash)
         {
             $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='CASH' AND paymentMethod IS NOT NULL AND parentSession='$sessionID'";
+            $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
+            if($db->connect_errno > 0)
+            {
+                die('Unable to connect to database [' . $db->connect_error . ']');
+            }
+
+            if(!$result = $db->query($sql))
+            {
+                die('Er was een fout tijdens het ophalen van bruto-omzet (PaymentMethod::All) (' . $db->error . ')');
+            }
+
+            $final = 0.00;
+            while($row = $result->fetch_assoc())
+            {
+                //Marge is totale prijs min belasting min inkoop prijs
+                $receipt = Misc::sqlGet("items", "receipt", "receiptId", $row["receiptId"]);
+                $json = json_decode(urldecode($receipt['items']), TRUE);
+
+                foreach ($json as $key => $val)
+                {
+                    $itemPrice = Misc::calculate(($val['priceAPiece']['priceExclVat'] * $_CFG['VAT']) . " " . $val['priceAPiece']['priceModifier']);
+                    $itemMargin = $itemPrice - (($val['priceAPiece']['priceExclVat'] * $_CFG['VAT']) - $val['priceAPiece']['priceExclVat']) - $val['priceAPiece']['priceExclVat'];
+                    $final += $itemMargin;
+                }
+            }
+            return $final;
         }
         else if ($identifier == PaymentMethod::BankTransfer)
         {
             $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='BANK' AND paymentMethod IS NOT NULL AND parentSession='$sessionID'";
+            $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
+            if($db->connect_errno > 0)
+            {
+                die('Unable to connect to database [' . $db->connect_error . ']');
+            }
+
+            if(!$result = $db->query($sql))
+            {
+                die('Er was een fout tijdens het ophalen van bruto-omzet (PaymentMethod::All) (' . $db->error . ')');
+            }
+
+            $final = 0.00;
+            while($row = $result->fetch_assoc())
+            {
+                //Marge is totale prijs min belasting min inkoop prijs
+                $receipt = Misc::sqlGet("items", "receipt", "receiptId", $row["receiptId"]);
+                $json = json_decode(urldecode($receipt['items']), TRUE);
+
+                foreach ($json as $key => $val)
+                {
+                    $itemPrice = Misc::calculate(($val['priceAPiece']['priceExclVat'] * $_CFG['VAT']) . " " . $val['priceAPiece']['priceModifier']);
+                    $itemMargin = $itemPrice - (($val['priceAPiece']['priceExclVat'] * $_CFG['VAT']) - $val['priceAPiece']['priceExclVat']) - $val['priceAPiece']['priceExclVat'];
+                    $final += $itemMargin;
+                }
+            }
+            return $final;
         }
     }
 

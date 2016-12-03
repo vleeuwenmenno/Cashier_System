@@ -8,11 +8,13 @@
 ?>
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
         <script src="js/sidebar.js"></script>
 
         <!-- Bootstrap and all it's dependencies -->
-        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="themes/<?php echo $_CFG['THEME']; ?>/bootstrap.css" />
+        <link rel="stylesheet" href="themes/<?php echo $_CFG['THEME']; ?>/stylesheet.css">
+        <link rel="stylesheet" href="themes/<?php echo $_CFG['THEME']; ?>/select2.min.css" />
+        <link rel="stylesheet" href="themes/<?php echo $_CFG['THEME']; ?>/bootstrap-combobox.css" />
         <script src="js/jquery.js"></script>
         <script src="js/bootstrap.min.js"></script>
     </head>
@@ -61,9 +63,6 @@
                             <span class="glyphicon glyphicon-eur"></span> Kassa</span>
                         </a>
                     </li>
-
-                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> Beheer Login</a></li>
-                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> Login</a></li>
                 </ul>
             </div>
             </nav>

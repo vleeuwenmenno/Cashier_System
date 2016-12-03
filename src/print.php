@@ -25,13 +25,7 @@ if (isset($_GET['openReport']))
         //width: 14cm;
 
         echo '<br /><br />
-        <div style="background: white;
-                    display: block;
-                    margin: 0 auto;
-                    margin-bottom: 0.5cm;
-                    box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
-                    width: 14cm;
-                    height: 19.8cm;">';
+        <div class="printExample">';
         echo '<div style="margin-left: 12px; padding-top: 12px;" id="printPart">';
             echo Misc::sqlGet("crName", "cash_registers", "id", $row['cashRegisterId'])['crName'] . ' geopend op ' .  $row['openDate'];
             echo '<br /><br />Medewerker: ' . $_SESSION['login_ok']['nickName'];

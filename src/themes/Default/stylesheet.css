@@ -29,6 +29,14 @@
     border-right: 1px solid #e7e7e7;
 }*/
 
+.eanLabel {
+    display: inline-block;
+    background-color: #ffffff;
+    position: relative;
+    margin-left: 3px;
+    left: -125.735;
+}
+
 .side-menu {
   position: fixed;
   width: 20%;
@@ -570,4 +578,15 @@
 
 .popover{
     width: 256px !important; /* Max Width of the popover (depending on the container!) */
+}
+
+.printExample {
+    background: white;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 0.5cm;
+    box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+    width: 14cm;
+    height: 19.8cm;
+    color: black;
 }

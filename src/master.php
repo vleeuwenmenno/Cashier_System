@@ -5,13 +5,17 @@
 ?>
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
         <script src="js/sidebar.js"></script>
 
         <!-- Bootstrap and all it's dependencies -->
-        <link rel="stylesheet" href="css/bootstrap.min.css" />
-        <link rel="stylesheet" href="css/select2.min.css" />
-        <link rel="stylesheet" href="css/bootstrap-combobox.css" />
+        <?php
+        if ($_CFG['THEME'] == "")
+            $_CFG['THEME'] = 'Default';
+        ?>
+        <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/bootstrap.css" />
+        <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/stylesheet.css">
+        <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/select2.min.css" />
+        <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/bootstrap-combobox.css" />
 
         <script src="js/jquery.js"></script>
         <script src="js/bootstrap.min.js"></script>

@@ -1,8 +1,9 @@
 <?php
 
     $_CFG = array(
-        'COMPANY_NAME' => 'Com Today',
-        'VAT' => 1.21
+        'COMPANY_NAME' => 'ComToday',
+        'VAT' => 1.21,
+        'THEME' => 'Default'
     );
 
     $config = array(

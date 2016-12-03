@@ -77,10 +77,10 @@ if (isset($_GET['new']))
 
                             echo '<tr>';
                             echo '    <th><button id="trash' .  $key . '" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" style="font-size: 12px;"></span></button></th>';
-                            echo '    <th><input class="form-control" style="width: 156px; display: none;" id="editable' . $key . '" value="' . $val['count'] . '" type="text" name="type"/><a style="color: black; float: left;" href="javascript:void(0);" id="editAmount' . $key . '">' . $val['count'] . '</a></th>';
+                            echo '    <th><input class="form-control" style="width: 156px; display: none;" id="editable' . $key . '" value="' . $val['count'] . '" type="text" name="type"/><a style="float: left;" href="javascript:void(0);" id="editAmount' . $key . '">' . $val['count'] . '</a></th>';
                             echo '    <th>' . urldecode(Items::getField("itemName", $key)) . '</th>';
                             echo '    <th><span class="priceClickable" id="' . $key . '" data-placement="bottom" data-trigger="hover">';
-                            echo '        <a style="color: black;" href="javascript:void(0);" id="editPrice' . $key . '">';
+                            echo '        <a href="javascript:void(0);" id="editPrice' . $key . '">';
                             echo '            &euro;&nbsp;' . number_format(number_format($total, 2, '.', '') * $_SESSION['receipt']['items'][$key]['count'], 2, ',', '') . '</a>';
                             echo '        </span>';
                             echo '        <div id="popover-title' . $key . '" class="hidden">';
@@ -436,7 +436,7 @@ if (isset($_GET['new']))
     <?php if (isset($_SESSION['receipt']['customer'])) { ?><button type="button" id="deselectCustomer" class="btn btn-danger">Verwijder klant van bon</button> <?php } ?>
     <button type="button" id="payBtn" class="btn btn-primary pull-right" data-toggle="modal" data-target="#printAmount">Betalen</button>
 
-    <div class="form-group pull-right" style="width: 256px; padding-right: 32px;">
+    <div class="form-group pull-right" style="width: 320px; padding-right: 32px;">
         <select class="combobox form-control" id="paymentMethod">
             <option value="" selected="selected">Selecteer betaal methode</option>
             <option value="CASH">Kontant</option>
