@@ -13,7 +13,7 @@ if (isset($_GET['new']))
             die('Unable to connect to database [' . $db->connect_error . ']');
         }
 
-        $sql = "INSERT INTO receipt (receiptId, creator, items, createDt, parentSession) VALUES ((UNIX_TIMESTAMP() - 315360000) + " . rand(0, 300) . ", '1', '', '" .  date("d-m-Y H:i:s") . "', '" . Misc::sqlGet("currentSession", "cash_registers", "crStaticIP", $thisIp)['currentSession'] . "')";
+        $sql = "INSERT INTO receipt (receiptId, creator, items, createDt, parentSession) VALUES ((UNIX_TIMESTAMP() - 315360000) + " . rand(0, 300) . ", '1', '', '" .  date("H:i:s d-m-Y") . "', '" . Misc::sqlGet("currentSession", "cash_registers", "crStaticIP", $thisIp)['currentSession'] . "')";
 
         if(!$result = $db->query($sql))
         {
@@ -470,22 +470,6 @@ if (isset($_GET['new']))
     </div>
     <br /><br /><br /><br />
 
-    <!-- =====DEBUG STUFF===== -->
-    <br /><br /><br /><br />
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <button type="button" class="btn btn-info spoiler-trigger" data-toggle="collapse">Debug Info</button>
-        </div>
-        <div class="panel-collapse collapse out">
-            <div class="panel-body">
-                <pre>
-                    <?php print_r($_SESSION);?>
-                </pre>
-            </div>
-        </div>
-    </div>
-    <!-- ^^^^^DEBUG STUFF^^^^^ -->
-
     <!-- Modal -->
     <div class="modal fade" id="printAmount" role="dialog">
         <div class="modal-dialog">
@@ -874,7 +858,7 @@ else
                 $("#listContents").html("");
 
                 $.get(
-                    "item/itemLoad.php",
+                    "receipt/receiptLoad.php",
                     {
                         start: 0,
                         count: 25,
@@ -1006,7 +990,7 @@ else
                                 });
 
                                 $.get(
-                                    "item/itemLoad.php",
+                                    "receipt/receiptLoad.php",
                                     {
                                         start: startLocation,
                                         count: 25,

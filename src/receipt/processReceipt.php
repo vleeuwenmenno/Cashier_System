@@ -44,7 +44,7 @@ else
     }
 
     $json = json_encode($_SESSION['receipt']['items']);
-    $sql = "UPDATE `receipt` SET `paidDt` = '" . date("d-m-Y H:i:s") . "', `paymentMethod` = '" . $paymentMethod . "', `items` = '" . urlencode($json) . "' WHERE `receipt`.`receiptId`='" . $receiptId . "';";
+    $sql = "UPDATE `receipt` SET `paidDt` = '" . date("H:i:s d-m-Y") . "', `paymentMethod` = '" . $paymentMethod . "', `items` = '" . urlencode($json) . "' WHERE `receipt`.`receiptId`='" . $receiptId . "';";
 
     if(!$result = $db->query($sql))
     {
