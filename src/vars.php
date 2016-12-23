@@ -8,7 +8,7 @@
 
     $config = array(
         'SQL_PASS' => "",
-        'SQL_USER' => "cashreg",
+        'SQL_USER' => "root",
         'SQL_HOST' => "localhost",
         'SQL_DB' => 'ct_kassa',
 		'timeout' => 60 // Session timeout

@@ -1,2 +1,2 @@
 <?php
-    echo date("H:i:s d-m-Y")
+    echo date("d-m-Y H:i:s");
