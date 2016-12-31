@@ -22,7 +22,7 @@ if (isset($_GET['openReport']))
     {
         echo '<br /><br />';
         echo '<div style="margin-left: 12px; padding-top: 12px;" id="printPart">';
-            echo Misc::sqlGet("crName", "cash_registers", "id", $row['cashRegisterId'])['crName'] . ' geopend op ' .  $row['openDate'];
+            echo Misc::sqlGet("crName", "cash_registers", "id", Misc::sqlGet("id", "cash_registers", "crStaticIP", $_SERVER['REMOTE_ADDR'])['id'])['crName'] . ' geopend op ' .  $row['openDate'];
             echo '<br /><br />Medewerker: ' . $_SESSION['login_ok']['nickName'];
             echo '<br />Kas-in: &euro; ' . $row['cashIn'];
         echo '</div>';

@@ -357,10 +357,7 @@ else
                                     ?>
                                     <b>Kas-in:</b> &euro; <?php echo '' . number_format($row['cashIn'], 2, ',', '') ?><br /> <!-- kas-in is het bedrag in cash wat er in de kassa zit op het moment van kassa/winkel opening -->
 
-                                    <b>Bruto-omzet:</b> &euro;&nbsp;<?php echo number_format(Calculate::getGrossTurnover(PaymentMethod::All, $cashSessionId), 2, ',', ''); ?><br />
-                                    <!-- Bruto omzet is de totale omzet. (Omzet is de optelsom van alle inkomsten) -->
-
-                                    <b>Netto-omzet:</b> &euro;&nbsp;<?php echo number_format(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2, ',', ''); ?><br />
+                                    <b>Omzet:</b> &euro;&nbsp;<?php echo number_format(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2, ',', ''); ?><br />
                                     <!-- De netto omzet wordt berekend aan de hand van de bruto omzet met aftrek van teruggenomen artikelen, schadevergoedingen en achteraf toegekende kortingen. -->
 
                                     <b>Marge:</b> &euro;&nbsp;<?php echo number_format(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2, ',', ''); ?><br /><br />
