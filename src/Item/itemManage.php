@@ -1,5 +1,6 @@
 <?php
 include_once("../includes.php");
+set_time_limit(3600);
 
 ?>
 <div id="customerForm">
@@ -11,7 +12,7 @@ if (isset($_GET['import']))
 {
     if ($_GET['import'] == "gistron")
     {
-        ini_set('max_input_vars', 10000);
+        ini_set('max_input_vars', 100000);
 
         $xml = simplexml_load_string(file_get_contents(dirname(__FILE__) . '/../import/gistron.xml'));
         $json = json_encode($xml);
@@ -65,7 +66,12 @@ if (isset($_GET['import']))
             }
         }
         echo 'Successfully imported ' . $ok . ' items. (Fail count: ' . $fail . ')';
-        die('</pre>');
+        echo '<script>
+                $(document).ready(function () {
+                    clearInterval(intervalObject);
+                });
+            </script>
+            ';
     }
     else if ($_GET['import'] == "copaco")
     {
@@ -123,9 +129,14 @@ if (isset($_GET['import']))
                 }
             }
         }
-        echo 'Successfully imported ' . $ok . ' items. (Fail count: ' . $fail . ')';
-        die('</pre>');
+        echo 'Successfully imported ' . $ok . ' items. (Fail count: ' . $fail . ')<script>
+                $(document).ready(function () {
+                    clearInterval(intervalObject);
+                });
+            </script>';
     }
+
+    die('</pre>');
 }
 else if (isset($_GET['update']))
 {
@@ -146,11 +157,11 @@ else if (isset($_GET['update']))
         <input type="button" class="btn btn-primary" id="updateItem" value="Inboeken" />
 
         <script>
-            $(document).ready(function () 
+            $(document).ready(function ()
             {
-                $("#itemIdUse").change(function() 
+                $("#itemIdUse").change(function()
                 {
-                    if(this.checked) 
+                    if(this.checked)
                     {
                         $("#EANLabel").html("Artikel Nummer:");
                         $("#EAN").attr("placeholder", "20243");
@@ -195,12 +206,12 @@ else if (isset($_GET['update']))
                             },
                             function (data)
                             {
-                                if (data.match("^OK "))
+                                if (data.replace(/(\r\n|\n|\r)/gm,"") == "OK")
 							    {
                                     $.notify({
 	                                    icon: 'glyphicon glyphicon-ok',
 	                                    title: 'Inboeken succesvol verwerkt',
-	                                    message: 'Voorraad voor ' + data.replace('OK', '') + ' is succesvol geupdate naar '
+	                                    message: '<br />Voorraad voor ' + data.replace('OK', '') + ' is succesvol geupdate.'
                                     },{
 	                                    // settings
 	                                    type: 'success',
@@ -218,21 +229,55 @@ else if (isset($_GET['update']))
 							    }
 							    else
 							    {
-							        $.notify({
-	                                    icon: 'glyphicon glyphicon-warning-sign',
-	                                    title: 'Fout',
-	                                    message: data 
-                                    },{
-	                                    // settings
-	                                    type: 'danger',
-                                        placement: {
-		                                    from: "bottom",
-		                                    align: "right"
-	                                    }
-                                    });
+                                    $.get(
+                                        "item/itemUpdateStock.php",
+                                        {
+                                            itemStock: $('#amount').val(),
+                                            itemId: '0' + $('#EAN').val()
+                                        },
+                                        function (data)
+                                        {
+                                            if (data.replace(/(\r\n|\n|\r)/gm,"") == "OK")
+            							    {
+                                                $.notify({
+            	                                    icon: 'glyphicon glyphicon-ok',
+            	                                    title: 'Inboeken succesvol verwerkt',
+            	                                    message: '<br />Voorraad voor ' + data.replace('OK', '') + ' is succesvol geupdate.'
+                                                },{
+            	                                    // settings
+            	                                    type: 'success',
+                                                    placement: {
+            		                                    from: "bottom",
+            		                                    align: "right"
+            	                                    }
+                                                });
 
-                                    $("#loaderAnimation").fadeOut();
-                                    $('#EAN').focus();
+            							        $("#loaderAnimation").fadeOut();
+
+                                                $('#EAN').val("");
+                                                $('#amount').val("");
+                                                $('#EAN').focus();
+            							    }
+            							    else
+            							    {
+            							        $.notify({
+            	                                    icon: 'glyphicon glyphicon-warning-sign',
+            	                                    title: 'Fout',
+            	                                    message: data
+                                                },{
+            	                                    // settings
+            	                                    type: 'danger',
+                                                    placement: {
+            		                                    from: "bottom",
+            		                                    align: "right"
+            	                                    }
+                                                });
+
+                                                $("#loaderAnimation").fadeOut();
+                                                $('#EAN').focus();
+            							    }
+                                        }
+                                    );
 							    }
                             }
                         );
@@ -247,11 +292,11 @@ else if (isset($_GET['update']))
                             },
                             function (data)
                             {
-                                if (data.match("^OK "))
+                                if (data.replace(/(\r\n|\n|\r)/gm,"") == "OK")
 							    {
                                     $.notify({
 	                                    icon: 'glyphicon glyphicon-ok',
-	                                    message: 'Voorraad voor ' + decodeURIComponent(data.replace('OK', '')) + ' is succesvol geupdate.'
+	                                    message: '<br />Voorraad voor ' + decodeURIComponent(data.replace('OK', '')) + ' is succesvol geupdate.'
                                     },{
 	                                    // settings
 	                                    type: 'success',
@@ -269,20 +314,55 @@ else if (isset($_GET['update']))
 							    }
 							    else
 							    {
-							        $.notify({
-	                                    icon: 'glyphicon glyphicon-warning-sign',
-	                                    title: 'Fout',
-	                                    message: data 
-                                    },{
-	                                    // settings
-	                                    type: 'danger',
-                                        placement: {
-		                                    from: "bottom",
-		                                    align: "center"
-	                                    }
-                                    });
-                                    $("#loaderAnimation").fadeOut();
-                                    $('#EAN').focus();
+                                    $.get(
+                                        "item/itemUpdateStock.php",
+                                        {
+                                            itemStock: $('#amount').val(),
+                                            EAN: '0' + $('#EAN').val()
+                                        },
+                                        function (data)
+                                        {
+                                            if (data.replace(/(\r\n|\n|\r)/gm,"") == "OK")
+            							    {
+                                                $.notify({
+            	                                    icon: 'glyphicon glyphicon-ok',
+            	                                    title: 'Inboeken succesvol verwerkt',
+            	                                    message: '<br />Voorraad voor ' + data.replace('OK', '') + ' is succesvol geupdate.'
+                                                },{
+            	                                    // settings
+            	                                    type: 'success',
+                                                    placement: {
+            		                                    from: "bottom",
+            		                                    align: "right"
+            	                                    }
+                                                });
+
+            							        $("#loaderAnimation").fadeOut();
+
+                                                $('#EAN').val("");
+                                                $('#amount').val("");
+                                                $('#EAN').focus();
+            							    }
+            							    else
+            							    {
+            							        $.notify({
+            	                                    icon: 'glyphicon glyphicon-warning-sign',
+            	                                    title: 'Fout',
+            	                                    message: data
+                                                },{
+            	                                    // settings
+            	                                    type: 'danger',
+                                                    placement: {
+            		                                    from: "bottom",
+            		                                    align: "right"
+            	                                    }
+                                                });
+
+                                                $("#loaderAnimation").fadeOut();
+                                                $('#EAN').focus();
+            							    }
+                                        }
+                                    );
 							    }
                             }
                         );

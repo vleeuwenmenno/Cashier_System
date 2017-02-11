@@ -1,9 +1,7 @@
 <?php
 include_once("../includes.php");
 
-if ($_GET['itemId'] != "" && $_GET['supplier'] != ""
-						   && $_GET['factoryId'] != ""
-						   && $_GET['itemName'] != ""
+if ($_GET['supplier'] != "" && $_GET['itemName'] != ""
 						   && $_GET['priceExclVat'] != ""
                            && $_GET['priceModifier'] != "")
 {
@@ -24,7 +22,7 @@ if ($_GET['itemId'] != "" && $_GET['supplier'] != ""
 	else
 	{
 		$last_id = mysqli_insert_id($db);
-		die("OK " . $last_id);
+		die("OK");
 	}
 }
 else

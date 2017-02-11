@@ -184,7 +184,7 @@ if (isset($_GET['new']))
                             },
 							function(data)
 							{
-								if (data.match("^OK "))
+								if (data.replace(/(\r\n|\n|\r)/gm,"") == "OK")
 								{
 									$("#okMessage").modal("show");
 								}

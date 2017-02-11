@@ -19,7 +19,7 @@ if ($_GET['itemId'] != "" && $_GET['itemStock'] != "")
 	else
 	{
 		$last_id = mysqli_insert_id($db);
-		die("OK " . $last_id);
+		die("OK");
 	}
 }
 
@@ -36,22 +36,30 @@ if ($_GET['EAN'] != "" && $_GET['itemStock'] != "")
     while($row = $results->fetch_assoc())
     { $item = $row; $i++; }
 
-    if($i > 1)
+    if ($item == "")
     {
-        die("Er zijn meerdere artikelen gevonden met dezelfde EAN, gebruik artikel nummer om in te boeken.");
-    }
-    else if($i == 1)
-    {
-        $sql = "UPDATE items SET itemStock='" . round(Misc::calculate($item['itemStock'] . ' ' . $_GET['itemStock']), 2) . "' WHERE EAN=" . $_GET['EAN'];
+        $query = "SELECT * FROM items WHERE EAN='0" . $_GET['EAN'] . "'";
 
-        if(!$result = $db->query($sql))
+        if(!$results = $db->query($query))
         {
-            die('Er was een fout tijdens het verwerken van de klant gegevens. (' . $db->error . ')');
+            die('There was an error running the query [' . $db->error . ']');
         }
-        else
-        {
-            die("OK " . $item['itemName']);
-        }
+
+        $i = 0;
+        while($row = $results->fetch_assoc())
+        { $item = $row; $i++; }
+    }
+
+
+    $sql = "UPDATE items SET itemStock='" . round(Misc::calculate($item['itemStock'] . ' ' . $_GET['itemStock']), 2) . "' WHERE EAN=" . $_GET['EAN'];
+
+    if(!$result = $db->query($sql))
+    {
+        die('Er was een fout tijdens het verwerken van de klant gegevens. (' . $db->error . ')');
+    }
+    else
+    {
+        die("OK");
     }
 }
 else

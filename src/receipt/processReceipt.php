@@ -56,7 +56,12 @@ else
     foreach ($json as $key => $val)
     {
         if (intval(Misc::sqlGet("itemStock", "items", "nativeId", $key)['itemStock']) != 2147483647)
-            Misc::sqlUpdate("items", "itemStock", "itemStock - " . $val['count'], "nativeId", "" . $key);
+        {
+            if (strlen(Misc::sqlGet("EAN", "items", "nativeId", $key)['EAN']) > 10)
+                Misc::sqlUpdate("items", "itemStock", "itemStock - " . $val['count'], "EAN", "" . Misc::sqlGet("EAN", "items", "nativeId", $key)['EAN']);
+            else
+                Misc::sqlUpdate("items", "itemStock", "itemStock - " . $val['count'], "nativeId", "" . $key);
+        }
     }
 
     //Move receipt data in session to OLD
