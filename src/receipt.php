@@ -1,7 +1,46 @@
 <?php
 include_once("includes.php");
 
-if (isset($_GET['new']))
+if (isset($_GET['recover']))
+{
+    $_SESSION['receipt'] = $_SESSION['receipt']['old'];
+
+    ?>
+    <span id="receiptNo"><h2>Bon #<?php echo str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT); ?></h2></span>
+
+    <script>
+        $(document).ready(function ()
+        {
+            $("#newReceipt").html("<span class=\"glyphicon glyphicon-file\"></span> " + $('#receiptNo').html().replace('<h2>', '').replace('</h2>', ''));
+            $("#closeErrorBtn").on("click", function () {
+                $("#customerForm").fadeIn();
+                $("#loaderAnimation").fadeOut();
+            });
+
+            $("#pageLoaderIndicator").fadeIn();
+            $("#PageContent").load("receipt.php?new", function () {
+                $("#pageLoaderIndicator").fadeOut();
+            });
+            
+            $.notify({
+                icon: 'glyphicon glyphicon-trash',
+                title: 'Bon herstelt',
+                message: 'Bon is successvol herstelt'
+            }, {
+                // settings
+                type: 'success',
+                delay: 2000,
+                timer: 10,
+                placement: {
+                    from: "bottom",
+                    align: "right"
+                }
+            });
+        });
+    </script>
+    <?php
+}
+else if (isset($_GET['new']))
 {
     if (!isset($_SESSION['receipt']['status']) || $_SESSION['receipt']['status'] != 'open')
     {
@@ -713,16 +752,25 @@ if (isset($_GET['new']))
                         $.notify({
                             icon: 'glyphicon glyphicon-trash',
                             title: 'Bon verwijderd',
-                            message: 'Bon is verwijderd (<a href="#">Ongedaan maken</a>)'
+                            message: 'Bon is verwijderd <a href="#" id="undoCloseReceipt" style="color: white;">(Ongedaan maken)</a>'
                         }, {
                             // settings
                             type: 'warning',
-                            delay: 2000,
+                            delay: 5000,
                             timer: 10,
                             placement: {
                                 from: "bottom",
                                 align: "right"
                             }
+                        });
+
+                        $('#undoCloseReceipt').click(function () {
+                            $("#undoCloseReceipt").css("display", "none");
+
+                            $("#pageLoaderIndicator").fadeIn();
+                            $("#PageContent").load("receipt.php?recover", function () {
+                                $("#pageLoaderIndicator").fadeOut();
+                            });
                         });
                     }
                 );
@@ -1094,4 +1142,5 @@ else
 </script>
 <?php
 }
+
 ?>
