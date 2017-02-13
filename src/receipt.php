@@ -21,7 +21,7 @@ if (isset($_GET['recover']))
             $("#PageContent").load("receipt.php?new", function () {
                 $("#pageLoaderIndicator").fadeOut();
             });
-            
+
             $.notify({
                 icon: 'glyphicon glyphicon-trash',
                 title: 'Bon herstelt',
@@ -411,7 +411,7 @@ else if (isset($_GET['new']))
                                         $.notify({
                                             icon: \'glyphicon glyphicon-trash\',
                                             title: \'' . urldecode(Items::getField("itemName", $key)) . '\',
-                                            message: \'<br />Verwijderd van bon (<a href="#" id="undo' . $key . '">Ongedaan maken</a>)\'
+                                            message: \'<br />Verwijderd van bon <a style="color: white;" href="#" id="undo' . $key . '">(Ongedaan maken)</a>\'
                                         }, {
                                             // settings
                                             type: \'danger\',
@@ -427,35 +427,42 @@ else if (isset($_GET['new']))
         							    $("#PageContent").load("receipt.php?new", function () {
         							        $("#pageLoaderIndicator").fadeOut();
         							    });
+
+                                        $("#undo' . $key . '").on("click", function() {
+                                            $("#undo' . $key . '").css("display", "none");
+
+                                            $.get(
+                                              "receipt/addItem.php",
+                                              {
+                                                  itemId: \'' . $key . '\',
+                                                  itemCount: \'1\'
+                                              },
+                                              function (data)
+                                              {
+                                                $.notify({
+                                                    icon: \'glyphicon glyphicon-trash\',
+                                                    title: \'' . urldecode(Items::getField("itemName", $key)) . '\',
+                                                    message: \'<br />Toegevoegt aan bon.\'
+                                                }, {
+                                                    // settings
+                                                    type: \'success\',
+                                                    delay: 5000,
+                                                    timer: 10,
+                                                    placement: {
+                                                        from: "bottom",
+                                                        align: "right"
+                                                    }
+                                                });
+                                              }
+                                          );
+
+                                          $("#pageLoaderIndicator").fadeIn();
+                                          $("#PageContent").load("receipt.php?new", function () {
+                                              $("#pageLoaderIndicator").fadeOut();
+                                          });
                                       }
                                   );
                                 });
-
-                                $("#undo' . $key . '").on("click", function() {
-                                  $.get(
-                                      "receipt/addItem.php",
-                                      {
-                                          itemId: \'' . $key . '\',
-                                          itemCount: \'1\'
-                                      },
-                                      function (data)
-                                      {
-                                        $.notify({
-                                            icon: \'glyphicon glyphicon-trash\',
-                                            title: \'' . urldecode(Items::getField("itemName", $key)) . '\',
-                                            message: \'<br />Toegevoegt aan bon.\'
-                                        }, {
-                                            // settings
-                                            type: \'success\',
-                                            delay: 5000,
-                                            timer: 10,
-                                            placement: {
-                                                from: "bottom",
-                                                align: "right"
-                                            }
-                                        });
-                                      }
-                                  );
 
                                   $("#pageLoaderIndicator").fadeIn();
                                   $("#PageContent").load("receipt.php?new", function () {
