@@ -33,6 +33,7 @@ if (isset($_GET['sTerm']))
                 echo '    <tr id="' . $row['nativeId'] . '">';
 
                 echo '            <td><a href="#" id="item' . $row['nativeId'] . 'Btn">' . $EAN . '</a></td>';
+                echo '            <td>' . $row['supplier'] . '</td>';
 
                 echo '            <td>' . urldecode($row['itemName']) . '</td>';
                 echo '            <td>' . $row['nativeId'] . '</td>';
@@ -162,6 +163,5 @@ if (isset($_GET['sTerm']))
                     </script>';
             }
         }
-
     }
 }

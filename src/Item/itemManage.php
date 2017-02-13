@@ -262,7 +262,7 @@ else if (isset($_GET['update']))
             							    {
             							        $.notify({
             	                                    icon: 'glyphicon glyphicon-warning-sign',
-            	                                    title: 'Fout',
+            	                                    title: 'Fout<br />',
             	                                    message: data
                                                 },{
             	                                    // settings
@@ -347,7 +347,7 @@ else if (isset($_GET['update']))
             							    {
             							        $.notify({
             	                                    icon: 'glyphicon glyphicon-warning-sign',
-            	                                    title: 'Fout',
+            	                                    title: 'Fout<br />',
             	                                    message: data
                                                 },{
             	                                    // settings

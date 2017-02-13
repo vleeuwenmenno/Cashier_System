@@ -63,7 +63,7 @@ if ($_GET['EAN'] != "" && $_GET['itemStock'] != "")
     }
 }
 else
-	die("Form is niet volledig, vul ieder item en verstuur hem opnieuw.");
+	die("Form is niet volledig ingevult, vul alle velden en verstuur hem opnieuw.");
 
 echo 'EAN/Artikel nummer niet gevonden.';
 

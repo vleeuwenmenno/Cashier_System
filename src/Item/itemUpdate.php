@@ -28,6 +28,6 @@ if ($_GET['itemId'] != "" && $_GET['supplier'] != ""
 	}
 }
 else
-	die("Form is niet volledig, vul ieder item en verstuur hem opnieuw.");
+die("Form is niet volledig ingevult, vul alle velden en verstuur hem opnieuw.");
 
 ?>

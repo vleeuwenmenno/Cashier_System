@@ -324,9 +324,151 @@ else
                 </button>
             </span>
         </div>
-        <div class="checkbox">
+        <div class="checkbox" style="display: none;">
             <label><input type="checkbox" id="isBarCodeMode" value="" disabled readonly>Barcode scanner modus</label>
         </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="panel panel-primary filterable">
+        <div class="panel-heading">
+            <h3 class="panel-title">Artikelen</h3>
+            <div class="pull-right">
+                <button class="btn btn-default btn-xs btn-filter">
+                    <span class="glyphicon glyphicon-filter"></span>&nbsp;Filteren
+                </button>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr class="filters">
+                    <th width="10%">
+                        <a href="#" class="mustFocus">
+                            <input type="text" class="form-control" placeholder="EAN" disabled />
+                        </a>
+                    </th>
+                    <th width="10%">
+                        <a href="#" class="mustFocus">
+                            <input type="text" class="form-control" placeholder="Leverancier" disabled />
+                        </a>
+                    </th>
+                    <th width="42.5%">
+                        <a href="#" class="mustFocus">
+                            <input type="text" class="form-control" placeholder="Item" disabled />
+                        </a>
+                    </th>
+                    <th width="15%">
+                        <a href="#" class="mustFocus">
+                            <input type="text" class="form-control" placeholder="Artikel Nummer" disabled />
+                        </a>
+                    </th>
+                    <th width="10%">
+                        <a href="#" class="mustFocus">
+                            <input type="text" class="form-control" placeholder="Voorraad" disabled />
+                        </a>
+                    </th>
+                    <th width="12.5%">
+                        <a href="#" class="mustFocus">
+                            <input type="text" class="form-control" placeholder="Verkoop prijs" disabled />
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <script>
+                    $(document).ready(function ()
+                    {
+                        var filterEnabled = false;
+                        $(".mustFocus").click(function (obj)
+                        {
+                            var $panel = $(this).parents('.filterable'),
+                            $filters = $panel.find('.filters input'),
+                            $tbody = $panel.find('.table tbody');
+
+                            if ($filters.prop('disabled') == true)
+                            {
+                                $filters.prop('disabled', false);
+                                obj.focus();
+                            }
+                            filterEnabled = true;
+                        });
+
+                        $(".mustFocus").focusout(function ()
+                        {
+                            if (filterEnabled)
+                            {
+                                var $panel = $(this).parents('.filterable'),
+                                $filters = $panel.find('.filters input'),
+                                $tbody = $panel.find('.table tbody');
+
+                                if ($filters.prop('disabled') == false)
+                                {
+                                    $filters.prop('disabled', true);
+
+                                }
+                                filterEnabled = false;
+                            }
+                        });
+                    });
+
+            </script>
+
+            <tbody id="listContents">
+
+            </tbody>
+        </table>
+
+        <button type="button" class="btn btn-info center-block" id="loadMore">Laad Meer</button>
+        <script>
+            $(document).ready(function ()
+            {
+                var startLocation = 25;
+                $("#loadMore").on("click", function () {
+
+                    $("#loadMore").fadeOut("fast", function () {
+                        $("html, body").animate({ scrollTop: $(document).height() }, "normal");
+                    });
+
+                    $.get(
+                        "item/itemLoad.php",
+                        {
+                            start: startLocation,
+                            count: 25,
+                            sTerm: $("#searchBar").val()
+                        },
+                        function (data)
+                        {
+                            if (data.replace(/(\r\n|\n|\r)/gm,"") != "")
+                                $("#loadMore").fadeIn();
+
+                            $("#listContents").append(data);
+                            startLocation += 25;
+                        }
+                    );
+                });
+            });
+        </script>
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+    <div id="loaderAnimation" style="display: none;">
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+            <defs>
+                <filter id="gooey">
+                    <fegaussianblur in="SourceGraphic" stddeviation="10" result="blur"></fegaussianblur>
+                    <fecolormatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo"></fecolormatrix>
+                    <feblend in="SourceGraphic" in2="goo"></feblend>
+                </filter>
+            </defs>
+        </svg>
+        <div class="blob blob-0"></div>
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="blob blob-4"></div>
+        <div class="blob blob-5"></div>
     </div>
 </div>
 <script>
@@ -349,22 +491,18 @@ else
                     "item/itemLoad.php",
                     {
                         start: 0,
-                        count: 50,
+                        count: 25,
                         sTerm: $("#searchBar").val()
                     },
                     function (data)
                     {
-                        if (data != "")
+                        if (!(data.replace(/(\r\n|\n|\r)/gm,"") != ""))
                         {
-                            $("#loadMore").fadeIn();
-                        }
-                        else
-                        {
-                            $("#listContents").html('<tr><td>Uw zoekopdracht - ' + $("#searchBar").val() + ' - heeft geen resultaat opgeleverd.</td></tr>');
+                            $("#listContents").html('<tr style="white-space: nowrap;"><td>Uw zoekopdracht - ' + $("#searchBar").val() + ' - heeft geen resultaat opgeleverd.</td></tr>');
                         }
 
                         $("#listContents").append(data);
-                        startLocation += 50;
+                        startLocation += 25;
 
                         if (barCodemode)
                         {
@@ -373,6 +511,22 @@ else
                             if(row === undefined)
                                 $('#searchBar').prop('placeholder', 'Kon geen artikel vinden met deze EAN code :(');
                         }
+                    }
+                );
+
+                $.get(
+                    "item/itemLoad.php",
+                    {
+                        start: startLocation + 25,
+                        count: 25,
+                        sTerm: $("#searchBar").val()
+                    },
+                    function (dataTwo)
+                    {
+                        if (dataTwo.replace(/(\r\n|\n|\r)/gm,"") != "")
+                            $("#loadMore").fadeIn();
+                        else
+                            $("#loadMore").fadeOut();
                     }
                 );
             });
@@ -438,155 +592,8 @@ else
                 }
             };
         });
-</script>
 
-<div class="row">
-    <div class="panel panel-primary filterable">
-        <div class="panel-heading">
-            <h3 class="panel-title">Artikelen</h3>
-            <div class="pull-right">
-                <button class="btn btn-default btn-xs btn-filter">
-                    <span class="glyphicon glyphicon-filter"></span>&nbsp;Filteren
-                </button>
-            </div>
-        </div>
-        <table class="table">
-            <thead>
-                <tr class="filters">
-                    <th width="15%">
-                        <a href="#" class="mustFocus">
-                            <input type="text" class="form-control" placeholder="EAN" disabled />
-                        </a>
-                    </th>
-                    <th width="45%">
-                        <a href="#" class="mustFocus">
-                            <input type="text" class="form-control" placeholder="Item" disabled />
-                        </a>
-                    </th>
-                    <th width="20%">
-                        <a href="#" class="mustFocus">
-                            <input type="text" class="form-control" placeholder="Artikel Nummer" disabled />
-                        </a>
-                    </th>
-                    <th width="10%">
-                        <a href="#" class="mustFocus">
-                            <input type="text" class="form-control" placeholder="Voorraad" disabled />
-                        </a>
-                    </th>
-                    <th width="10%">
-                        <a href="#" class="mustFocus">
-                            <input type="text" class="form-control" placeholder="Verkoop prijs" disabled />
-                        </a>
-                    </th>
-                </tr>
-            </thead>
-            <script>
-                    $(document).ready(function ()
-                    {
-                        var filterEnabled = false;
-                        $(".mustFocus").click(function (obj)
-                        {
-                            var $panel = $(this).parents('.filterable'),
-                            $filters = $panel.find('.filters input'),
-                            $tbody = $panel.find('.table tbody');
-
-                            if ($filters.prop('disabled') == true)
-                            {
-                                $filters.prop('disabled', false);
-                                obj.focus();
-                            }
-                            filterEnabled = true;
-                        });
-
-                        $(".mustFocus").focusout(function ()
-                        {
-                            if (filterEnabled)
-                            {
-                                var $panel = $(this).parents('.filterable'),
-                                $filters = $panel.find('.filters input'),
-                                $tbody = $panel.find('.table tbody');
-
-                                if ($filters.prop('disabled') == false)
-                                {
-                                    $filters.prop('disabled', true);
-
-                                }
-                                filterEnabled = false;
-                            }
-                        });
-                    });
-
-            </script>
-
-            <tbody id="listContents">
-
-            </tbody>
-        </table>
-        <?php
-    if ($i >= 50)
-    {
-        ?>
-        <button type="button" class="btn btn-info center-block" id="loadMore">Laad Meer</button>
-        <script>
-                        $(document).ready(function ()
-                        {
-                            var startLocation = 26;
-                            $("#loadMore").on("click", function () {
-
-                                $("#loadMore").fadeOut("fast", function () {
-                                    $("html, body").animate({ scrollTop: $(document).height() }, "normal");
-                                });
-
-                                $.get(
-                                    "item/itemLoad.php",
-                                    {
-                                        start: startLocation,
-                                        count: 50,
-                                        sTerm: $("#searchBar").val()
-                                    },
-                                    function (data)
-                                    {
-                                        if (data != "")
-                                        {
-                                            $("#loadMore").fadeIn();
-                                        }
-
-                                        $("#listContents").append(data);
-                                        startLocation += 50;
-                                    }
-                                );
-                            });
-                        });
-        </script>
-        <?php
-    }
-        ?>
-    </div>
-    <br />
-    <br />
-    <br />
-    <br />
-    <div id="loaderAnimation" style="display: none;">
-        <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
-            <defs>
-                <filter id="gooey">
-                    <fegaussianblur in="SourceGraphic" stddeviation="10" result="blur"></fegaussianblur>
-                    <fecolormatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo"></fecolormatrix>
-                    <feblend in="SourceGraphic" in2="goo"></feblend>
-                </filter>
-            </defs>
-        </svg>
-        <div class="blob blob-0"></div>
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-        <div class="blob blob-4"></div>
-        <div class="blob blob-5"></div>
-    </div>
-</div>
-<script>
         $(document).ready(function () {
-
             $("#searchBar").focus();
 
             $('.search-panel .dropdown-menu').find('a').click(function (e) {
