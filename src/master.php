@@ -146,7 +146,6 @@
                                                     <li><a href="#" id="searchItem"><span class="glyphicon glyphicon-search"></span> Zoeken</a></li>
                                                     <li><a href="#" id="createNewItem"><span class="glyphicon glyphicon-file"></span> Nieuw Artikel</a></li>
                                                     <li><a href="#" id="itemEntryUpdate"><span class="glyphicon glyphicon-barcode"></span> Artikel Inboeken</a></li>
-                                                    <?php if (Permissions::isManager($_SESSION['login_ok']['userId'])) { ?><li><a href="#" id="manageItems"><span class="glyphicon glyphicon-cog"></span> Artikelen Beheren</a></li><?php } ?>
                                                     <script>
 														$(document).ready(function ()
 														{
@@ -185,6 +184,7 @@
                                             </div>
                                         </div>
                                     </li>
+
                                     <li class="panel panel-default" id="dropdown">
                                         <a data-toggle="collapse" <?php if (Misc::crIsActive()) { ?> href="#dropdown-lvl4"<?php } ?>>
                                             <span class="glyphicon glyphicon-expand"></span> Klanten</span>
@@ -250,6 +250,7 @@
                                             </div>
                                         </div>
                                     </li>
+                                    <?php if (Permissions::isManager($_SESSION['login_ok']['userId'])) { ?><li><a href="#" id="manageItems"><span class="glyphicon glyphicon-cog"></span> Systeem Beheer</a></li><?php } ?>
                                 </ul>
                             </div>
                         </div>
