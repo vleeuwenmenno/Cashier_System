@@ -20,6 +20,35 @@ class Misc
 		return isset($replace) ? $replace : $matches[0];
     }
 
+    public static function sqlExists($item, $equals, $table)
+    {
+        $sql = "SELECT $item FROM $table WHERE $item='$equals';";
+        global $config;
+
+        $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
+
+        if($db->connect_errno > 0)
+        {
+            die('Unable to connect to database [' . $db->connect_error . ']');
+        }
+
+        if(!$result = $db->query($sql))
+        {
+            die('Er was een fout tijdens het uitvoeren van deze query (' . $db->error . ') (' . $sql . ')');
+        }
+
+        $i = 0;
+        while($row = $result->fetch_assoc())
+        {
+            $i++;
+        }
+
+        if ($i > 0)
+            return true;
+        else
+            return false;
+    }
+
 	public static function sqlGet($what, $table, $something, $isSomething)
 	{
 		$sql = "SELECT $what FROM $table WHERE $something='$isSomething';";
