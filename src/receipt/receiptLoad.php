@@ -22,13 +22,16 @@ if (isset($_GET['sTerm']))
         $i = 0;
         while($row = $result->fetch_assoc())
         {
-                $i++;
+            $i++;
+            if ($row['paymentMethod'] != "")
+            {
                 echo '    <tr id="' . $row['receiptId'] . '">';
                 echo '        <td>' . $row['receiptId'] . '</td>';
                 echo '        <td>' . Misc::sqlGet("paidDt", "receipt", "receiptId", $row['receiptId'])['paidDt'] . '</td>';
                 echo '        <td>' . $row['receiptId'] . '</td>';
                 echo Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId']);
                 echo '        <td>&euro;&nbsp;' . number_format(Calculate::getReceiptTotal(Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId'])['items'])['total'], 2, ',', '') . '</td>';
+                echo '<td><button id="openReceipt' . $i . '" type="button" class="btn btn-info"><span class="glyphicon glyphicon-list"></span></button></td>';
                 echo '    </tr>';
                 echo '
                   <script>
@@ -37,7 +40,25 @@ if (isset($_GET['sTerm']))
 
     					        });
                   </script>';
-        }
+            }
+            else
+            {
+                echo '    <tr id="' . $row['receiptId'] . '">';
+                echo '        <td>' . $row['receiptId'] . '</td>';
+                echo '        <td>' . Misc::sqlGet("createDt", "receipt", "receiptId", $row['receiptId'])['createDt'] . '</td>';
+                echo '        <td>' . $row['receiptId'] . '</td>';
+                echo Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId']);
+                echo '        <td>&euro;&nbsp;' . number_format(Calculate::getReceiptTotal(Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId'])['items'])['total'], 2, ',', '') . '</td>';
+                echo '<td><button id="openReceipt' . $i . '" type="button" class="btn btn-info"><span class="glyphicon glyphicon-upload"></span></button></td>';
+                echo '    </tr>';
+                echo '
+                  <script>
+                      $(document).ready(function ()
+                                {
 
+                                });
+                  </script>';
+            }
+        }
     }
 }

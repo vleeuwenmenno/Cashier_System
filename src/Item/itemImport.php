@@ -87,32 +87,39 @@ include_once("../includes.php");
 											<input type="button" class="btn btn-default" style="display: none; float: left; width: 20%" id="changePwCancel<?php echo $i; ?>" value="Annuleren" />
 										</td>
 										<td>
-					                        Is Beheerder: <input id="isAdmin<?php echo $i; ?>" type="checkbox" <?php if ($row['managementUser'] == 1) echo 'checked'; ?>>
-											<br />
-											Thema:
-											<select class="combobox">
-												<?php
-												$folders = scandir("../themes");
+    				                        <div style="float: left;">
+                                                Is Beheerder: <input id="isAdmin<?php echo $i; ?>" type="checkbox" <?php if ($row['managementUser'] == 1) echo 'checked'; ?>>
+    											<br />
+    											Thema:
+    											<select class="combobox">
+    												<?php
+    												$folders = scandir("../themes");
 
-												foreach ($folders as $key => $val)
-												{
-													if ($val != "." && $val != ".." && $val != "fonts")
-													{
-														$s = "";
+    												foreach ($folders as $key => $val)
+    												{
+    													if ($val != "." && $val != ".." && $val != "fonts")
+    													{
+    														$s = "";
 
-														if ($val == $row['userTheme'])
-															$s = "selected";
+    														if ($val == $row['userTheme'])
+    															$s = "selected";
 
-														if ($val == "Default")
-														{
-															echo '<option value="' . $val . '"'. $s . '>Bootstrap</option>';
-														}
-														else
-															echo '<option value="' . $val . '"' . $s . '>' . $val . '</option>';
-													}
-												}
-												?>
-											</select>
+    														if ($val == "Default")
+    														{
+    															echo '<option value="' . $val . '"'. $s . '>Bootstrap</option>';
+    														}
+    														else
+                                                                echo '<option value="' . $val . '"' . $s . '>' . $val . '</option>';
+    													}
+    												}
+    												?>
+    											</select>
+                                             </div>
+                                             <div style="float: left; padding-left: 12px;">
+                                                 <?php if ($i > 0) { ?>
+                                                 <button id="deleteUser<?php echo $i; ?>" type="button" class="btn btn-warning"><span class="glyphicon glyphicon-trash"></span></button>
+                                                 <?php } ?>
+                                             </div>
 										</td>
 									</td>
 
@@ -188,13 +195,13 @@ include_once("../includes.php");
 											<input class="form-control" id="userNameText" style="float: left;" placeholder="Gebruikersnaam...">
 										</td>
 										<td>
-											<input class="form-control" type="password" id="changePwTextbox" style="float: left;" placeholder="Wachtwoord...">
+											<input class="form-control" type="password" id="passwordText" style="float: left;" placeholder="Wachtwoord...">
 										</td>
 										<td>
 											Is Beheerder: <input id="isAdmin" type="checkbox">
 											<br />
 											Thema:
-											<select class="combobox">
+											<select id="userThemeCombo" class="combobox">
 												<?php
 												$folders = scandir("../themes");
 
@@ -202,10 +209,12 @@ include_once("../includes.php");
 												{
 													if ($val != "." && $val != ".." && $val != "fonts")
 													{
-														if ($val == "DEFAULT")
+														if ($val == "Default")
 														{
 															echo '<option value="' . $val . '">Bootstrap</option>';
 														}
+                                                        else if ($val == "Yeti")
+                                                            echo '<option value="' . $val . '"' . $s . ' selected>' . $val . '</option>';
 														else
 															echo '<option value="' . $val . '">' . $val . '</option>';
 													}
@@ -242,7 +251,54 @@ include_once("../includes.php");
 										});
 
 										$("#addUserApply").click(function() {
+                                            $.get(
+                                                "management/addUser.php",
+                                                {
+                                                    nickname: $("#displayNameText").val(),
+                                                    username: $("#userNameText").val(),
+                                                    pass: $("#passwordText").val(),
+                                                    managementUser: $("#isAdmin").is(":checked"),
+                                                    userTheme: $('#userThemeCombo option:selected').val()
+                                                },
+                                                function (data)
+                                                {
+                                                    if (data.replace(/(\r\n|\n|\r)/gm,"") == "OK")
+                                                    {
+                                                        $.notify({
+                                                            icon: 'glyphicon glyphicon-ok',
+                                                            title: 'Gebruiker toegevoegt',
+                                                            message: '<br / >De gebruiker is succesvol toegevoegt'
+                                                        },{
+                                                            // settings
+                                                            type: 'success',
+                                                            placement: {
+                                                                from: "bottom",
+                                                                align: "right"
+                                                            }
+                                                        });
 
+                                                        $("#pageLoaderIndicator").fadeIn();
+                                                        $("#PageContent").load("item/itemImport.php", function () {
+                                                            $("#pageLoaderIndicator").fadeOut();
+                                                        });
+                                                    }
+                                                    else
+                                                    {
+                                                        $.notify({
+                                                            icon: 'glyphicon glyphicon-ok',
+                                                            title: 'Fout',
+                                                            message: '<br / >' + data
+                                                        },{
+                                                            // settings
+                                                            type: 'warning',
+                                                            placement: {
+                                                                from: "bottom",
+                                                                align: "right"
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            );
 										});
 									});
 
@@ -398,7 +454,7 @@ include_once("../includes.php");
 
 												$("#executeBtw").on("click", function()
 												{
-													$.get(
+                                                    $.get(
 											            "item/dbWipe.php",
 											            {
 											                deleteAll: $("#deleteAll").is(":checked"),
