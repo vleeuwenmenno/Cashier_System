@@ -64,6 +64,8 @@ else
         }
     }
 
+    $_SESSION['receipt']['saved'] = true;
+
     //Move receipt data in session to OLD
     //Go to print page
     echo '
@@ -79,8 +81,7 @@ else
             $.get(
                 "receipt/empty.php",
                 {
-                    receiptId: \'' . $receiptId . '\',
-                    save: 1
+                    receiptId: \'' . $receiptId . '\'
                 },
                 function (data)
                 {

@@ -93,7 +93,7 @@ include_once("includes.php");
     											Thema:
     											<select class="combobox">
     												<?php
-    												$folders = scandir("../themes");
+    												$folders = scandir("themes");
 
     												foreach ($folders as $key => $val)
     												{
@@ -278,7 +278,7 @@ include_once("includes.php");
                                                         });
 
                                                         $("#pageLoaderIndicator").fadeIn();
-                                                        $("#PageContent").load("item/itemImport.php", function () {
+                                                        $("#PageContent").load("management.php", function () {
                                                             $("#pageLoaderIndicator").fadeOut();
                                                         });
                                                     }
@@ -330,7 +330,7 @@ include_once("includes.php");
 					    <h2>Database Beheer</h2>
 					    <br />
 					    <div class="form-group">
-					        Gistron XML Aanwezig: <?php if (file_exists(dirname(__FILE__) . '/../import/gistron.xml')) { echo 'Ja'; } else { echo 'Nee'; } ?>
+					        Gistron XML Aanwezig: <?php if (file_exists(dirname(__FILE__) . '/import/gistron.xml')) { echo 'Ja'; } else { echo 'Nee'; } ?>
 					        <br />
 					        <input type="button" class="btn btn-warning" id="importGistron" value="Gistron Importeren" />
 
@@ -354,7 +354,7 @@ include_once("includes.php");
 					        </script>
 					    </div>
 					    <div class="form-group">
-					        Copaco XML Aanwezig: <?php if (file_exists(dirname(__FILE__) . '/../import/copaco.xml')) { echo 'Ja'; } else { echo 'Nee'; } ?>
+					        Copaco XML Aanwezig: <?php if (file_exists(dirname(__FILE__) . '/import/copaco.xml')) { echo 'Ja'; } else { echo 'Nee'; } ?>
 					        <br />
 					        <input type="button" class="btn btn-warning" id="importCopaco" value="Copaco Importeren" />
 
@@ -375,7 +375,7 @@ include_once("includes.php");
 					        </script>
 					    </div>
 					    <div class="form-group">
-					        United Supplies XML Aanwezig: <?php if (file_exists(dirname(__FILE__) . '/../import/unitedsupplies.xml')) { echo 'Ja'; } else { echo 'Nee'; } ?>
+					        United Supplies XML Aanwezig: <?php if (file_exists(dirname(__FILE__) . '/import/unitedsupplies.xml')) { echo 'Ja'; } else { echo 'Nee'; } ?>
 					        <br />
 					        <input type="button" class="btn btn-warning" id="importUSupplies" value="United Supplies Importeren" disabled/ />
 

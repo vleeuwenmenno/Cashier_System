@@ -52,7 +52,7 @@ else if (isset($_GET['new']))
             die('Unable to connect to database [' . $db->connect_error . ']');
         }
 
-        $sql = "INSERT INTO receipt (receiptId, creator, items, createDt, parentSession) VALUES ((UNIX_TIMESTAMP() - 315360000) + " . rand(0, 300) . ", '1', '', '" .  date("H:i:s d-m-Y") . "', '" . Misc::sqlGet("currentSession", "cash_registers", "crStaticIP", $thisIp)['currentSession'] . "')";
+        $sql = "INSERT INTO receipt (receiptId, creator, items, createDt, parentSession) VALUES ((UNIX_TIMESTAMP() - 315360000) + " . rand(0, 300) . ", '" . $_SESSION['login_ok']['userId'] . "', '', '" .  date("H:i:s d-m-Y") . "', '" . Misc::sqlGet("currentSession", "cash_registers", "crStaticIP", $thisIp)['currentSession'] . "')";
 
         if(!$result = $db->query($sql))
         {

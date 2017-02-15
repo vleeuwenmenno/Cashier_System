@@ -57,7 +57,12 @@ if (isset($_GET['sTerm']))
                       <script>
                         $(document).ready(function ()
     			        {
-
+                            $("#viewReceipt' . $i . '").click(function() {
+                                $("#pageLoaderIndicator").fadeIn();
+                                $("#PageContent").load("receipt/viewReceipt.php?receipt=' . $row['receiptId'] . '", function () {
+                                    $("#pageLoaderIndicator").fadeOut();
+                                });
+                            });
     			        });
                       </script>';
                 }
@@ -85,7 +90,12 @@ if (isset($_GET['sTerm']))
                           <script>
                             $(document).ready(function ()
                             {
-
+                                $("#viewReceipt' . $i . '").click(function() {
+                                    $("#pageLoaderIndicator").fadeIn();
+                                    $("#PageContent").load("receipt/viewReceipt.php?receipt=' . $row['receiptId'] . '", function () {
+                                        $("#pageLoaderIndicator").fadeOut();
+                                    });
+                                });
                             });
                           </script>';
                       }
