@@ -3,15 +3,7 @@ include_once("../includes.php");
 
 if (isset($_GET['receiptId']))
 {
-    $_SESSION['receipt']['old'] = null;
-    $_SESSION['receipt']['old'] = $_SESSION['receipt'];
-
-    $_SESSION['receipt']['id'] = 0;
-    $_SESSION['receipt']['items'] = null;
-    $_SESSION['receipt']['status'] = 'closed';
-    $_SESSION['receipt']['customer'] = null;
-
-    if (!isset($_GET['save']))
+    if ($_SESSION['receipt']['saved'] != true)
     {
         $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
@@ -27,5 +19,14 @@ if (isset($_GET['receiptId']))
             die('There was an error running the query [' . $db->error . ']');
         }
     }
+
+    $_SESSION['receipt']['old'] = null;
+    $_SESSION['receipt']['old'] = $_SESSION['receipt'];
+
+    $_SESSION['receipt']['id'] = 0;
+    $_SESSION['receipt']['items'] = null;
+    $_SESSION['receipt']['status'] = 'closed';
+    $_SESSION['receipt']['customer'] = null;
+    $_SESSION['receipt']['saved'] = false;
 }
 ?>

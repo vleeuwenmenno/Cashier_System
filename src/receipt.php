@@ -24,7 +24,7 @@ if (isset($_GET['recover']))
 
             $.notify({
                 icon: 'glyphicon glyphicon-trash',
-                title: 'Bon herstelt',
+                title: '',
                 message: 'Bon is successvol herstelt'
             }, {
                 // settings
@@ -60,6 +60,7 @@ else if (isset($_GET['new']))
         }
 
         $_SESSION['receipt']['status'] = 'open';
+        $_SESSION['receipt']['saved'] = false;
         $_SESSION['receipt']['id'] = mysqli_insert_id($db);
     }
 ?>
@@ -478,6 +479,7 @@ else if (isset($_GET['new']))
             </table>
         </div>
     <button type="button" id="closeReceipt" class="btn btn-default">Bon Sluiten</button>
+    <button type="button" id="saveReceipt" class="btn btn-primary">Bon Opslaan</button>
     <?php if (!isset($_SESSION['receipt']['customer'])) { ?><button type="button" id="selectCustomer" class="btn btn-info">Selecteer klant</button> <?php } ?>
     <?php if (isset($_SESSION['receipt']['customer'])) { ?><button type="button" id="deselectCustomer" class="btn btn-danger">Verwijder klant van bon</button> <?php } ?>
     <button type="button" id="payBtn" class="btn btn-primary pull-right" data-toggle="modal" data-target="#printAmount">Betalen</button>
@@ -516,6 +518,20 @@ else if (isset($_GET['new']))
     </div>
     <br /><br /><br /><br />
 
+    <br /><br /><br /><br />
+    <div class="panel panel-default" id="debugPanel" style="display: none;">
+        <div class="panel-heading">
+            <button type="button" class="btn btn-default btn-xs spoiler-trigger" data-toggle="collapse">Debug Info</button>
+        </div>
+        <div class="panel-collapse collapse out">
+            <div class="panel-body">
+                <pre>
+                    <?php print_r ($_SESSION); ?>
+                </pre>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal -->
     <div class="modal fade" id="printAmount" role="dialog">
         <div class="modal-dialog">
@@ -546,6 +562,11 @@ else if (isset($_GET['new']))
         }
     ?>
     <script type="text/javascript">
+        function showDebug()
+        {
+            $("#debugPanel").css("display", "");
+        }
+
         function checkTotalValue()
         {
             var totalPrice = "<?php echo number_format(Calculate::getReceiptTotal($_SESSION['receipt']['id'], true)['total'], 2, ',', ''); ?>";
@@ -595,6 +616,71 @@ else if (isset($_GET['new']))
         }
 
         $(document).ready(function() {
+
+            $("#saveReceipt").click(function () {
+                var rows = document.getElementById("listContents").getElementsByTagName("tr").length;
+                if (rows > 0)
+                {
+                    $.get(
+                        "receipt/saveReceipt.php",
+                        { },
+                        function (data)
+                        {
+                            if (data.replace(/(\r\n|\n|\r)/gm,"") == "OK")
+                            {
+                                $.notify({
+                                    icon: 'glyphicon glyphicon-floppy-saved',
+                                    title: 'Opgeslagen',
+                                    message: '<br />Bon is successvol opgeslagen.'
+                                }, {
+                                    // settings
+                                    type: 'info',
+                                    delay: 2000,
+                                    timer: 10,
+                                    placement: {
+                                        from: "bottom",
+                                        align: "right"
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                $.notify({
+                                    icon: 'glyphicon glyphicon-warning-sign',
+                                    title: 'Fout',
+                                    message: '<br />Bon is niet opgeslagen :(<br />' + data
+                                }, {
+                                    // settings
+                                    type: 'danger',
+                                    delay: 2000,
+                                    timer: 10,
+                                    placement: {
+                                        from: "bottom",
+                                        align: "right"
+                                    }
+                                });
+                            }
+                        }
+                    );
+                }
+                else
+                {
+                    $.notify({
+                        icon: 'glyphicon glyphicon-warning-sign',
+                        title: 'Bon is niet opgeslagen',
+                        message: '<br />Voeg eerst artikelen toe om de bon op te slaan.'
+                    }, {
+                        // settings
+                        type: 'warning',
+                        delay: 2000,
+                        timer: 10,
+                        placement: {
+                            from: "bottom",
+                            align: "right"
+                        }
+                    });
+                }
+            });
 
             $.get(
                 "barcode/getBarcode.php",
@@ -671,15 +757,19 @@ else if (isset($_GET['new']))
                             var cashVal = $('#cashVal').val();
 
                             $("#pageLoaderIndicator").fadeIn();
+                            $("#sideBarMenu").addClass("disabledbutton");
                             $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&print=" + printAmount + "&paymentMethod=" + $( "#paymentMethod" ).val() + "&pin=" + pinVal + "&cash=" + cashVal, function () {
                                 $("#pageLoaderIndicator").fadeOut();
+                                $("#sideBarMenu").removeClass("disabledbutton");
                             });
                        }
                        else
                        {
                            $("#pageLoaderIndicator").fadeIn();
+                           $("#sideBarMenu").addClass("disabledbutton");
                            $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&print=" + printAmount + "&paymentMethod=" + $( "#paymentMethod" ).val(), function () {
                                $("#pageLoaderIndicator").fadeOut();
+                               $("#sideBarMenu").removeClass("disabledbutton");
                            });
                        }
                     }
@@ -744,6 +834,7 @@ else if (isset($_GET['new']))
 
             $('#closeReceipt').click(function () {
                 $("#newReceipt").html("<span class=\"glyphicon glyphicon-file\"></span> Nieuwe Bon");
+
                 $("#pageLoaderIndicator").fadeIn();
                 $("#PageContent").load("receipt.php", function () {
                     $("#pageLoaderIndicator").fadeOut();
@@ -758,8 +849,8 @@ else if (isset($_GET['new']))
                     {
                         $.notify({
                             icon: 'glyphicon glyphicon-trash',
-                            title: 'Bon verwijderd',
-                            message: 'Bon is verwijderd <a href="#" id="undoCloseReceipt" style="color: white;">(Ongedaan maken)</a>'
+                            title: 'Bon venster gesloten',
+                            message: '<a href="#" id="undoCloseReceipt" style="color: white;">(Ongedaan maken)</a>'
                         }, {
                             // settings
                             type: 'warning',

@@ -28,6 +28,11 @@
     background-color: #f8f8f8;
     border-right: 1px solid #e7e7e7;
 }*/
+.disabledbutton {
+    pointer-events: none;
+    opacity: 0.4;
+}
+
 .eanLabel {
     display: inline-block;
     background-color: #222222;

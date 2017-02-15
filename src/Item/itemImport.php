@@ -285,12 +285,12 @@ include_once("../includes.php");
                                                     else
                                                     {
                                                         $.notify({
-                                                            icon: 'glyphicon glyphicon-ok',
+                                                            icon: 'glyphicon glyphicon-warning-sign',
                                                             title: 'Fout',
                                                             message: '<br / >' + data
                                                         },{
                                                             // settings
-                                                            type: 'warning',
+                                                            type: 'danger',
                                                             placement: {
                                                                 from: "bottom",
                                                                 align: "right"
