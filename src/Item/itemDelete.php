@@ -11,7 +11,7 @@ if ($_GET['id'] != "")
 		die('Unable to connect to database [' . $db->connect_error . ']');
 	}
 
-	$sql = "DELETE FROM items WHERE itemId=" . $_GET['id'];
+	$sql = "DELETE FROM items WHERE nativeId=" . $_GET['id'];
 
 	if(!$result = $db->query($sql))
 	{

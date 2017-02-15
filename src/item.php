@@ -531,6 +531,8 @@ else
                 );
             });
 
+            $('#searchBtn').click();
+
             var barCodemode = false;
 
             $('#searchBar').on('keydown', function ( e )

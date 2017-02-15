@@ -157,9 +157,9 @@
 															    });
 														    });
 
-														    $("#manageItems").on("click", function () {
+														    $("#managementBtn").on("click", function () {
 														        $("#pageLoaderIndicator").fadeIn();
-														        $("#PageContent").load("item/itemImport.php", function () {
+														        $("#PageContent").load("management.php", function () {
 														            $("#pageLoaderIndicator").fadeOut();
 														        });
 														    });
@@ -250,7 +250,7 @@
                                             </div>
                                         </div>
                                     </li>
-                                    <?php if (Permissions::isManager($_SESSION['login_ok']['userId'])) { ?><li><a href="#" id="manageItems"><span class="glyphicon glyphicon-cog"></span> Systeem Beheer</a></li><?php } ?>
+                                    <?php if (Permissions::isManager($_SESSION['login_ok']['userId'])) { ?><li><a href="#" id="managementBtn"><span class="glyphicon glyphicon-cog"></span> Systeem Beheer</a></li><?php } ?>
                                 </ul>
                             </div>
                         </div>

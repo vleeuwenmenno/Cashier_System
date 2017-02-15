@@ -348,8 +348,20 @@ if (isset($_GET['id']))
                 <button type="button" class="btn btn-danger" id="applyDeletionBtn">Verwijderen</button>
                 <button type="button" class="btn btn-primary" id="cancelDeletionBtn" data-dismiss="modal">Sluiten</button>
                 <script>
+							var confirmDeleted = false;
 					        $(document).ready(function ()
 					        {
+								$("#deleteConfirm").on("hidden.bs.modal", function () {
+
+									if (confirmDeleted)
+									{
+										$("#pageLoaderIndicator").fadeIn();
+									    $("#PageContent").load("item.php", function() {
+									        $("#pageLoaderIndicator").fadeOut();
+									    });
+									}
+								});
+
 					            $("#applyDeletionBtn").on("click", function ()
 					            {
 					                if ($("#confirmBox").val() == "<?php echo $row['itemId'];?>")
@@ -361,14 +373,10 @@ if (isset($_GET['id']))
                                             },
 							                function(data)
 							                {
-							                    if (data.match("^OK "))
+												if (data.replace(/(\r\n|\n|\r)/gm,"") == "OK 0")
 							                    {
+													confirmDeleted = true;
 							                        $("#deleteConfirm").modal('hide');
-
-							                        $("#pageLoaderIndicator").fadeIn();
-							                        $("#PageContent").load("item.php", function () {
-							                            $("#pageLoaderIndicator").fadeOut();
-							                        });
 							                    }
 							                    else
 							                    {

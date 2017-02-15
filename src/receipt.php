@@ -1028,6 +1028,8 @@ else
                 );
             });
 
+            $('#searchBtn').click();
+
             $('#searchBar').keypress(function (e)
             {
                 var key = e.which;
