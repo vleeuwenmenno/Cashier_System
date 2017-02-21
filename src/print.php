@@ -89,13 +89,13 @@ margin-top: 32px;">
                 ?>
                 <tr>
                     <td><?php echo urldecode(Misc::sqlGet("itemName", "items", "nativeId", $key)['itemName']); ?></td>
-                    <td>€ <?php echo str_replace(".", ",", Misc::calculate('(' . $val['priceAPiece']['priceExclVat'] . ' * ' . $_CFG['VAT'] . ')' . $val['priceAPiece']['priceModifier'])); ?></td>
+                    <td>€ <?php echo str_replace(".", ",", Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier'])); ?></td>
                     <td><?php echo $val['count']; ?>x</td>
-                    <td>€ <?php echo str_replace(".", ",", (Misc::calculate('(' . $val['priceAPiece']['priceExclVat'] . ' * ' . $_CFG['VAT'] . ')' . $val['priceAPiece']['priceModifier']) * $val['count'])); ?></td>
+                    <td>€ <?php echo str_replace(".", ",", (Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier']) * $val['count'])); ?></td>
                 </tr>
                 <?php
 
-                $totalIncl += (Misc::calculate('(' . $val['priceAPiece']['priceExclVat'] . ' * ' . $_CFG['VAT'] . ')' . $val['priceAPiece']['priceModifier']) * $val['count']);
+                $totalIncl += (Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier']) * $val['count']);
             }
         ?>
     </table>
