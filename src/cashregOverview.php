@@ -281,7 +281,10 @@ else if (isset($_GET['close']))
                             });
 
                             $("#closeCr").on("click", function () {
-                                alert("//TODO: Zorg dat dit werkt!!");
+                                $("#pageLoaderIndicator").fadeIn();
+                                $("#PageContent").load("cashregOverview.php?cashout", function () {
+                                    $("#pageLoaderIndicator").fadeOut();
+                                });
                             });
 
                             $("#cancelCr").on("click", function() {
@@ -297,6 +300,85 @@ else if (isset($_GET['close']))
         </div>
     </div>
     <?php
+}
+else if (isset($_GET['cashout']))
+{
+    ?>
+
+    <div class="container container-table">
+        <div class="row vertical-center-row">
+            <div class="text-center col-md-4 col-md-offset-4" style="margin-top: 32px;">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Kassa Sluiten</h3>
+                    </div>
+                    <div class="panel-body" style="display: inline-block; text-align: left">
+                        <?php
+                            $ok = false;
+                            $thisIp = $_SERVER['REMOTE_ADDR'];
+
+                            $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
+
+                            if($db->connect_errno > 0)
+                            {
+                                die('Unable to connect to database [' . $db->connect_error . ']');
+                            }
+
+                            $sql = "SELECT * FROM cash_registers WHERE crStaticIP='$thisIp';";
+
+                            if(!$result = $db->query($sql))
+                            {
+                                die('Er was een fout tijdens het verwerken van de klant gegevens. (' . $db->error . ')');
+                            }
+
+                            while($row = $result->fetch_assoc())
+                            { $ok = true; }
+
+                            if (!$ok)
+                            {
+                                echo 'U bevindt zich niet op een kassa systeem! (' . $thisIp . ')';
+                                return;
+                            }
+
+                            if (Misc::crIsActive())
+                            {
+                                $sql = "SELECT * FROM cashsession ORDER BY cashSessionId DESC LIMIT 1;";
+
+                                if(!$result = $db->query($sql))
+                                {
+                                    die('Er was een fout tijdens het verwerken van de klant gegevens. (' . $db->error . ')');
+                                }
+
+                                $cashOut = 0.0;
+                                while($row = $result->fetch_assoc())
+                                {
+                                    $cashSessionId = Misc::sqlGet("currentSession", "cash_registers", "crStaticIP", $thisIp)['currentSession'];
+                                    ?>
+                                    <b>Kas-in:</b> &euro; <?php echo '' . round($row['cashIn'], 2) ?><br />
+                                    <b>Kas-uit:</b> &euro; <?php echo '' . round($row['cashIn'], 2) ?><br />
+
+                                    <b>Bruto-omzet:</b> &euro;&nbsp;<?php echo round(Calculate::getGrossTurnover(PaymentMethod::All, $cashSessionId), 2); ?><br />
+                                    <b>Omzet:</b> &euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2); ?><br />
+                                    <b>Marge:</b> &euro;&nbsp;<?php echo round(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2); ?><br /><br />
+
+                                    <b>Kassa geopend op:</b> <?php echo $row['openDate']; ?><br />
+                                    <b>Geopend door:</b> <?php echo $_SESSION['login_ok']['nickName']; ?><br />
+                                </div>
+                                <button type="button" class="btn btn-primary" id="confirmClose">Bevestigen</button>
+                                <button type="button" class="btn btn-default" id="cancelClose">Annuleren</button><br /><br />
+                                <?php
+                                }
+                            }
+                            else
+                            {
+                                echo 'Kan kassa niet sluiten als hij nog niet is geopent.';
+                            }
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
 }
 else
 {
@@ -435,5 +517,5 @@ $time = explode(' ', $time);
 $time = $time[1] + $time[0];
 $finish = $time;
 $total_time = str_replace("0.", "", number_format(($finish - $start), 4));
-echo 'Page created in '.$total_time.'ms';
+echo '<script> $(document).ready(function () { console.log("Page created in '.$total_time.'ms"); });';
 ?>

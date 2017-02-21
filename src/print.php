@@ -63,6 +63,7 @@ font-style: normal;
 font-variant: normal;
 font-weight: 400;
 line-height: 20px;">
+
     <div style="margin-left: 48px;margin-top: 160px;">
         Bon Nr. <?php echo $_GET['receipt']; ?><br />
         Tijd/Datum: <?php echo $receipt['paidDt']; ?><br />
@@ -123,12 +124,16 @@ margin-top: 32px;">
     }
     echo 'Afdrukken</button></center>';
     echo '<script>
-        $(document).ready(function() {
-            $("#printAgain").css("display", "none");
-            $("#PageContent").printElement({ printMode:\'popup\' });
-            $("#printAgain").css("display", "inline");
+        $(document).ready(function() {';
 
-            $("#printAgain").on("click", function() {
+    if ($_GET['print'] > 0)
+    {
+        echo '$("#printAgain").css("display", "none");
+            $("#PageContent").printElement({ printMode:\'popup\' });
+            $("#printAgain").css("display", "inline");';
+    }
+
+    echo '  $("#printAgain").on("click", function() {
                 $("#printAgain").css("display", "none");
                 $("#PageContent").printElement({ printMode:\'popup\' });
                 $("#printAgain").css("display", "inline");

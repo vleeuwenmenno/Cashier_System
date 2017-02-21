@@ -484,6 +484,7 @@ else if (isset($_GET['new']))
     <?php if (isset($_SESSION['receipt']['customer'])) { ?><button type="button" id="deselectCustomer" class="btn btn-danger">Verwijder klant van bon</button> <?php } ?>
     <button type="button" id="payBtn" class="btn btn-primary pull-right" data-toggle="modal" data-target="#printAmount">Betalen</button>
 
+
     <div class="form-group pull-right" style="width: 320px; padding-right: 32px;">
         <select class="combobox form-control" id="paymentMethod">
             <option value="" selected="selected">Selecteer betaal methode</option>
@@ -508,8 +509,7 @@ else if (isset($_GET['new']))
         <input class="form-control" id="cashVal">
     </div>
 
-    <br /><br /><br /><br />
-
+    <h2 style="float: right; position: relative; left: -32px;">Totaal: &euro;<?php echo number_format(round(Calculate::getReceiptTotal($_SESSION['receipt']['id'], true)['total'], 2), 2, ",", "."); ?></h2>
     <div class="panel panel-default" id="debugPanel" style="display: none;">
         <div class="panel-heading">
             <button type="button" class="btn btn-default btn-xs spoiler-trigger" data-toggle="collapse">Debug Info</button>
@@ -738,7 +738,7 @@ else if (isset($_GET['new']))
 
                             $("#pageLoaderIndicator").fadeIn();
                             $("#sideBarMenu").addClass("disabledbutton");
-                            $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&print=" + printAmount + "&paymentMethod=" + $( "#paymentMethod" ).val() + "&pin=" + pinVal + "&cash=" + cashVal, function () {
+                            $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&printAmount=" + printAmount + "&paymentMethod=" + $( "#paymentMethod" ).val() + "&pin=" + pinVal + "&cash=" + cashVal, function () {
                                 $("#pageLoaderIndicator").fadeOut();
                                 $("#sideBarMenu").removeClass("disabledbutton");
                             });
@@ -747,7 +747,7 @@ else if (isset($_GET['new']))
                        {
                            $("#pageLoaderIndicator").fadeIn();
                            $("#sideBarMenu").addClass("disabledbutton");
-                           $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&print=" + printAmount + "&paymentMethod=" + $( "#paymentMethod" ).val(), function () {
+                           $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&printAmount=" + printAmount + "&paymentMethod=" + $( "#paymentMethod" ).val(), function () {
                                $("#pageLoaderIndicator").fadeOut();
                                $("#sideBarMenu").removeClass("disabledbutton");
                            });
@@ -1228,6 +1228,6 @@ $time = explode(' ', $time);
 $time = $time[1] + $time[0];
 $finish = $time;
 $total_time = str_replace("0.", "", number_format(($finish - $start), 4));
-echo 'Page created in '.$total_time.'ms';
+echo '<script> $(document).ready(function () { console.log("Page created in '.$total_time.'ms"); });';
 
 ?>

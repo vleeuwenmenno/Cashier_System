@@ -29,12 +29,6 @@ else
         $pinValue = $_GET['pin'];
     }
 
-    //Create a document for the paper receipt
-    //TODO: Generate document
-
-    //Print receipt (Amount based on GET para &print)
-    //TODO: Print with PHP functions
-
     //Register receipt as paid into the database
     $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
