@@ -31,12 +31,12 @@ if (isset($_GET['openReport']))
         echo '
             $(document).ready(function() {
                 $("#printAgain").css("display", "none");
-                window.print();
+                $("#printPart").printElement();
                 $("#printAgain").css("display", "inline");
 
                 $("#printAgain").on("click", function() {
                     $("#printAgain").css("display", "none");
-                    window.print();
+                    $("#printPart").printElement();
                     $("#printAgain").css("display", "inline");
                 });
             });

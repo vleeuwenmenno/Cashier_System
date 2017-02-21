@@ -429,4 +429,11 @@ else
     </div>
     <?php
 }
+
+$time = microtime();
+$time = explode(' ', $time);
+$time = $time[1] + $time[0];
+$finish = $time;
+$total_time = str_replace("0.", "", number_format(($finish - $start), 4));
+echo 'Page created in '.$total_time.'ms';
 ?>

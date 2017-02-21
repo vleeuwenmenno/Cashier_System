@@ -485,6 +485,15 @@ if (isset($_GET['id']))
     <center>Artikel wijziging wordt verwerkt in het systeem...</center>
 </div>
 <?php
+
 	}
 }
+
+$time = microtime();
+$time = explode(' ', $time);
+$time = $time[1] + $time[0];
+$finish = $time;
+$total_time = round(($finish - $start), 4);
+echo 'FUUUCK Page generated in '.$total_time.' seconds.';
+
 ?>

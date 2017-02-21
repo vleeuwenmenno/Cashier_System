@@ -673,17 +673,6 @@ else if (isset($_GET['new']))
                 }
             });
 
-            $.get(
-                "barcode/getBarcode.php",
-                {
-                    EAN: "<?php echo str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT); ?>"
-                },
-                function (data)
-                {
-                    $("#barcodeEan").html(data);
-                }
-            );
-
             $(".spoiler-trigger").click(function() {
             	$(this).parent().next().collapse('toggle');
             });
@@ -1233,5 +1222,12 @@ else
 </script>
 <?php
 }
+
+$time = microtime();
+$time = explode(' ', $time);
+$time = $time[1] + $time[0];
+$finish = $time;
+$total_time = str_replace("0.", "", number_format(($finish - $start), 4));
+echo 'Page created in '.$total_time.'ms';
 
 ?>
