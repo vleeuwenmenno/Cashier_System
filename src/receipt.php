@@ -130,7 +130,7 @@ else if (isset($_GET['new']))
                             echo '            <div>';
                             echo '            Inkoop: &euro;&nbsp;' . round($purchase, 2) . '<br/>
                                               Btw. : &nbsp;&nbsp;&nbsp;&euro;&nbsp;' . round($vatOnly, 2) . '<br />
-                                              Marge: &euro;&nbsp;' . round($total - (round($purchase, 2) + number_format($vatOnly, 2)), 2) . '<br />
+                                              Marge: &euro;&nbsp;' . round($total - (round($purchase, 2) + round($vatOnly, 2)), 2) . '<br />
                                               P.S: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&euro;&nbsp; ' . round($total, 2) . '<br />
                                               Totaal:&nbsp; &euro;&nbsp;' . round(round($total, 2) * $_SESSION['receipt']['items'][$key]['count'], 2) . '<br />';
                             echo '            </div>';
@@ -509,16 +509,7 @@ else if (isset($_GET['new']))
     </div>
 
     <br /><br /><br /><br />
-    <div class="pull-right">
-        <h3>Totaal: &euro; <?php echo round(Calculate::getReceiptTotal($_SESSION['receipt']['id'], true)['total'], 2); ?></h3>
-        <span id="barcodeEan">
 
-        </span>
-
-    </div>
-    <br /><br /><br /><br />
-
-    <br /><br /><br /><br />
     <div class="panel panel-default" id="debugPanel" style="display: none;">
         <div class="panel-heading">
             <button type="button" class="btn btn-default btn-xs spoiler-trigger" data-toggle="collapse">Debug Info</button>

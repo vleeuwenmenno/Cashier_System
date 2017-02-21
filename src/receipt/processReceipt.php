@@ -86,7 +86,7 @@ else
                 function (data)
                 {
                     $.notify({
-                        icon: \'glyphicon glyphicon-trash\',
+                        icon: \'fa fa-shopping-cart fa-2x\',
                         title: \'\',
                         message: \'Bon is betaalt en verwerkt in het systeem.\'
                     }, {

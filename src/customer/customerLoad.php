@@ -52,7 +52,7 @@ if (isset($_GET['sTerm']))
                     echo '            <td>' . $row['postalCode'] . '</td>';
 
                     if (isset($_SESSION['receipt']['status']) && $_SESSION['receipt']['status'] == "open")
-                        echo '<td><button id="add' .  $row['customerId'] . '" type="button" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span></button></td>';
+                        echo '<td><button id="add' .  $row['customerId'] . '" type="button" class="btn btn-info"><i class="fa fa-plus-circle fa-1x" aria-hidden="true"></i></button></td>';
 
                     echo '    <script>';
                     echo '    	$(document).ready(function ()
@@ -69,7 +69,7 @@ if (isset($_GET['sTerm']))
                                         customerId: \'' . $row['customerId'] . '\',
                                     },
                                     function (data)
-                                    { 
+                                    {
                                         $("#pageLoaderIndicator").fadeIn();
                                         $("#PageContent").load("receipt.php?new", function () {
                                             $("#pageLoaderIndicator").fadeOut();

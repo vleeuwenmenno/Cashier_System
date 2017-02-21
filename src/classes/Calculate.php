@@ -250,8 +250,8 @@ class Calculate
 
                 foreach ($json as $key => $val)
                 {
-                    $itemPrice = Misc::calculate(($val['priceAPiece']['priceExclVat'] * $_CFG['VAT']) . " " . $val['priceAPiece']['priceModifier']);
-                    $itemMargin = $itemPrice - (($val['priceAPiece']['priceExclVat'] * $_CFG['VAT']) - $val['priceAPiece']['priceExclVat']) - $val['priceAPiece']['priceExclVat'];
+                    $itemPrice = Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . " " . $val['priceAPiece']['priceModifier']);
+                    $itemMargin = $itemPrice - (round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) - $val['priceAPiece']['priceExclVat']) - $val['priceAPiece']['priceExclVat'];
                     $final += $itemMargin;
                 }
             }
@@ -281,8 +281,8 @@ class Calculate
 
                 foreach ($json as $key => $val)
                 {
-                    $itemPrice = Misc::calculate(($val['priceAPiece']['priceExclVat'] * $_CFG['VAT']) . " " . $val['priceAPiece']['priceModifier']);
-                    $itemMargin = $itemPrice - (($val['priceAPiece']['priceExclVat'] * $_CFG['VAT']) - $val['priceAPiece']['priceExclVat']) - $val['priceAPiece']['priceExclVat'];
+                    $itemPrice = Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . " " . $val['priceAPiece']['priceModifier']);
+                    $itemMargin = $itemPrice - (round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) - $val['priceAPiece']['priceExclVat']) - $val['priceAPiece']['priceExclVat'];
                     $final += $itemMargin;
                 }
             }
@@ -312,8 +312,8 @@ class Calculate
 
                 foreach ($json as $key => $val)
                 {
-                    $itemPrice = Misc::calculate(($val['priceAPiece']['priceExclVat'] * $_CFG['VAT']) . " " . $val['priceAPiece']['priceModifier']);
-                    $itemMargin = $itemPrice - (($val['priceAPiece']['priceExclVat'] * $_CFG['VAT']) - $val['priceAPiece']['priceExclVat']) - $val['priceAPiece']['priceExclVat'];
+                    $itemPrice = Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . " " . $val['priceAPiece']['priceModifier']);
+                    $itemMargin = $itemPrice - (round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) - $val['priceAPiece']['priceExclVat']) - $val['priceAPiece']['priceExclVat'];
                     $final += $itemMargin;
                 }
             }
@@ -343,8 +343,8 @@ class Calculate
 
                 foreach ($json as $key => $val)
                 {
-                    $itemPrice = Misc::calculate(($val['priceAPiece']['priceExclVat'] * $_CFG['VAT']) . " " . $val['priceAPiece']['priceModifier']);
-                    $itemMargin = $itemPrice - (($val['priceAPiece']['priceExclVat'] * $_CFG['VAT']) - $val['priceAPiece']['priceExclVat']) - $val['priceAPiece']['priceExclVat'];
+                    $itemPrice = Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . " " . $val['priceAPiece']['priceModifier']);
+                    $itemMargin = $itemPrice - (round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) - $val['priceAPiece']['priceExclVat']) - $val['priceAPiece']['priceExclVat'];
                     $final += $itemMargin;
                 }
             }
@@ -369,7 +369,7 @@ class Calculate
         foreach ($json as $key => $val)
         {
             $final['total'] += (Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier']) * $val['count']);
-            $final['exclVat'] += ($val['priceAPiece']['priceExclVat'] *  $val['count']);
+            $final['exclVat'] += round($val['priceAPiece']['priceExclVat'] *  $val['count'], 2);
         }
         return $final;
     }

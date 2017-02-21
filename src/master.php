@@ -5,8 +5,6 @@
 ?>
 <html>
     <head>
-        <script src="js/sidebar.js"></script>
-
         <!-- Bootstrap and all it's dependencies -->
         <?php
         if ($_CFG['THEME'] == "")
@@ -22,7 +20,7 @@
         <script src="js/bootstrap.min.js"></script>
         <script src="js/bootstrap-notify.min.js"></script>
         <script src="js/select2.full.min.js"></script>
-        <script src="js/jqeury.jeditable.js"></script>
+        <script src="js/jquery.jeditable.js"></script>
         <script src="js/bootstrap-combobox.js"></script>
         <script src="js/jquery.printElement.js"></script>
     </head>
@@ -40,23 +38,6 @@
                         <a class="navbar-brand" href="#">
                             <?php echo $_CFG['COMPANY_NAME'] . ' - ' . $_SESSION['login_ok']['nickName']; ?>
                         </a>
-                    </div>
-
-                    <!-- Search -->
-                    <a data-toggle="collapse" href="#search" class="btn btn-default" id="search-trigger">
-                        <i class="fa fa-search fa-2x" aria-hidden="true"></i>&nbsp;&nbsp;
-                    </a>
-
-                    <!-- Search body -->
-                    <div id="search" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <form class="navbar-form" role="search">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="Snel-zoeken...">
-                                </div>
-                                <button type="submit" class="btn btn-default "><span class="glyphicon glyphicon-ok"></span></button>
-                            </form>
-                        </div>
                     </div>
                 </div>
 

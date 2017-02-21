@@ -157,7 +157,7 @@ if (isset($_GET['new']))
 			</div>
 		  </div>
 		</div>
-		
+
 		<div id="loaderAnimation" style="display: none;">
 			<svg xmlns="http://www.w3.org/2000/svg" version="1.1">
 			  <defs>
@@ -192,7 +192,7 @@ else
             <input type="text" class="form-control" name="searchBar" id="searchBar" placeholder="Zoek term... (Id, voorletter, achternaam, enz.)" aria-describedby="basic-addon2">
             <span class="input-group-btn">
             <button class="btn btn-primary" type="submit" id="searchBtn" style="height: 34px;">
-                <span class="glyphicon glyphicon-search"></span>
+                <i class="fa fa-search fa-1x" aria-hidden="true"></i>
             </button>
             </span>
         </div>
@@ -259,7 +259,7 @@ else
                 <h3 class="panel-title">Klanten</h3>
                 <div class="pull-right">
                     <button class="btn btn-default btn-xs btn-filter">
-                        <span class="glyphicon glyphicon-filter"></span>&nbsp;Filteren
+                        <i class="fa fa-filter fa-1x" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Filteren
                     </button>
                 </div>
             </div>
@@ -297,7 +297,7 @@ else
                     $(document).ready(function ()
                     {
                         $("#searchBtn").trigger('click');
-                        
+
                         var filterEnabled = false;
                         $(".mustFocus").click(function (obj)
                         {
@@ -324,17 +324,17 @@ else
                                 if ($filters.prop('disabled') == false)
                                 {
                                     $filters.prop('disabled', true);
-                                    
+
                                 }
                                 filterEnabled = false;
                             }
                         });
                     });
-                    
+
                 </script>
 
                 <tbody id="listContents">
-                    
+
                 </tbody>
             </table>
             <?php
@@ -348,7 +348,7 @@ else
                         {
                             var startLocation = 26;
                             $("#loadMore").on("click", function () {
-                                
+
                                 $("#loadMore").fadeOut("fast", function () {
                                     $("#moreLoaderIndicator").fadeIn();
                                     $("html, body").animate({ scrollTop: $(document).height() }, "normal");

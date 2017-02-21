@@ -100,7 +100,7 @@ else if (isset($_GET['open']))
                                         else
                                         {
                                             $.notify({
-                                                icon: 'glyphicon glyphicon-remove',
+                                                icon: 'fa fa-exclamation-triangle fa-2x',
                                                 title: 'Error<br />',
                                                 message: data
                                             }, {
@@ -207,7 +207,7 @@ else if (isset($_GET['close']))
                                 <b>Kassa geopend op:</b> <?php echo $row['openDate']; ?><br />
                                 <b>Geopend door:</b> <?php echo $_SESSION['login_ok']['nickName']; ?><br /><br />
                                 <?php
-                                    $cashOut = round($row['cashIn'], 2, '.', '') + round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2);
+                                    $cashOut = round($row['cashIn'], 2) + round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2);
                                 ?>
                                 <div class="input-group">
                                     <span class="input-group-addon" style="max-width: 120px; width: 120px;">Totaal kasgeld</span>
@@ -278,6 +278,10 @@ else if (isset($_GET['close']))
 
                                 if ($("#bankOut").val().substring(0, 2) != "€ ")
                                     $("#bankOut").val("€ " + $("#bankOut").val())
+                            });
+
+                            $("#closeCr").on("click", function () {
+                                alert("Error: system throws NotImplemented.Exception;");
                             });
 
                             $("#cancelCr").on("click", function() {

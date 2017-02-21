@@ -5,8 +5,6 @@
 ?>
 <html>
     <head>
-        <script src="js/sidebar.js"></script>
-
         <!-- Bootstrap and all it's dependencies -->
         <?php
         if ($_CFG['THEME'] == "")
