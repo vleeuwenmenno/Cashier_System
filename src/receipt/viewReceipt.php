@@ -21,8 +21,8 @@
         <script src="js/bootstrap.min.js"></script>
         <script src="js/bootstrap-notify.min.js"></script>
         <script src="js/select2.full.min.js"></script>
-        <script src="js/jqeury.jeditable.js"></script>
         <script src="js/bootstrap-combobox.js"></script>
+        <script src="js/jquery.printElement.js"></script>
     </head>
     <body>
         <?php
@@ -62,13 +62,13 @@
                         ?>
                         <tr>
                             <td><?php echo urldecode(Misc::sqlGet("itemName", "items", "nativeId", $key)['itemName']); ?></td>
-                            <td>€ <?php echo str_replace(".", ",", Misc::calculate('(' . $val['priceAPiece']['priceExclVat'] . ' * ' . $_CFG['VAT'] . ')' . $val['priceAPiece']['priceModifier'])); ?></td>
+                            <td>€ <?php echo str_replace(".", ",", Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier'])); ?></td>
                             <td><?php echo $val['count']; ?>x</td>
-                            <td>€ <?php echo str_replace(".", ",", (Misc::calculate('(' . $val['priceAPiece']['priceExclVat'] . ' * ' . $_CFG['VAT'] . ')' . $val['priceAPiece']['priceModifier']) * $val['count'])); ?></td>
+                            <td>€ <?php echo str_replace(".", ",", (Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier']) * $val['count'])); ?></td>
                         </tr>
                         <?php
 
-                        $totalIncl += (Misc::calculate('(' . $val['priceAPiece']['priceExclVat'] . ' * ' . $_CFG['VAT'] . ')' . $val['priceAPiece']['priceModifier']) * $val['count']);
+                        $totalIncl += (Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier']) * $val['count']);
                     }
                 ?>
             </table>
@@ -86,5 +86,20 @@
                 </table>
             </div>
         </div>
+        <center style="
+            position: relative;
+            top: 128px;
+        ">
+            <button id="printAgain" type="button" class="btn btn-default">Afdrukken</button>
+        </center>
+        <script>
+            $(document).ready(function() {
+                $("#printAgain").on("click", function() {
+                    $("#printAgain").css("display", "none");
+                    $("#PageContent").printElement({ printMode:'popup' });
+                    $("#printAgain").css("display", "inline");
+                });
+            });
+        </script>
     </body>
 </html>

@@ -418,7 +418,7 @@ else
             </tbody>
         </table>
 
-        <button type="button" class="btn btn-info center-block" style="display: none;" id="loadMore">Laad Meer</button>
+        <button type="button" class="btn btn-info center-block" style="display: none;" id="loadMore">Laad Meer</button><br />
         <script>
             $(document).ready(function ()
             {

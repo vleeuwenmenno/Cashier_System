@@ -66,12 +66,12 @@ if (isset($_GET['sTerm']))
 
                 if (isset($_SESSION['receipt']['status']) && $_SESSION['receipt']['status'] == "open")
                 {
-                    echo '            <td><button id="return' .  $row['nativeId'] . '" type="button" class="btn btn-warning"><span class="glyphicon glyphicon-hand-left"></span></button></td>';
+                    echo '            <td><button id="return' .  $row['nativeId'] . '" type="button" class="btn btn-warning" style="font-size: 10px;"><i class="fa fa-archive fa-2x" aria-hidden="true"></i></button></td>';
 
                     if ($row['itemStock'] == "0")
-                        echo '            <td><button id="add' .  $row['nativeId'] . 'Warn" type="button" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span></button></td>';
+                        echo '            <td><button id="add' .  $row['nativeId'] . 'Warn" type="button" class="btn btn-info" style="font-size: 10px;"><i class="fa fa-cart-plus fa-2x" aria-hidden="true"></i></button></td>';
                     else
-                        echo '            <td><button id="add' .  $row['nativeId'] . '" type="button" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span></button></td>';
+                        echo '            <td><button id="add' .  $row['nativeId'] . '" type="button" class="btn btn-info" style="font-size: 10px;"><i class="fa fa-cart-plus fa-2x" aria-hidden="true"></i></button></td>';
                 }
                 echo '    </tr>';
                 echo '    <script>';
@@ -97,7 +97,7 @@ if (isset($_GET['sTerm']))
                                         );
 
                                         $.notify({
-                                            icon: \'glyphicon glyphicon-trash\',
+                                            icon: \'fa fa-cart-plus fa-2x\',
                                             title: \'' . urldecode($row['itemName']) . '\',
                                             message: \'<br />Toegevoegt aan bon.\'
                                         }, {
@@ -127,7 +127,7 @@ if (isset($_GET['sTerm']))
                                     );
 
                                     $.notify({
-                                        icon: \'glyphicon glyphicon-trash\',
+                                        icon: \'fa fa-cart-plus fa-2x\',
                                         title: \'' . urldecode($row['itemName']) . '\',
                                         message: \'<br />Toegevoegt aan bon.\'
                                     }, {

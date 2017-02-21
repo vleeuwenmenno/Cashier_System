@@ -76,7 +76,7 @@ else
                 $("#pageLoaderIndicator").fadeOut();
             });
 
-            $("#newReceipt").html("<span class=\"glyphicon glyphicon-file\"></span> Nieuwe Bon");
+            $("#newReceipt").html("<i class=\"fa fa-file-text fa-2x\" aria-hidden=\"true\"></i>&nbsp;&nbsp; Nieuwe Bon");
 
             $.get(
                 "receipt/empty.php",
@@ -92,8 +92,8 @@ else
                     }, {
                         // settings
                         type: \'success\',
-                        delay: 2000,
-                        timer: 10,
+                        delay: 1000,
+                        timer: 2,
                         placement: {
                             from: "bottom",
                             align: "right"

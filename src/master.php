@@ -16,6 +16,7 @@
         <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/stylesheet.css">
         <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/select2.min.css" />
         <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/bootstrap-combobox.css" />
+        <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/font-awesome.css" />
 
         <script src="js/jquery.js"></script>
         <script src="js/bootstrap.min.js"></script>
@@ -23,6 +24,7 @@
         <script src="js/select2.full.min.js"></script>
         <script src="js/jqeury.jeditable.js"></script>
         <script src="js/bootstrap-combobox.js"></script>
+        <script src="js/jquery.printElement.js"></script>
     </head>
     <body>
         <div class="row">
@@ -42,7 +44,7 @@
 
                     <!-- Search -->
                     <a data-toggle="collapse" href="#search" class="btn btn-default" id="search-trigger">
-                        <span class="glyphicon glyphicon-search"></span>
+                        <i class="fa fa-search fa-2x" aria-hidden="true"></i>&nbsp;&nbsp;
                     </a>
 
                     <!-- Search body -->
@@ -66,7 +68,7 @@
                     <!-- Dropdown-->
                     <li class="panel panel-default" id="dropdown">
                         <a data-toggle="collapse" href="#dropdown-lvl1">
-                            <span class="glyphicon glyphicon-eur"></span> Kassa</span>
+                            <i class="fa fa-money fa-2x" aria-hidden="true"></i>&nbsp;&nbsp; Kassa</span>
                         </a>
 
                         <!-- Dropdown level 1 -->
@@ -76,10 +78,10 @@
                                     <!-- Dropdown level 2 -->
                                     <li class="panel panel-default" id="dropdown">
                                         <a data-toggle="collapse" href="#" id="cashregOverview">
-                                            <span class="glyphicon glyphicon-eur"></span> Kassa overzicht</span>
+                                            <i class="fa fa-television fa-2x" aria-hidden="true"></i>&nbsp;&nbsp;Kassa overzicht</span>
                                         </a>
                                         <a data-toggle="collapse" <?php if (Misc::crIsActive()) { ?> href="#dropdown-lvl2"<?php } ?>>
-                                            <span class="glyphicon glyphicon-eur"></span> Bonnen</span>
+                                            <i class="fa fa-paperclip fa-2x" aria-hidden="true"></i>&nbsp;&nbsp;Bonnen</span>
                                         </a>
                                         <script>
                                             $(document).ready(function ()
@@ -109,10 +111,10 @@
                                                     }
                                                     else
                                                     {
-                                                        echo '<li><a href="#" id="newReceipt"><span class="glyphicon glyphicon-file"></span> Nieuwe Bon</a></li>';
+                                                        echo '<li><a href="#" id="newReceipt"><i class="fa fa-file-text fa-2x" aria-hidden="true"></i>&nbsp;&nbsp; Nieuwe Bon</a></li>';
                                                     }
                                                     ?>
-                                                    <li><a href="#" id="searchReceipt"><span class="glyphicon glyphicon-search"></span> Zoeken</a></li>
+                                                    <li><a href="#" id="searchReceipt"><i class="fa fa-search fa-2x" aria-hidden="true"></i>&nbsp;&nbsp; Zoeken</a></li>
                                                     <script>
 														$(document).ready(function ()
 														{
@@ -138,14 +140,14 @@
                                     </li>
                                     <li class="panel panel-default" id="dropdown">
                                         <a data-toggle="collapse" <?php if (Misc::crIsActive()) { ?> href="#dropdown-lvl3"<?php } ?>>
-                                            <span class="glyphicon glyphicon-barcode"></span> Artikelen</span>
+                                            <i class="fa fa-barcode fa-2x" aria-hidden="true"></i>&nbsp;&nbsp; Artikelen</span>
                                         </a>
                                         <div id="dropdown-lvl3" class="panel-collapse collapse">
                                             <div class="panel-body">
                                                 <ul class="nav navbar-nav">
-                                                    <li><a href="#" id="searchItem"><span class="glyphicon glyphicon-search"></span> Zoeken</a></li>
-                                                    <li><a href="#" id="createNewItem"><span class="glyphicon glyphicon-file"></span> Nieuw Artikel</a></li>
-                                                    <li><a href="#" id="itemEntryUpdate"><span class="glyphicon glyphicon-barcode"></span> Artikel Inboeken</a></li>
+                                                    <li><a href="#" id="searchItem"><i class="fa fa-search fa-2x" aria-hidden="true"></i>&nbsp;&nbsp; Zoeken</a></li>
+                                                    <li><a href="#" id="createNewItem"><i class="fa fa-file-text-o fa-2x" aria-hidden="true"></i>&nbsp;&nbsp; Nieuw Artikel</a></li>
+                                                    <li><a href="#" id="itemEntryUpdate"><i class="fa fa-barcode fa-2x" aria-hidden="true"></i>&nbsp;&nbsp; Artikel Inboeken</a></li>
                                                     <script>
 														$(document).ready(function ()
 														{
@@ -187,13 +189,13 @@
 
                                     <li class="panel panel-default" id="dropdown">
                                         <a data-toggle="collapse" <?php if (Misc::crIsActive()) { ?> href="#dropdown-lvl4"<?php } ?>>
-                                            <span class="glyphicon glyphicon-expand"></span> Klanten</span>
+                                            <i class="fa fa-address-book-o fa-2x" aria-hidden="true"></i>&nbsp;&nbsp; Klanten</span>
                                         </a>
                                         <div id="dropdown-lvl4" class="panel-collapse collapse">
                                             <div class="panel-body">
                                                 <ul class="nav navbar-nav">
-                                                    <li><a href="#" id="load_custm"><span class="glyphicon glyphicon-search"></span> Zoeken</a></li>
-                                                    <li><a href="#" id="load_ncustm"><span class="glyphicon glyphicon-file"></span> Nieuwe Klant</a></li>
+                                                    <li><a href="#" id="load_custm"><i class="fa fa-search fa-2x" aria-hidden="true"></i>&nbsp;&nbsp; Zoeken</a></li>
+                                                    <li><a href="#" id="load_ncustm"><i class="fa fa-address-card-o fa-2x" aria-hidden="true"></i> Nieuwe Klant</a></li>
 													<script>
 														$(document).ready(function ()
 														{
@@ -250,13 +252,13 @@
                                             </div>
                                         </div>
                                     </li>
-                                    <?php if (Permissions::isManager($_SESSION['login_ok']['userId'])) { ?><li><a href="#" id="managementBtn"><span class="glyphicon glyphicon-cog"></span> Systeem Beheer</a></li><?php } ?>
+                                    <?php if (Permissions::isManager($_SESSION['login_ok']['userId'])) { ?><li><a href="#" id="managementBtn"><i class="fa fa-sliders fa-2x" aria-hidden="true"></i>&nbsp;&nbsp; Systeem Beheer</a></li><?php } ?>
                                 </ul>
                             </div>
                         </div>
                     </li>
 
-                    <li><a href="logout.php"><span class="glyphicon glyphicon-user"></span> Uitloggen</a></li>
+                    <li><a href="logout.php"><i class="fa fa-sign-out fa-2x" aria-hidden="true"></i>&nbsp;&nbsp; Uitloggen</a></li>
                     <div class="loader mainLoader" id="pageLoaderIndicator" style="display: none;"></div>
                 </ul>
             </div>

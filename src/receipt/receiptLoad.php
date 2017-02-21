@@ -44,12 +44,12 @@ if (isset($_GET['sTerm']))
                     echo Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId']);
                     echo '        <td>&euro;&nbsp;' . round(Calculate::getReceiptTotal(Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId'])['items'])['total'], 2) . '</td>';
                     echo '<td>
-                            <button id="viewReceipt' . $i . '" type="button" class="btn btn-info"><span class="glyphicon glyphicon-list"></span></button>
+                            <button id="viewReceipt' . $i . '" type="button" class="btn btn-info"><i class="fa fa-folder-open-o" aria-hidden="true"></i></button>
                             &nbsp;
-                            <button id="loadReceipt' . $i . '" type="button" class="btn btn-primary" disabled readonly><span class="glyphicon glyphicon-upload"></span></button>';
+                            <button id="loadReceipt' . $i . '" type="button" class="btn btn-primary" disabled readonly><i class="fa fa-download" aria-hidden="true"></i></button>';
                     if (Permissions::isManager($_SESSION['login_ok']['userId']))
                     {
-                        echo '&nbsp;&nbsp;<button id="removeReceipt' . $i . '" type="button" class="btn btn-warning"><span class="glyphicon glyphicon-trash"></span></button>';
+                        echo '&nbsp;&nbsp;<button id="removeReceipt' . $i . '" type="button" class="btn btn-warning"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
                     }
                     echo '</td>';
                     echo '    </tr>';
@@ -77,12 +77,12 @@ if (isset($_GET['sTerm']))
                         echo Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId']);
                         echo '        <td>&euro;&nbsp;' . round(Calculate::getReceiptTotal(Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId'])['items'])['total'], 2) . '</td>';
                         echo '<td>
-                                <button id="viewReceipt' . $i . '" type="button" class="btn btn-info"><span class="glyphicon glyphicon-list"></span></button>
+                                <button id="viewReceipt' . $i . '" type="button" class="btn btn-info"><i class="fa fa-folder-open-o" aria-hidden="true"></i></span></button>
                                 &nbsp;
-                                <button id="loadReceipt' . $i . '" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-upload"></span></button>';
+                                <button id="loadReceipt' . $i . '" type="button" class="btn btn-primary"><i class="fa fa-download" aria-hidden="true"></i></button>';
                         if (Permissions::isManager($_SESSION['login_ok']['userId']))
                         {
-                            echo '&nbsp;&nbsp;<button id="removeReceipt' . $i . '" type="button" class="btn btn-warning"><span class="glyphicon glyphicon-trash"></span></button>';
+                            echo '&nbsp;&nbsp;<button id="removeReceipt' . $i . '" type="button" class="btn btn-warning"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
                         }
                         echo '</td>';
                         echo '    </tr>';

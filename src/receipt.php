@@ -833,7 +833,7 @@ else if (isset($_GET['new']))
             });
 
             $('#closeReceipt').click(function () {
-                $("#newReceipt").html("<span class=\"glyphicon glyphicon-file\"></span> Nieuwe Bon");
+                $("#newReceipt").html("<i class=\"fa fa-file-text fa-2x\" aria-hidden=\"true\"></i>&nbsp;&nbsp; Nieuwe Bon");
 
                 $("#pageLoaderIndicator").fadeIn();
                 $("#PageContent").load("receipt.php", function () {

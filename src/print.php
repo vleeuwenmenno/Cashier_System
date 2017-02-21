@@ -123,25 +123,14 @@ margin-top: 32px;">
     }
     echo 'Afdrukken</button></center>';
     echo '<script>
-        $.get(
-            "barcode/getBarcode.php",
-            {
-                EAN: "' . $_GET['receipt'] . '"
-            },
-            function (data)
-            {
-                $("#barcodeEan").html(data);
-            }
-        );
-
         $(document).ready(function() {
             $("#printAgain").css("display", "none");
-            window.print();
+            $("#PageContent").printElement({ printMode:\'popup\' });
             $("#printAgain").css("display", "inline");
 
             $("#printAgain").on("click", function() {
                 $("#printAgain").css("display", "none");
-                window.print();
+                $("#PageContent").printElement({ printMode:\'popup\' });
                 $("#printAgain").css("display", "inline");
             });
         });
