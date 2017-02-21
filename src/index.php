@@ -1,10 +1,10 @@
 <?php
     include_once("includes.php");
 
-	if (Permissions::checkSession("", false))
-	{
-		header("Location: master.php");
-	}
+    if (Permissions::checkSession("", false))
+    {
+        header("Location: master.php");
+    }
 ?>
 <html>
     <head>
@@ -23,6 +23,7 @@
             <!-- Menu -->
             <div class="side-menu">
             <nav class="navbar navbar-default" role="navigation">
+                
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
                 <div class="brand-wrapper">
@@ -46,7 +47,7 @@
                                 <div class="form-group">
                                     <input type="text" class="form-control" placeholder="Snel-zoeken...">
                                 </div>
-                                <button type="submit" class="btn btn-default "><span class="glyphicon glyphicon-ok"></span></button>
+                                    <button type="submit" class="btn btn-default "><span class="glyphicon glyphicon-ok"></span></button>
                             </form>
                         </div>
                     </div>
@@ -85,6 +86,7 @@
                     <button type="submit" class="btn btn-primary">Login</button>
                     <button type="button" class="btn btn-default">Annuleren</button>
                     <?php
+
                     if (isset($_POST['employee']) || isset($_POST['passwrd']))
                     {
                         $_SESSION['login'] = array(
@@ -98,14 +100,16 @@
                         })();
                     </script>
                     <?php
+
                     }
                     if (isset($_GET['notice']))
                     {
                         echo $_GET['notice'];
                     }
+
                     ?>
-				</form>
-			</div>
+	             </form>
+            </div>
             <div class="col-sm-2"></div>
         </div>
     </body>
