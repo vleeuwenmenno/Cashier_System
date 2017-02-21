@@ -61,7 +61,7 @@ if (isset($_GET['id']))
 	<br />
 	<div class="form-group">
 		<label for="priceExclVat">Inkoop prijs: </label>
-		<input type="text" class="form-control" id="priceExclVat" placeholder="26,66" value="<?php echo number_format($row["priceExclVat"], 2, ",", " "); ?>" readonly />
+		<input type="text" class="form-control" id="priceExclVat" placeholder="26,66" value="<?php echo round($row["priceExclVat"], 2); ?>" readonly />
 	</div>
 	<label for="priceModifier">Prijs berekening: </label>
 	<div class="input-group">

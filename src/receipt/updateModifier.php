@@ -6,7 +6,7 @@ if (isset($_GET["modifier"]) && isset($_GET['global']) && isset($_GET["nativeId"
     if ($_GET['global'] != "false")
     {
         $_SESSION['receipt']['items'][$_GET['nativeId']]['priceAPiece']['priceModifier'] = str_replace(',', '.', $_GET["modifier"]);
-        $_SESSION['receipt']['items'][$_GET['nativeId']]['priceAPiece']['priceExclVat'] = number_format($_GET["priceExclVat"], 2, '.', '');
+        $_SESSION['receipt']['items'][$_GET['nativeId']]['priceAPiece']['priceExclVat'] = round($_GET["priceExclVat"], 2);
 
         $json = json_encode($_SESSION['receipt']['items']);
         $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
@@ -26,9 +26,9 @@ if (isset($_GET["modifier"]) && isset($_GET['global']) && isset($_GET["nativeId"
     else
     {
         $_SESSION['receipt']['items'][$_GET['nativeId']]['priceAPiece']['priceModifier'] = str_replace(',', '.', $_GET["modifier"]);
-        $_SESSION['receipt']['items'][$_GET['nativeId']]['priceAPiece']['priceExclVat'] = number_format($_GET["priceExclVat"], 2, '.', '');
+        $_SESSION['receipt']['items'][$_GET['nativeId']]['priceAPiece']['priceExclVat'] = round($_GET["priceExclVat"], 2);
 
-        $sql = "UPDATE items SET priceExclVat='" . number_format($_GET["priceExclVat"], 2, '.', '') . "', priceModifier='" . str_replace(',', '.', $_GET["modifier"]) . "' WHERE nativeId = " . $_GET['nativeId'] . ";";
+        $sql = "UPDATE items SET priceExclVat='" . round($_GET["priceExclVat"], 2) . "', priceModifier='" . str_replace(',', '.', $_GET["modifier"]) . "' WHERE nativeId = " . $_GET['nativeId'] . ";";
         $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
 		if($db->connect_errno > 0)

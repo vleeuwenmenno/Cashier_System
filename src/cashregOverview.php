@@ -51,7 +51,7 @@ else if (isset($_GET['open']))
     $cashOut = 0.0;
     while ($row = $result->fetch_assoc())
     {
-        $cashOut = number_format($row['cashOut'], 2, ',', '');
+        $cashOut = round($row['cashOut'], 2);
     }
     ?>
     <div class="container container-table">
@@ -193,35 +193,35 @@ else if (isset($_GET['close']))
                             {
                                 $cashSessionId = Misc::sqlGet("currentSession", "cash_registers", "crStaticIP", $thisIp)['currentSession'];
                                 ?>
-                                <b>Kas-in:</b> &euro; <?php echo '' . number_format($row['cashIn'], 2, ',', '') ?><br /> <!-- kas-in is het bedrag in cash wat er in de kassa zit op het moment van kassa/winkel opening -->
+                                <b>Kas-in:</b> &euro; <?php echo '' . round($row['cashIn'], 2) ?><br /> <!-- kas-in is het bedrag in cash wat er in de kassa zit op het moment van kassa/winkel opening -->
 
-                                <!-- <b>Bruto-omzet:</b> &euro;&nbsp;<?php //echo number_format(Calculate::getGrossTurnover(PaymentMethod::All, $cashSessionId), 2, ',', ''); ?><br />
+                                <!-- <b>Bruto-omzet:</b> &euro;&nbsp;<?php //echo round(Calculate::getGrossTurnover(PaymentMethod::All, $cashSessionId), 2); ?><br />
                                 Bruto omzet is de totale omzet. (Omzet is de optelsom van alle inkomsten) -->
 
-                                <b>Omzet:</b> &euro;&nbsp;<?php echo number_format(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2, ',', ''); ?><br />
+                                <b>Omzet:</b> &euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2); ?><br />
                                 <!-- De netto omzet wordt berekend aan de hand van de bruto omzet met aftrek van teruggenomen artikelen, schadevergoedingen en achteraf toegekende kortingen. -->
 
-                                <b>Marge:</b> &euro;&nbsp;<?php echo number_format(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2, ',', ''); ?><br /><br />
+                                <b>Marge:</b> &euro;&nbsp;<?php echo round(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2); ?><br /><br />
                                 <!-- De marge is het verschil tussen inkoop- en verkoopprijs. -->
 
                                 <b>Kassa geopend op:</b> <?php echo $row['openDate']; ?><br />
                                 <b>Geopend door:</b> <?php echo $_SESSION['login_ok']['nickName']; ?><br /><br />
                                 <?php
-                                    $cashOut = number_format($row['cashIn'], 2, '.', '') + number_format(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2, '.', '');
+                                    $cashOut = round($row['cashIn'], 2, '.', '') + round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2);
                                 ?>
                                 <div class="input-group">
                                     <span class="input-group-addon" style="max-width: 120px; width: 120px;">Totaal kasgeld</span>
-                                    <input type="text" class="form-control" id="cashOut" placeholder="&euro;&nbsp;<?php echo number_format($cashOut, 2, ',', ''); ?>">
+                                    <input type="text" class="form-control" id="cashOut" placeholder="&euro;&nbsp;<?php echo round($cashOut, 2); ?>">
                                 </div>
 
                                 <div class="input-group">
                                     <span class="input-group-addon" style="max-width: 120px; width: 120px;">Pinbon</span>
-                                    <input type="text" class="form-control" id="pinOut" placeholder="&euro;&nbsp;<?php echo number_format(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2, ',', ''); ?>">
+                                    <input type="text" class="form-control" id="pinOut" placeholder="&euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2); ?>">
                                 </div>
 
                                 <div class="input-group">
                                     <span class="input-group-addon" style="max-width: 120px; width: 120px;">Op rekening</span>
-                                    <input type="text" class="form-control" id="bankOut" placeholder="&euro;&nbsp;<?php echo number_format(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2, ',', ''); ?>">
+                                    <input type="text" class="form-control" id="bankOut" placeholder="&euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2); ?>">
                                 </div>
 
                                 <div class="checkbox">
@@ -355,15 +355,15 @@ else
                                 {
                                     $cashSessionId = Misc::sqlGet("currentSession", "cash_registers", "crStaticIP", $thisIp)['currentSession'];
                                     ?>
-                                    <b>Kas-in:</b> &euro; <?php echo '' . number_format($row['cashIn'], 2, ',', '') ?><br /> <!-- kas-in is het bedrag in cash wat er in de kassa zit op het moment van kassa/winkel opening -->
+                                    <b>Kas-in:</b> &euro; <?php echo '' . round($row['cashIn'], 2) ?><br /> <!-- kas-in is het bedrag in cash wat er in de kassa zit op het moment van kassa/winkel opening -->
 
-                                    <!-- <b>Bruto-omzet:</b> &euro;&nbsp;<?php //echo number_format(Calculate::getGrossTurnover(PaymentMethod::All, $cashSessionId), 2, ',', ''); ?><br />
+                                    <!-- <b>Bruto-omzet:</b> &euro;&nbsp;<?php //echo round(Calculate::getGrossTurnover(PaymentMethod::All, $cashSessionId), 2); ?><br />
                                     Bruto omzet is de totale omzet. (Omzet is de optelsom van alle inkomsten) -->
 
-                                    <b>Omzet:</b> &euro;&nbsp;<?php echo number_format(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2, ',', ''); ?><br />
+                                    <b>Omzet:</b> &euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2); ?><br />
                                     <!-- De netto omzet wordt berekend aan de hand van de bruto omzet met aftrek van teruggenomen artikelen, schadevergoedingen en achteraf toegekende kortingen. -->
 
-                                    <b>Marge:</b> &euro;&nbsp;<?php echo number_format(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2, ',', ''); ?><br /><br />
+                                    <b>Marge:</b> &euro;&nbsp;<?php echo round(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2); ?><br /><br />
                                     <!-- De marge is het verschil tussen inkoop- en verkoopprijs. -->
 
                                     <b>Kassa geopend op:</b> <?php echo $row['openDate']; ?><br />

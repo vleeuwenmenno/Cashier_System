@@ -228,7 +228,7 @@ class Misc
     // calculates the result of an expression in infix notation
 	public static function calculate($exp) {
         $exp = str_replace(',', '.', $exp);
-		return round(Misc::calculate_rpn(Misc::mathexp_to_rpn($exp)), 2);
+		return Misc::calculate_rpn(Misc::mathexp_to_rpn($exp));
 	}
 
 	// calculates the result of an expression in reverse polish notation
@@ -265,7 +265,7 @@ class Misc
 				array_push($stack, $item);
 			}
 		}
-		return $stack[0];
+		return round($stack[0], 2);
 	}
 
 	// converts infix notation to reverse polish notation

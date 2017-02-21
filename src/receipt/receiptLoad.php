@@ -42,7 +42,7 @@ if (isset($_GET['sTerm']))
                     echo '        <td>' . Misc::sqlGet("paidDt", "receipt", "receiptId", $row['receiptId'])['paidDt'] . '</td>';
                     echo '        <td>' . $row['receiptId'] . '</td>';
                     echo Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId']);
-                    echo '        <td>&euro;&nbsp;' . number_format(Calculate::getReceiptTotal(Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId'])['items'])['total'], 2, ',', '') . '</td>';
+                    echo '        <td>&euro;&nbsp;' . round(Calculate::getReceiptTotal(Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId'])['items'])['total'], 2) . '</td>';
                     echo '<td>
                             <button id="viewReceipt' . $i . '" type="button" class="btn btn-info"><span class="glyphicon glyphicon-list"></span></button>
                             &nbsp;
@@ -75,7 +75,7 @@ if (isset($_GET['sTerm']))
                         echo '        <td>' . Misc::sqlGet("createDt", "receipt", "receiptId", $row['receiptId'])['createDt'] . '</td>';
                         echo '        <td>' . $row['receiptId'] . '</td>';
                         echo Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId']);
-                        echo '        <td>&euro;&nbsp;' . number_format(Calculate::getReceiptTotal(Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId'])['items'])['total'], 2, ',', '') . '</td>';
+                        echo '        <td>&euro;&nbsp;' . round(Calculate::getReceiptTotal(Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId'])['items'])['total'], 2) . '</td>';
                         echo '<td>
                                 <button id="viewReceipt' . $i . '" type="button" class="btn btn-info"><span class="glyphicon glyphicon-list"></span></button>
                                 &nbsp;

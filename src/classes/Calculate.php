@@ -37,7 +37,7 @@ class Calculate
                 $receipt = Calculate::getReceiptTotal($row['items']);
 
                 if ($receipt['total'] > 0)
-                    $final += number_format($receipt['total'],2 , '.', '');
+                    $final += round($receipt['total'],2 );
             }
 
             return $final;
@@ -63,7 +63,7 @@ class Calculate
                 $receipt = Calculate::getReceiptTotal($row['items']);
 
                 if ($receipt['total'] > 0)
-                    $final += number_format($receipt['total'],2 , '.', '');
+                    $final += round($receipt['total'],2 );
             }
 
             return $final;
@@ -89,7 +89,7 @@ class Calculate
                 $receipt = Calculate::getReceiptTotal($row['items']);
 
                 if ($receipt['total'] > 0)
-                    $final += number_format($receipt['total'],2 , '.', '');
+                    $final += round($receipt['total'],2 );
             }
 
             return $final;
@@ -115,7 +115,7 @@ class Calculate
                 $receipt = Calculate::getReceiptTotal($row['items']);
 
                 if ($receipt['total'] > 0)
-                    $final += number_format($receipt['total'],2 , '.', '');
+                    $final += round($receipt['total'],2 );
             }
 
             return $final;
@@ -146,7 +146,7 @@ class Calculate
             while($row = $result->fetch_assoc())
             {
                 $receipt = Calculate::getReceiptTotal($row['items']);
-                $final += number_format($receipt['total'],2 , '.', '');
+                $final += round($receipt['total'],2 );
             }
             return $final;
         }
@@ -169,7 +169,7 @@ class Calculate
             while($row = $result->fetch_assoc())
             {
                 $receipt = Calculate::getReceiptTotal($row['items']);
-                $final += number_format($receipt['total'],2 , '.', '');
+                $final += round($receipt['total'],2 );
             }
             return $final;
         }
@@ -192,7 +192,7 @@ class Calculate
             while($row = $result->fetch_assoc())
             {
                 $receipt = Calculate::getReceiptTotal($row['items']);
-                $final += number_format($receipt['total'],2 , '.', '');
+                $final += round($receipt['total'],2 );
             }
             return $final;
         }
@@ -215,7 +215,7 @@ class Calculate
             while($row = $result->fetch_assoc())
             {
                 $receipt = Calculate::getReceiptTotal($row['items']);
-                $final += number_format($receipt['total'],2 , '.', '');
+                $final += round($receipt['total'],2 );
             }
             return $final;
         }
@@ -368,7 +368,7 @@ class Calculate
         $final = array();
         foreach ($json as $key => $val)
         {
-            $final['total'] += (Misc::calculate(number_format($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2, '.', '') . $val['priceAPiece']['priceModifier']) * $val['count']);
+            $final['total'] += (Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier']) * $val['count']);
             $final['exclVat'] += ($val['priceAPiece']['priceExclVat'] *  $val['count']);
         }
         return $final;
