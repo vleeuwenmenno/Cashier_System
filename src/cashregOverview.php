@@ -281,7 +281,7 @@ else if (isset($_GET['close']))
                             });
 
                             $("#closeCr").on("click", function () {
-                                alert("Error: system throws NotImplemented.Exception;");
+                                alert("//TODO: Zorg dat dit werkt!!");
                             });
 
                             $("#cancelCr").on("click", function() {

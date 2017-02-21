@@ -24,22 +24,22 @@
             <div class="col-sm-6">
                 <form class="ui form panel" style="text-align: left !important;" action="index.php?login<?php if (isset($_GET['r'])) { echo '&r=' . $_GET['r']; }?>" method="POST" enctype="multipart/form-data">
                     <h2>Kassa</h2>
+
                     <div class="form-group">
-                        <label for="employee">Medewerker: </label>
-                        <input type="text" class="form-control" name="employee" id="employee">
+                        <label for="username">Medewerker: </label>
+                        <input type="text" class="form-control" name="username" id="username" readonly onfocus="this.removeAttribute('readonly');"/>
                     </div>
                     <div class="form-group">
                         <label for="passwrd">Wachtwoord: </label>
-                        <input type="password" class="form-control" name="passwrd" id="passwrd">
+                        <input type="password" class="form-control" name="passwrd" id="passwrd" readonly onfocus="this.removeAttribute('readonly');"/>
                     </div>
-                    <button type="submit" class="btn btn-primary">Login</button>
-                    <button type="button" class="btn btn-default">Annuleren</button>
+                    <center><button type="submit" class="btn btn-primary" style="width: 196px;">Login</button></center>
                     <?php
 
-                    if (isset($_POST['employee']) || isset($_POST['passwrd']))
+                    if (isset($_POST['username']) || isset($_POST['passwrd']))
                     {
                         $_SESSION['login'] = array(
-                            'user' => trim($_POST['employee']),
+                            'user' => trim($_POST['username']),
                             'pass' => $_POST['passwrd']);
                     ?>
                     <script>
@@ -49,13 +49,12 @@
                         })();
                     </script>
                     <?php
-
                     }
-                    if (isset($_GET['notice']))
+
+                    if (isset($_SESSION['prob']))
                     {
-                        echo $_GET['notice'];
+                        echo $_SESSION['prob'];
                     }
-
                     ?>
 	             </form>
             </div>

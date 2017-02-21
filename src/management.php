@@ -21,6 +21,7 @@ include_once("includes.php");
 					<div id="userManagement">
 						<h2>Gebruikers Beheer</h2>
 					    <br />
+                        //TODO: Zorg dat wijzigingen worden verwerkt in het systeem
 					    <div class="form-group">
 							<table class="table">
 					            <thead>
@@ -318,6 +319,7 @@ include_once("includes.php");
 					<div id="balanceManagement">
 						<h2>Balans Beheer</h2>
 					    <br />
+                        //TODO: Dit werkt momenteel nog helemaal niet, FIX IT!
 					    <div class="form-group">
 							Balans rapport printen:<br />
 							<input type="button" class="btn btn-default" id="printReport" value="Print minimaal" />
@@ -375,6 +377,7 @@ include_once("includes.php");
 					        </script>
 					    </div>
 					    <div class="form-group">
+                            //TODO: Is hier een XML voor??<br />
 					        United Supplies XML Aanwezig: <?php if (file_exists(dirname(__FILE__) . '/import/unitedsupplies.xml')) { echo 'Ja'; } else { echo 'Nee'; } ?>
 					        <br />
 					        <input type="button" class="btn btn-warning" id="importUSupplies" value="United Supplies Importeren" disabled/ />

@@ -27,7 +27,7 @@ if ($_SESSION['login'])
             {
                 echo 'Login accepted with username!';
                 unset($_SESSION['login']);
-                $_SESSION['result'] = "Login accepted with username";
+                $_SESSION['prob'] = "Gegevens geaccepteerd, u wordt binnen enkelen seconden ingelogd...";
 
                 unset($row['hash']);
                 unset($row['salt']);
@@ -51,20 +51,20 @@ if ($_SESSION['login'])
             else
             {
                 echo 'Username or password incorrect. ERROR: 001';
-                $_SESSION['result'] = "Username or password incorrect. ERROR: 001";
+                $_SESSION['prob'] = "Gebruikersnaam of wachtwoord is onjuist.";
                 header("Location: index.php?login");
             }
         }
         else
         {
             echo 'Username or password incorrect.  ERROR: 002';
-            $_SESSION['result'] = "Username or password incorrect.  ERROR: 002";
+            $_SESSION['prob'] = "Gebruikersnaam of wachtwoord is onjuist.";
             header("Location: index.php?login");
         }
     }
 
     echo 'Username or password incorrect.  ERROR: 005';
-    $_SESSION['result'] = "Username or password incorrect.  ERROR: 005";
+    $_SESSION['prob'] = "Gebruikersnaam of wachtwoord is onjuist.";
     header("Location: index.php?login");
 }
 ?>
