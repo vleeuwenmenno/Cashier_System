@@ -98,8 +98,8 @@ if (isset($_GET['sTerm']))
 
                                         $.notify({
                                             icon: \'fa fa-cart-plus fa-2x\',
-                                            title: \'' . urldecode($row['itemName']) . '\',
-                                            message: \'<br />Toegevoegt aan bon.\'
+                                            title: \'  Toegevoegt aan bon\',
+                                            message: \'<br />' . urldecode($row['itemName']) . '\'
                                         }, {
                                             // settings
                                             type: \'success\',
@@ -128,8 +128,8 @@ if (isset($_GET['sTerm']))
 
                                     $.notify({
                                         icon: \'fa fa-cart-plus fa-2x\',
-                                        title: \'' . urldecode($row['itemName']) . '\',
-                                        message: \'<br />Toegevoegt aan bon.\'
+                                        title: \'  Toegevoegt aan bon\',
+                                        message: \'<br />' . urldecode($row['itemName']) . '\'
                                     }, {
                                         // settings
                                         type: \'success\',
@@ -143,6 +143,33 @@ if (isset($_GET['sTerm']))
                                 });';
                     }
                 }
+
+                echo ' $("#return' . $row['nativeId'] . '").on("click", function() {
+                            $.get(
+                                "receipt/addItem.php",
+                                {
+                                    itemId: \'' . $row['nativeId'] . '\',
+                                    itemCount: \'-1\'
+                                },
+                                function (data)
+                                { }
+                            );
+
+                            $.notify({
+                                icon: \'fa fa-archive fa-2x\',
+                                title: \'  Retour is toegevoegt aan bon\',
+                                message: \'<br />' . urldecode($row['itemName']) . '\'
+                            }, {
+                                // settings
+                                type: \'success\',
+                                delay: 5000,
+                                timer: 10,
+                                placement: {
+                                    from: "bottom",
+                                    align: "right"
+                                }
+                            });
+                        });';
 
                 echo       '$("#popOver' . $row['nativeId'] . '").popover({
                                 html : true,
