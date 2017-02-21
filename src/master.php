@@ -250,7 +250,7 @@
 
             </div>
             <div class="col-sm-8">
-                <div id="PageContent">
+                <div id="PageContent" style="position: relative; left: -62px;">
 
                 </div>
 			</div>
