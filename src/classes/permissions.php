@@ -36,7 +36,7 @@ class Permissions
         {
             $time_diff = strtotime($row['validUntil']) - strtotime('+0hour');
 
-            if (($time_diff / 60) <= 0)
+            if (($time_diff / 720) <= 0)
             {
                 $sql = "DELETE FROM sessions WHERE sessionId='" . $_SESSION['sessionId'] . "';";
 

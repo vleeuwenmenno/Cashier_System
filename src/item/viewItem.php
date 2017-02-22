@@ -1,5 +1,6 @@
 <?php
 include_once("../includes.php");
+Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 
 if (isset($_GET['id']))
 {

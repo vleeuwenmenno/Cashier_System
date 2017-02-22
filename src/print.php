@@ -64,7 +64,7 @@ font-variant: normal;
 font-weight: 400;
 line-height: 20px;">
 
-    <div style="margin-left: 48px;margin-top: 96px; font-size: 12px;">
+    <div style="margin-left: 48px;margin-top: 128px; font-size: 12px;">
         Bon Nr. <?php echo $_GET['receipt']; ?><br />
         Tijd/Datum: <?php echo $receipt['paidDt']; ?><br />
         Kassa: <?php echo Misc::sqlGet("crName", "cash_registers", "id", Misc::sqlGet("cashRegisterId", "cashsession", "cashSessionId", $receipt['parentSession'])['cashRegisterId'])['crName']; ?><br />
