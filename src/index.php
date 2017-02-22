@@ -54,6 +54,7 @@
                     if (isset($_SESSION['prob']))
                     {
                         echo $_SESSION['prob'];
+                        $_SESSION['prob'] = "";
                     }
                     ?>
 	             </form>

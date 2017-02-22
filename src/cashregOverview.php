@@ -283,7 +283,7 @@ else if (isset($_GET['close']))
 
                             $("#closeCr").on("click", function () {
                                 $("#pageLoaderIndicator").fadeIn();
-                                $("#PageContent").load("cashregOverview.php?cashout", function () {
+                                $("#PageContent").load("cashregOverview.php?cashOut=" + encodeURI($("#cashOut").val()) + "&pinOut=" + encodeURI($("#pinOut").val()) + "&bankOut=" + encodeURI($("#bankOut").val()), function () {
                                     $("#pageLoaderIndicator").fadeOut();
                                 });
                             });
@@ -302,10 +302,9 @@ else if (isset($_GET['close']))
     </div>
     <?php
 }
-else if (isset($_GET['cashout']))
+else if (isset($_GET['cashOut']) && isset($_GET['pinOut']) && isset($_GET['bankOut']))
 {
     ?>
-
     <div class="container container-table">
         <div class="row vertical-center-row">
             <div class="text-center col-md-4 col-md-offset-4" style="margin-top: 32px;">
@@ -353,18 +352,36 @@ else if (isset($_GET['cashout']))
                                 $cashOut = 0.0;
                                 while($row = $result->fetch_assoc())
                                 {
+                                    //$totalIn = str_replace("€ ", "", str_replace(",", ".", $_GET['pinOut']))
+                                    //$totalIn = round((str_replace("€ ", "", str_replace(",", ".", $_GET['cashOut'])) + $totalIn), 2);
+                                    //$totalIn = round((str_replace("€ ", "", str_replace(",", ".", $_GET['bankOut'])) + $totalIn), 2);
+
                                     $cashSessionId = Misc::sqlGet("currentSession", "cash_registers", "crStaticIP", $thisIp)['currentSession'];
                                     $cashOut = round($row['cashIn'], 2) + round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2);
                                     ?>
-                                    <b>Kas-in:</b> &euro; <?php echo '' . round($row['cashIn'], 2) ?><br />
-                                    <b>Kas-uit:</b> &euro; <?php echo '' . $cashOut; ?><br />
-
-                                    <b>Bruto-omzet:</b> &euro;&nbsp;<?php echo round(Calculate::getGrossTurnover(PaymentMethod::All, $cashSessionId), 2); ?><br />
+                                    <b>Totaal In:</b> &euro; <?php echo $totalIn; ?><br />
                                     <b>Omzet:</b> &euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2); ?><br />
-                                    <b>Marge:</b> &euro;&nbsp;<?php echo round(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2); ?><br /><br />
+                                    <b>Verschil:</b> &euro; <?php echo round($totalIn - round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2), 2);?><br />
+                                    <br />
+                                    <b>Pinbon: </b><?php echo $_GET['pinOut']; ?><br /> <!-- Het bedrag van de pinbon -->
+                                    <b>Omzet pin: </b> &euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2); ?><br/>
+                                    <b>Verschil: </b> &euro; <?php echo round(str_replace("€ ", "", str_replace(",", ".", $_GET['pinOut'])) - round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2), 2);?><br />
+                                    <br />
+                                    <b>Kontant kasgeld: </b><?php echo $_GET['cashOut']; ?><br /> <!-- Kasin  -->
+                                    <b>Omzet kontant: </b> &euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2); ?><br/>
+                                    <b>Verschil: </b> &euro; <?php echo round(str_replace("€ ", "", str_replace(",", ".", $_GET['cashOut'])) - round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2), 2);?><br />
+                                    <br />
+                                    <b>Op rekening: </b><?php echo $_GET['bankOut']; ?><br /> <!-- Het bedrag wat op rekening is  -->
+                                    <b>Omzet rekening: </b>  &euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2); ?><br />
+                                    <b>Verschil: </b>  &euro; <?php echo round(str_replace("€ ", "", str_replace(",", ".", $_GET['bankOut'])) - round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2), 2); ?><br />
+                                    <br />
+                                    <b>Marge:</b> &euro;&nbsp;<?php echo round(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2); ?><br />
+                                    <b>Totaal kasgeld: </b> &euro;&nbsp; <?php echo round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId) + Misc::sqlGet("cashIn", "cashsession", "cashSessionId", $cashSessionId)['cashIn'], 2); ?><br /><br />
 
-                                    <b>Kassa geopend op:</b> <?php echo $row['openDate']; ?><br />
-                                    <b>Geopend door:</b> <?php echo $_SESSION['login_ok']['nickName']; ?><br />
+                                    <div class="input-group">
+                                        <span class="input-group-addon" style="max-width: 120px; width: 120px;">Afromen</span>
+                                        <input type="text" class="form-control" id="cashOut" placeholder="€&nbsp;0,00">
+                                    </div>
                                 </div>
                                 <button type="button" class="btn btn-primary" id="confirmClose">Bevestigen</button>
                                 <button type="button" class="btn btn-default" id="cancelClose">Annuleren</button><br /><br />
@@ -386,7 +403,7 @@ else if (isset($_GET['cashout']))
                                 });
 
                                 $("#confirmclose").on("click", function() {
-                                    
+
                                 });
                             });
                         </script>

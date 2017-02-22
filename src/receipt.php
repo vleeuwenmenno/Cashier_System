@@ -957,6 +957,7 @@ else
 <div class="row">
     <div class="col-lg-offset-3 col-lg-6">
         <div class="input-group">
+            //TODO: Maak de delete button en laad button werkent.
             <input type="text" class="form-control" name="searchBar" id="searchBar" placeholder="Zoek term... (Bon nummer, klant, bedrijf, etc.)" aria-describedby="basic-addon2" />
             <span class="input-group-btn">
                 <button class="btn btn-primary" type="submit" id="searchBtn" style="height: 34px;">
