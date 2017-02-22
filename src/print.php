@@ -102,12 +102,12 @@ font-size: 10px; ">
         ?>
     </table>
     <div style="float: right; font-size: 14px;">
-        <table style="float: right; font-size: 14px;">
+        <table style="float: right; font-size: 10px;">
             <tr style="font-size: larger;">
-                <td style=" padding-bottom: 8px;">Excl. Btw: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo str_replace(".", ",", round($totalIncl - ($totalIncl / 100 * 21), 2)); ?></div></td>
+                <td style=" padding-bottom: 8px;">Excl. Btw: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo str_replace(".", ",", round($totalIncl / $_CFG['VAT'], 2)); ?></div></td>
             </tr>
             <tr style="font-size: larger;">
-                <td style=" padding-bottom: 8px;">Btw: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo str_replace(".", ",", round($totalIncl / 100 * 21, 2)); ?></div></td>
+                <td style=" padding-bottom: 8px;">Btw: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo str_replace(".", ",", round($totalIncl - round($totalIncl / $_CFG['VAT'], 2), 2)); ?></div></td>
             </tr>
             <tr style="font-size: larger;">
                 <td style=" padding-bottom: 8px;">Totaal: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo str_replace(".", ",", $totalIncl); ?></div></td>
