@@ -354,9 +354,10 @@ else if (isset($_GET['cashout']))
                                 while($row = $result->fetch_assoc())
                                 {
                                     $cashSessionId = Misc::sqlGet("currentSession", "cash_registers", "crStaticIP", $thisIp)['currentSession'];
+                                    $cashOut = round($row['cashIn'], 2) + round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2);
                                     ?>
                                     <b>Kas-in:</b> &euro; <?php echo '' . round($row['cashIn'], 2) ?><br />
-                                    <b>Kas-uit:</b> &euro; <?php echo '' . round($row['cashIn'], 2) ?><br />
+                                    <b>Kas-uit:</b> &euro; <?php echo '' . $cashOut; ?><br />
 
                                     <b>Bruto-omzet:</b> &euro;&nbsp;<?php echo round(Calculate::getGrossTurnover(PaymentMethod::All, $cashSessionId), 2); ?><br />
                                     <b>Omzet:</b> &euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2); ?><br />
@@ -375,6 +376,20 @@ else if (isset($_GET['cashout']))
                                 echo 'Kan kassa niet sluiten als hij nog niet is geopent.';
                             }
                         ?>
+                        <script>
+                            $( document ).ready(function() {
+                                $("#cancelClose").on("click", function () {
+                                    $("#pageLoaderIndicator").fadeIn();
+                                    $("#PageContent").load("cashregOverview.php", function () {
+                                        $("#pageLoaderIndicator").fadeOut();
+                                    });
+                                });
+
+                                $("#confirmclose").on("click", function() {
+                                    
+                                });
+                            });
+                        </script>
                     </div>
                 </div>
             </div>

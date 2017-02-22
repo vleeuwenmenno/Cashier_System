@@ -583,7 +583,7 @@ else if (isset($_GET['new']))
 
             if (parseInt( $("#pinVal").val()) > totalPrice || parseInt( $("#cashVal").val()) > totalPrice || $("#pinVal").val() == "" || $("#cashVal").val() == "")
             {
-                $("#payBtn").prop("disabled", true);
+                //$("#payBtn").prop("disabled", true); //Not needed
 
                 $("#cashVal").css("border-color", "red");
                 $("#cashVal").css("box-shadow", "0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6)");
