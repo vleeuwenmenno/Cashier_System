@@ -1,5 +1,6 @@
 <?php
 include_once("includes.php");
+Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 
 if (isset($_GET['openReport']))
 {
@@ -21,7 +22,7 @@ if (isset($_GET['openReport']))
     while($row = $result->fetch_assoc())
     {
         echo '<br /><br />';
-        echo '<div style="margin-left: 12px; padding-top: 12px;" id="printPart">';
+        echo '<div style="margin-left: 12px; padding-top: 12px; font-size: 12px;" id="printPart">';
             echo Misc::sqlGet("crName", "cash_registers", "id", Misc::sqlGet("id", "cash_registers", "crStaticIP", $_SERVER['REMOTE_ADDR'])['id'])['crName'] . ' geopend op ' .  $row['openDate'];
             echo '<br /><br />Medewerker: ' . $_SESSION['login_ok']['nickName'];
             echo '<br />Kas-in: &euro; ' . $row['cashIn'];
@@ -46,7 +47,91 @@ if (isset($_GET['openReport']))
 }
 else if (isset($_GET['closeReport']))
 {
+    $cashSessionId = $_GET['closeReport'];
+    ?>
+    <html>
+        <head>
+            <!-- Bootstrap and all it's dependencies -->
+            <?php
+            if ($_CFG['THEME'] == "")
+                $_CFG['THEME'] = 'Default';
+            ?>
+            <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/bootstrap.css" />
+            <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/stylesheet.css">
+            <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/select2.min.css" />
+            <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/bootstrap-combobox.css" />
+            <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/font-awesome.css" />
 
+            <script src="js/jquery.js"></script>
+            <script src="js/bootstrap.min.js"></script>
+            <script src="js/bootstrap-notify.min.js"></script>
+            <script src="js/select2.full.min.js"></script>
+            <script src="js/jquery.jeditable.js"></script>
+            <script src="js/bootstrap-combobox.js"></script>
+            <script src="js/jquery.printElement.js"></script>
+        </head>
+        <body>
+            <div id="reportPrint" style="margin: 32px; font-size: 12px;">
+                <div style="width: 256px;">
+                    Dagoverzicht van <?php echo Misc::sqlGet("crName", "cash_registers", "id", Misc::sqlGet("cashRegisterId", "cashsession", "cashSessionId", $cashSessionId)['cashRegisterId'])['crName']; ?> op <?php echo substr(Misc::sqlGet("closeDate", "cashsession", "cashSessionId", $cashSessionId)['closeDate'], 0, 10); ?><br />
+                    <br />
+                    Geopend: <?php echo Misc::sqlGet("openDate", "cashsession", "cashSessionId", $cashSessionId)['openDate']; ?><br />
+                    Medewerker: <?php echo Misc::sqlGet("nickName", "users", "userId", Misc::sqlGet("openedBy", "cashsession", "cashSessionId", $cashSessionId)['openedBy'])['nickName']; ?><br />
+                    <br />
+                    Gesloten: <?php echo Misc::sqlGet("closeDate", "cashsession", "cashSessionId", $cashSessionId)['closeDate']; ?><br />
+                    Medewerker: <?php echo Misc::sqlGet("nickName", "users", "userId", Misc::sqlGet("closedBy", "cashsession", "cashSessionId", $cashSessionId)['closedBy'])['nickName']; ?><br />
+                    <br />
+                    <div><b>Kasgeld:</b><span style="float: right;">&euro;&nbsp;<?php echo Misc::sqlGet("cashOut", "cashsession", "cashSessionId", $cashSessionId)['cashOut'] ?></span></div>
+                    <div><b>Kas in:</b><span style="float: right;"> &euro;&nbsp;<?php echo Misc::sqlGet("cashIn", "cashsession", "cashSessionId", $cashSessionId)['cashIn'] ?></span></div>
+                    <div><b>Afromen:</b><span style="float: right;"> &euro; <?php echo Misc::sqlGet("cutOut", "cashsession", "cashSessionId", $cashSessionId)['cutOut'] ?></span></div>
+                    <div><b>Kas uit:</b><span style="float: right;">&euro;&nbsp;<?php echo round(Misc::sqlGet("cashOut", "cashsession", "cashSessionId", $cashSessionId)['cashOut'] - Misc::sqlGet("cutOut", "cashsession", "cashSessionId", $cashSessionId)['cutOut'], 2); ?> </span></div>
+                    <br />
+                    <div><span>Totaal Inkomsten:</span><span style="float: right;">&euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2), 2, ",", "."); ?> </span></div>
+                    <div><span>Totaal Omzet:</span><span style="float: right;"> &euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2), 2, ",", "."); ?></span></div>
+                    <div><b>Verschil:</b><span style="float: right;"> &euro; 0,00</span></div>
+                    <br />
+                    <div><span>Pinbon: </span><span style="float: right;">&euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2), 2, ",", "."); ?></span></div>
+                    <div><span>Omzet pin: </span><span style="float: right;"> &euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2), 2, ",", "."); ?></span></div>
+                    <div><b>Verschil: </b><span style="float: right;"> &euro; 0,00</span></div>
+                    <br />
+                    <div><span>Kontant kasgeld-in: </span><span style="float: right;"> &euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2), 2, ",", "."); ?></span></div>
+                    <div><span>Omzet kontant: </span><span style="float: right;"> &euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2), 2, ",", "."); ?></span></div>
+                    <div><b>Verschil: </b><span style="float: right;"> &euro; 0,00</span></div>
+                    <br />
+                    <div><span>Op rekening: </span><span style="float: right;">&euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2), 2, ",", "."); ?></span></div>
+                    <div><span>Omzet rekening: </span><span style="float: right;">&euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2), 2, ",", "."); ?></span></div>
+                    <div><b>Verschil: </b><span style="float: right;">&euro; 0,00</span></div>
+                    <br />
+                    <div><b>Totaal Omzet:</b><span style="float: right;"> &euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2), 2, ",", "."); ?></span></div>
+                    <div><b>Totaal Omzet Excl. BTW:</b><span style="float: right;"> &euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId) / $_CFG['VAT'], 2), 2, ",", "."); ?></span></div>
+                    <div><b>Totaal Inkoop:</b><span style="float: right;"> &euro;&nbsp;<?php echo number_format(round(round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId) / $_CFG['VAT'], 2) - round(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2), 2), 2, ",", "."); ?></span></div>
+                    <div><b>Netto Winst:</b><span style="float: right;"> &euro;&nbsp;<?php echo number_format(round(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2), 2, ",", "."); ?></span></div>
+                </div>
+                <?php
+                    //LOOP ALL ITEMS WE SOLD TODAY
+                    
+                ?>
+            </div>
+            <center>
+                <button type="button" id="printBtn" class="btn btn-primary">Afdrukken</button>
+                <button type="button" id="backTo" class="btn btn-default">Terug naar Kassa</button>
+            </center>
+            <script>
+                $(document).ready(function() {
+                    $("#printBtn").on("click", function () {
+                        $("#printBtn").css("display", "none");
+                        $("#backTo").css("display", "none");
+
+                        $("#reportPrint").printElement();
+
+                        $("#printBtn").css("display", "");
+                        $("#backTo").css("display", "");
+                    });
+                });
+            </script>
+        </body>
+    </html>
+<?php
 }
 else if (isset($_GET['receipt']))
 {

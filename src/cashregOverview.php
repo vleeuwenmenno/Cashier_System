@@ -404,11 +404,11 @@ else if (isset($_GET['cashOut']) && isset($_GET['pinOut']) && isset($_GET['bankO
 
                                     <div class="input-group" style="padding-top: 16px;">
                                         <span class="input-group-addon" style="max-width: 120px; width: 120px;">Afromen</span>
-                                        <input type="text" class="form-control" id="cashOut" placeholder="€&nbsp;0,00">
+                                        <input type="text" class="form-control" id="cutOut" placeholder="€&nbsp;0,00">
                                     </div>
                                 </div>
                                 <br />
-                                <button type="button" class="btn btn-primary" id="confirmClose">Bevestigen</button>
+                                <button type="button" class="btn btn-primary" id="closeCashier">Bevestigen</button>
                                 <button type="button" class="btn btn-default" id="cancelClose">Annuleren</button><br /><br />
                                 <?php
                                 }
@@ -427,8 +427,11 @@ else if (isset($_GET['cashOut']) && isset($_GET['pinOut']) && isset($_GET['bankO
                                     });
                                 });
 
-                                $("#confirmclose").on("click", function() {
-
+                                $("#closeCashier").on("click", function() {
+                                    $("#pageLoaderIndicator").fadeIn();
+                                    $("#PageContent").load("management/closeCashier.php?cutOut=" + $("#cutOut").val(), function () {
+                                        $("#pageLoaderIndicator").fadeOut();
+                                    });
                                 });
                             });
                         </script>

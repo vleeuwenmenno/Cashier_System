@@ -36,7 +36,7 @@ if ($_SESSION['login'])
                 $_SESSION['sessionId'] = Misc::str_random(32);
                 //$_SESSION['lang'] = $row['lang'];
 
-                $sql = "INSERT INTO `sessions` (`sessionId`, `userId`, `lastPing`, `validUntil`) VALUES ('" . $_SESSION['sessionId'] . "', '" . $row['userId'] . "', '" . date("Y-m-d H:i:s", strtotime('+0hour')) . "', '" . date("Y-m-d H:i:s", strtotime('+1 hour')) . "');";
+                $sql = "INSERT INTO `sessions` (`sessionId`, `userId`, `lastPing`, `validUntil`) VALUES ('" . $_SESSION['sessionId'] . "', '" . $row['userId'] . "', '" . date("Y-m-d H:i:s", strtotime('+0hour')) . "', '" . date("Y-m-d H:i:s", strtotime('+12 hour')) . "');";
 
                 if(!$result = $db->query($sql))
                 {
