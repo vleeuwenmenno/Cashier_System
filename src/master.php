@@ -250,10 +250,22 @@
                 margin-right: auto;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                bottom: -8px;
+                bottom: -2px;
                 font-size: 10px;">
-                Ontwikkelt door M.C. van Leeuwen (stardebris.net)
+                Ontwikkelt door <span id="mennoName">M.C. van Leeuwen</span>
             </span>
+            <script>
+                var clickCount = 0;
+                $("#mennoName").on("click", function () {
+                    if (clickCount < 7)
+                        clickCount++;
+                    else
+                    {
+                        alert("Well, I'd suppose you like my name so much that you started mashing on it?\n\nCooldown dude ;)\n\nDeze software is gemaakt door...\n\nMenno van Leeuwen\nmenno.vanleeuwen@stardebris.net");
+                        clickCount = 0;
+                    }
+                });
+            </script>
         </div>
         <div class="row">
             <div class="col-sm-3">
