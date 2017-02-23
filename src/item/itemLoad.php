@@ -49,17 +49,17 @@ if (isset($_GET['sTerm']))
 
                 echo '    <td><span class="priceClickable" id="popOver' . $row['nativeId'] . '" data-placement="bottom" data-trigger="hover">';
                 echo '        <a>';
-                echo '            &euro;&nbsp;' . round($total, 2) . '</a>';
+                echo '            &euro;&nbsp;' . number_format(round($total, 2), 2, ",", ".") . '</a>';
                 echo '        </span>';
                 echo '        <div id="popover-title' . $row['nativeId'] . '" class="hidden">';
                 echo '            <b>Prijs berekening</b>';
                 echo '        </div>';
                 echo '        <div id="popover-content' . $row['nativeId'] . '" class="hidden">';
                 echo '            <div>';
-                echo '            Inkoop: &euro;&nbsp;' . round($purchase, 2) . '<br/>
-                                  Btw. : &nbsp;&nbsp;&nbsp;&euro;&nbsp;' . round($vatOnly, 2) . '<br />
-                                  Marge: &euro;&nbsp;' . round($total - (round($purchase, 2) + round($vatOnly, 2)), 2) . '<br />
-                                  P.S: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&euro;&nbsp; ' . round($total, 2) . '<br />';
+                echo '            Inkoop: &euro;&nbsp;' . number_format(round($purchase, 2), 2, ",", ".") . '<br/>
+                                  Btw. : &nbsp;&nbsp;&nbsp;&euro;&nbsp;' . number_format(round($vatOnly, 2), 2, ",", ".") . '<br />
+                                  Marge: &euro;&nbsp;' . number_format(round($total - (round($purchase, 2) + round($vatOnly, 2)), 2), 2, ",", ".") . '<br />
+                                  P.S: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&euro;&nbsp; ' . number_format(round($total, 2), 2, ",", ".") . '<br />';
                 echo '            </div>';
                 echo '        </div>';
                 echo '    </td>';
