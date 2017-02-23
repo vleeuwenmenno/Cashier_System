@@ -509,6 +509,7 @@ else if (isset($_GET['new']))
         <label for="cashVal">Kontant bedrag:</label>
         <input class="form-control" id="cashVal">
     </div>
+    //TODO: Kontant en Pin op dezelfde bon wordt nog niet op de bon weergeven, ook worden de klant gegevens nog niet op de bon weergeven
 
     <h2 style="float: right; position: relative; left: -32px;">Totaal: &euro;<?php echo number_format(round(Calculate::getReceiptTotal($_SESSION['receipt']['id'], true)['total'], 2), 2, ",", "."); ?></h2>
     <div class="panel panel-default" id="debugPanel" style="display: none;">

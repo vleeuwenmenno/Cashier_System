@@ -109,7 +109,7 @@ else if (isset($_GET['closeReport']))
                 </div>
                 <?php
                     //LOOP ALL ITEMS WE SOLD TODAY
-                    
+                    echo '//TODO: Zorg dat de artikelen die verkocht zijn vandaag hier worden weergeven.';
                 ?>
             </div>
             <center>
@@ -126,6 +126,10 @@ else if (isset($_GET['closeReport']))
 
                         $("#printBtn").css("display", "");
                         $("#backTo").css("display", "");
+                    });
+
+                    $("#backTo").on("click", function () {
+                        window.location.replace("master.php");
                     });
                 });
             </script>
