@@ -22,7 +22,7 @@ if ($_GET['supplier'] != "" && $_GET['itemName'] != ""
 	else
 	{
 		$last_id = mysqli_insert_id($db);
-		die("OK");
+		die("OK " . $last_id);
 	}
 }
 else

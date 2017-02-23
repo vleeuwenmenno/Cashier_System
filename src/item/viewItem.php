@@ -495,6 +495,6 @@ $time = explode(' ', $time);
 $time = $time[1] + $time[0];
 $finish = $time;
 $total_time = round(($finish - $start), 4);
-echo 'FUUUCK Page generated in '.$total_time.' seconds.';
+echo '<script> $(document).ready(function () { console.log("Page created in '.$total_time.'ms"); });';
 
 ?>

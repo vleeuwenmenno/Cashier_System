@@ -71,133 +71,136 @@ if (isset($_GET['new']))
     <br />
     <button type="button" id="applyBtn" class="btn btn-primary">Artikel Toevoegen</button>
     <script>
-				$(document).ready(function ()
-				{
-                    $("#itemStock").on("input", function() {
-                        if ($("#itemStock").val() != "∞")
-                            $("#stockInfiniteCheck").prop("checked", false);
-                        else
-                            $("#stockInfiniteCheck").prop("checked", true);
-                    });
+        var nativeId = 0;
 
-                    $("#stockInfiniteCheck").change(function() {
-                        if($(this).is(":checked"))
-                        {
-                            $("#itemStock").val("∞");
-                        }
-                        else
-                        {
-                            $("#itemStock").val("0");
-                        }
-                    });
+		$(document).ready(function ()
+		{
+            $("#itemStock").on("input", function() {
+                if ($("#itemStock").val() != "∞")
+                    $("#stockInfiniteCheck").prop("checked", false);
+                else
+                    $("#stockInfiniteCheck").prop("checked", true);
+            });
 
-				    $('#priceModifier').on('input', function ()
-				    {
-                        var vat = "<?php echo $_CFG['VAT']; ?>";
+            $("#stockInfiniteCheck").change(function() {
+                if($(this).is(":checked"))
+                {
+                    $("#itemStock").val("∞");
+                }
+                else
+                {
+                    $("#itemStock").val("0");
+                }
+            });
 
-				        $.get(
-                            "item/calcString.php",
-                            {
-                                sum: encodeURIComponent("(" +  $('#priceExclVat').val().replace(",", ".") + " * " + vat  + ") " + $("#priceModifier").val())
-                            },
-                            function (data)
-                            {
-                                $("#priceResell").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
+		    $('#priceModifier').on('input', function ()
+		    {
+                var vat = "<?php echo $_CFG['VAT']; ?>";
 
-                                $.get(
-                                    "item/calcString.php",
-                                    {
-                                        sum: encodeURIComponent(data + " - " + "(" +  $('#priceExclVat').val().replace(",", ".") + " * " + vat  + ")")
-                                    },
-                                    function (dataTwo)
-                                    {
-                                        $("#priceMarginOnly").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
-                                    }
-                                );
-                            }
-                        );
-				    });
+		        $.get(
+                    "item/calcString.php",
+                    {
+                        sum: encodeURIComponent("(" +  $('#priceExclVat').val().replace(",", ".") + " * " + vat  + ") " + $("#priceModifier").val())
+                    },
+                    function (data)
+                    {
+                        $("#priceResell").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
 
-				    $('#priceExclVat').on('input', function ()
-				    {
-                        var vat = "<?php echo $_CFG['VAT']; ?>";
-
-                        //Set price excl vat label
-                        $("#priceExclVatLabel").html("Inkoop<br />&euro;&nbsp;" + $('#priceExclVat').val().replace(".", ","));
-
-                        //Set vat price
                         $.get(
                             "item/calcString.php",
                             {
-                                sum: encodeURIComponent($('#priceExclVat').val().replace(",", ".") + " * " + vat)
+                                sum: encodeURIComponent(data + " - " + "(" +  $('#priceExclVat').val().replace(",", ".") + " * " + vat  + ")")
                             },
-                            function (data)
+                            function (dataTwo)
                             {
-                                $('#priceVatOnly').html("Btw<br />&nbsp;&euro;&nbsp;" + parseFloat(data.replace(",", ".") - $('#priceExclVat').val().replace(",", ".")).toFixed(2).replace(".", ","));
+                                $("#priceMarginOnly").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
                             }
                         );
+                    }
+                );
+		    });
 
-                        //Set resell price and margin only price
+		    $('#priceExclVat').on('input', function ()
+		    {
+                var vat = "<?php echo $_CFG['VAT']; ?>";
+
+                //Set price excl vat label
+                $("#priceExclVatLabel").html("Inkoop<br />&euro;&nbsp;" + $('#priceExclVat').val().replace(".", ","));
+
+                //Set vat price
+                $.get(
+                    "item/calcString.php",
+                    {
+                        sum: encodeURIComponent($('#priceExclVat').val().replace(",", ".") + " * " + vat)
+                    },
+                    function (data)
+                    {
+                        $('#priceVatOnly').html("Btw<br />&nbsp;&euro;&nbsp;" + parseFloat(data.replace(",", ".") - $('#priceExclVat').val().replace(",", ".")).toFixed(2).replace(".", ","));
+                    }
+                );
+
+                //Set resell price and margin only price
+                $.get(
+                    "item/calcString.php",
+                    {
+                        sum: encodeURIComponent("(" +  $('#priceExclVat').val().replace(",", ".") + " * " + vat  + ") " + $("#priceModifier").val())
+                    },
+                    function (data)
+                    {
+                        $("#priceResell").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
+
                         $.get(
                             "item/calcString.php",
                             {
-                                sum: encodeURIComponent("(" +  $('#priceExclVat').val().replace(",", ".") + " * " + vat  + ") " + $("#priceModifier").val())
+                                sum: encodeURIComponent(data + " - " + "(" +  $('#priceExclVat').val().replace(",", ".") + " * " + vat  + ")")
                             },
-                            function (data)
+                            function (dataTwo)
                             {
-                                $("#priceResell").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
-
-                                $.get(
-                                    "item/calcString.php",
-                                    {
-                                        sum: encodeURIComponent(data + " - " + "(" +  $('#priceExclVat').val().replace(",", ".") + " * " + vat  + ")")
-                                    },
-                                    function (dataTwo)
-                                    {
-                                        $("#priceMarginOnly").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
-                                    }
-                                );
+                                $("#priceMarginOnly").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
                             }
                         );
-				    });
+                    }
+                );
+		    });
 
-					$("#applyBtn").on("click", function ()
+			$("#applyBtn").on("click", function ()
+			{
+			    $("#customerForm").fadeOut("fast", function () {
+			        $("#loaderAnimation").fadeIn();
+			    });
+
+                if ($("#itemStock").val() == "∞")
+                    $("#itemStock").val("2147483647");
+
+				$.get(
+                    "item/itemAdd.php",
+                    {
+                        itemId: $("#itemId").val(),
+                        EAN: $("#EAN").val(),
+                        supplier: $("#supplier").val(),
+                        factoryId: $("#factoryId").val(),
+                        itemName: $("#itemName").val(),
+                        itemCategory: $("#itemCategory").val(),
+                        itemStock: $("#itemStock").val(),
+                        priceExclVat: $("#priceExclVat").val().replace(",", "."),
+                        priceModifier: $("#priceModifier").val()
+                    },
+					function(data)
 					{
-					    $("#customerForm").fadeOut("fast", function () {
-					        $("#loaderAnimation").fadeIn();
-					    });
-
-                        if ($("#itemStock").val() == "∞")
-                            $("#itemStock").val("2147483647");
-
-						$.get(
-                            "item/itemAdd.php",
-                            {
-                                itemId: $("#itemId").val(),
-                                EAN: $("#EAN").val(),
-                                supplier: $("#supplier").val(),
-                                factoryId: $("#factoryId").val(),
-                                itemName: $("#itemName").val(),
-                                itemCategory: $("#itemCategory").val(),
-                                itemStock: $("#itemStock").val(),
-                                priceExclVat: $("#priceExclVat").val().replace(",", "."),
-                                priceModifier: $("#priceModifier").val()
-                            },
-							function(data)
-							{
-								if (data.replace(/(\r\n|\n|\r)/gm,"") == "OK")
-								{
-									$("#okMessage").modal("show");
-								}
-								else
-								{
-									$("#errorMessageContent").text(data);
-									$("#errorMessage").modal("show");
-								}
-							}
-                        );
-					});
-				});
+						if (data.startsWith("OK ") == 0)
+						{
+                            nativeId = data.replace("OK ", "");
+							$("#okMessage").modal("show");
+						}
+						else
+						{
+							$("#errorMessageContent").text(data);
+							$("#errorMessage").modal("show");
+						}
+					}
+                );
+			});
+		});
     </script>
 </div>
 
@@ -250,15 +253,32 @@ if (isset($_GET['new']))
                 <script>
 					$(document).ready(function ()
 					{
+                        var openItem = false;
+
 						$("#openCustBtn").on("click", function () {
+                            openItem = true;
 						    $("#okMessage").modal("hide");
 						});
 
 						$('#okMessage').on('hidden.bs.modal', function () {
-						    $("#PageContent").load('item/viewItem.php?id=' + $('#itemId').val());
+                            if (openItem)
+                            {
+                                $("#pageLoaderIndicator").fadeIn();
+                                $("#PageContent").load('item/viewItem.php?id=' + nativeId, function () {
+                                    $("#pageLoaderIndicator").fadeOut();
+                                });
+                            }
+                            else if (!openItem)
+                            {
+                                $("#pageLoaderIndicator").fadeIn();
+                                $("#PageContent").load("item.php?new", function () {
+                                    $("#pageLoaderIndicator").fadeOut();
+                                });
+                            }
 						});
 
 						$("#closeOkBtn").on("click", function () {
+                            openItem = false;
 							$("#okMessage").modal("hide");
 						});
 					});
