@@ -102,25 +102,6 @@ INSERT INTO `customers` (`customerId`, `initials`, `familyName`, `companyName`, 
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `items`
---
-
-CREATE TABLE `items` (
-  `nativeId` int(11) NOT NULL,
-  `itemId` varchar(128) NOT NULL,
-  `EAN` varchar(512) NOT NULL,
-  `supplier` varchar(255) DEFAULT NULL,
-  `factoryId` varchar(255) NOT NULL,
-  `itemName` varchar(4096) NOT NULL,
-  `itemCategory` varchar(256) NOT NULL,
-  `itemStock` int(11) NOT NULL,
-  `priceExclVat` decimal(18,2) NOT NULL,
-  `priceModifier` varchar(255) NOT NULL DEFAULT '* 1.375'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
 -- Tabelstructuur voor tabel `receipt`
 --
 
@@ -219,12 +200,6 @@ ALTER TABLE `customers`
   ADD PRIMARY KEY (`customerId`);
 
 --
--- Indexen voor tabel `items`
---
-ALTER TABLE `items`
-  ADD PRIMARY KEY (`nativeId`);
-
---
 -- Indexen voor tabel `receipt`
 --
 ALTER TABLE `receipt`
@@ -251,11 +226,6 @@ ALTER TABLE `cashsession`
 --
 ALTER TABLE `customers`
   MODIFY `customerId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
---
--- AUTO_INCREMENT voor een tabel `items`
---
-ALTER TABLE `items`
-  MODIFY `nativeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=441739;
 --
 -- AUTO_INCREMENT voor een tabel `receipt`
 --

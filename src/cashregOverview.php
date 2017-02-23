@@ -194,47 +194,50 @@ else if (isset($_GET['close']))
                             {
                                 $cashSessionId = Misc::sqlGet("currentSession", "cash_registers", "crStaticIP", $thisIp)['currentSession'];
                                 ?>
-                                <b>Kas-in:</b> &euro; <?php echo '' . round($row['cashIn'], 2) ?><br /> <!-- kas-in is het bedrag in cash wat er in de kassa zit op het moment van kassa/winkel opening -->
-
-                                <!-- <b>Bruto-omzet:</b> &euro;&nbsp;<?php //echo round(Calculate::getGrossTurnover(PaymentMethod::All, $cashSessionId), 2); ?><br />
-                                Bruto omzet is de totale omzet. (Omzet is de optelsom van alle inkomsten) -->
-
-                                <b>Omzet:</b> &euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2); ?><br />
-                                <!-- De netto omzet wordt berekend aan de hand van de bruto omzet met aftrek van teruggenomen artikelen, schadevergoedingen en achteraf toegekende kortingen. -->
-
-                                <b>Marge:</b> &euro;&nbsp;<?php echo round(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2); ?><br /><br />
-                                <!-- De marge is het verschil tussen inkoop- en verkoopprijs. -->
-
-                                <b>Kassa geopend op:</b> <?php echo $row['openDate']; ?><br />
-                                <b>Geopend door:</b> <?php echo $_SESSION['login_ok']['nickName']; ?><br /><br />
-                                <?php
-                                    $cashOut = round($row['cashIn'], 2) + round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2);
-                                ?>
-                                <div class="input-group">
-                                    <span class="input-group-addon" style="max-width: 120px; width: 120px;">Totaal kasgeld</span>
-                                    <input type="text" class="form-control" id="cashOut" placeholder="&euro;&nbsp;<?php echo round($cashOut, 2); ?>">
+                                <b>Omzet:</b><br />
+                                <div><span style="margin-left: 2.5em; font-size: 12px;">Omzet pin:</span><i style="float: right;">&euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2); ?></i></div><br />
+                                <div style="position: relative; top: -16px;"><span style="margin-left: 2.5em; font-size: 12px;">Omzet kontant:</span><i style="float: right;">&euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2); ?></i></div><br />
+                                <div style="position: relative; top: -32px;"><span style="margin-left: 2.5em; font-size: 12px;">Omzet op rekening:</span><i style="float: right;">&euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2); ?></i></div><br />
+                                <div style="position: relative; top: -48px;"><b style="margin-left: 2.5em; font-size: 12px;">Totaal omzet:</b><i style="float: right;">&euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2); ?></i></div><br />
+                                <div style="position: relative; top: -32px;"><b>Marge:</b><span style="float: right;"> &euro;&nbsp;<?php echo round(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2); ?></span></div><br />
+                                <div style="position: relative; top: -48px;"><b>Kas-in:</b><span style="float: right;"> &euro; <?php echo '' . round($row['cashIn'], 2) ?></span><br /></div>
+                                <div style="position: relative; top: -32px; padding-bottom: 32px;">
+                                    <b>Kassa geopend op:</b> <?php echo $row['openDate']; ?><br />
+                                    <b>Geopend door:</b> <?php echo $_SESSION['login_ok']['nickName']; ?>
                                 </div>
+                                <div style="position: relative; top: -32px;">
+                                    <?php
+                                        $cashOut = round($row['cashIn'], 2) + round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2);
+                                    ?>
+                                    <div class="input-group">
+                                        <span class="input-group-addon" style="max-width: 120px; width: 120px;">Totaal kasgeld</span>
+                                        <input type="text" class="form-control" id="cashOut" placeholder="&euro;&nbsp;<?php echo round($cashOut, 2); ?>">
+                                    </div>
 
-                                <div class="input-group">
-                                    <span class="input-group-addon" style="max-width: 120px; width: 120px;">Pinbon</span>
-                                    <input type="text" class="form-control" id="pinOut" placeholder="&euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2); ?>">
-                                </div>
+                                    <div class="input-group">
+                                        <span class="input-group-addon" style="max-width: 120px; width: 120px;">Pinbon</span>
+                                        <input type="text" class="form-control" id="pinOut" placeholder="&euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2); ?>">
+                                    </div>
 
-                                <div class="input-group">
-                                    <span class="input-group-addon" style="max-width: 120px; width: 120px;">Op rekening</span>
-                                    <input type="text" class="form-control" id="bankOut" placeholder="&euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2); ?>">
-                                </div>
+                                    <div class="input-group">
+                                        <span class="input-group-addon" style="max-width: 120px; width: 120px;">Op rekening</span>
+                                        <input type="text" class="form-control" id="bankOut" placeholder="&euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2); ?>">
+                                    </div>
 
-                                <div class="checkbox">
-                                    <label><input type="checkbox" id="agreeConfirm" value="">Hierbij verklaar ik alles naar waarheid te hebben ingevuld.</label>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" id="agreeConfirm" value="">Hierbij verklaar ik alles naar waarheid te hebben ingevuld.</label>
+                                    </div>
+
+                                    <center style="position: relative; top: 32px;">
+                                        <button type="button" id="closeCr" class="btn btn-primary" disabled>Kassa sluiten</button>
+                                        <button type="button" id="cancelCr" class="btn btn-default">Annuleren</button>
+                                    </center>
                                 </div>
                             <?php
                             }
                         }
                         ?>
                     </div>
-                    <button type="button" id="closeCr" class="btn btn-primary" disabled>Kassa sluiten</button>
-                    <button type="button" id="cancelCr" class="btn btn-default">Annuleren</button><br /><br />
                     <script>
                         $( document ).ready(function() {
                             $('#agreeConfirm').change(function()
@@ -282,10 +285,30 @@ else if (isset($_GET['close']))
                             });
 
                             $("#closeCr").on("click", function () {
-                                $("#pageLoaderIndicator").fadeIn();
-                                $("#PageContent").load("cashregOverview.php?cashOut=" + encodeURI($("#cashOut").val()) + "&pinOut=" + encodeURI($("#pinOut").val()) + "&bankOut=" + encodeURI($("#bankOut").val()), function () {
-                                    $("#pageLoaderIndicator").fadeOut();
-                                });
+                                if ($("#cashOut").val() != "" && $("#bankOut").val() != "" && $("#pinOut").val() != "")
+                                {
+                                    $("#pageLoaderIndicator").fadeIn();
+                                    $("#PageContent").load("cashregOverview.php?cashOut=" + encodeURI($("#cashOut").val()) + "&pinOut=" + encodeURI($("#pinOut").val()) + "&bankOut=" + encodeURI($("#bankOut").val()), function () {
+                                        $("#pageLoaderIndicator").fadeOut();
+                                    });
+                                }
+                                else
+                                {
+                                    $.notify({
+                                        icon: 'fa fa-exclamation-triangle fa-2x',
+                                        title: 'Vul alle velden<br />',
+                                        message: 'Niet alle velden waren ingevuld, vul alle velden A.U.B'
+                                    }, {
+                                        // settings
+                                        type: 'danger',
+                                        delay: 2000,
+                                        timer: 5,
+                                        placement: {
+                                            from: "bottom",
+                                            align: "right"
+                                        }
+                                    });
+                                }
                             });
 
                             $("#cancelCr").on("click", function() {
@@ -352,37 +375,39 @@ else if (isset($_GET['cashOut']) && isset($_GET['pinOut']) && isset($_GET['bankO
                                 $cashOut = 0.0;
                                 while($row = $result->fetch_assoc())
                                 {
-                                    //$totalIn = str_replace("€ ", "", str_replace(",", ".", $_GET['pinOut']))
-                                    //$totalIn = round((str_replace("€ ", "", str_replace(",", ".", $_GET['cashOut'])) + $totalIn), 2);
-                                    //$totalIn = round((str_replace("€ ", "", str_replace(",", ".", $_GET['bankOut'])) + $totalIn), 2);
+                                    $totalIn = str_replace("€ ", "", str_replace(",", ".", $_GET['pinOut']));
+                                    $totalIn = round((str_replace("€ ", "", str_replace(",", ".", $_GET['cashOut'])) + $totalIn) - round($row['cashIn'], 2), 2);
+                                    $totalIn = round((str_replace("€ ", "", str_replace(",", ".", $_GET['bankOut'])) + $totalIn), 2);
 
                                     $cashSessionId = Misc::sqlGet("currentSession", "cash_registers", "crStaticIP", $thisIp)['currentSession'];
                                     $cashOut = round($row['cashIn'], 2) + round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2);
                                     ?>
-                                    <b>Totaal In:</b> &euro; <?php echo $totalIn; ?><br />
-                                    <b>Omzet:</b> &euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2); ?><br />
-                                    <b>Verschil:</b> &euro; <?php echo round($totalIn - round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2), 2);?><br />
+                                    <div><b>Totaal Inkomsten:</b><span style="float: right;"> &euro; <?php echo $totalIn; ?></span></div>
+                                    <div><b>Totaal Omzet:</b><span style="float: right;"> &euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2); ?></span></div>
+                                    <div><b>Verschil:</b><span style="float: right;"> &euro; <?php echo round($totalIn - round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2), 2);?></span></div>
                                     <br />
-                                    <b>Pinbon: </b><?php echo $_GET['pinOut']; ?><br /> <!-- Het bedrag van de pinbon -->
-                                    <b>Omzet pin: </b> &euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2); ?><br/>
-                                    <b>Verschil: </b> &euro; <?php echo round(str_replace("€ ", "", str_replace(",", ".", $_GET['pinOut'])) - round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2), 2);?><br />
+                                    <div><span>Pinbon: </span><span style="float: right;"><?php echo $_GET['pinOut']; ?></span></div>
+                                    <div><span>Omzet pin: </span><span style="float: right;"> &euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2); ?></span></div>
+                                    <div><b>Verschil: </b><span style="float: right;"> &euro; <?php echo round(str_replace("€ ", "", str_replace(",", ".", $_GET['pinOut'])) - round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2), 2);?></span></div>
                                     <br />
-                                    <b>Kontant kasgeld: </b><?php echo $_GET['cashOut']; ?><br /> <!-- Kasin  -->
-                                    <b>Omzet kontant: </b> &euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2); ?><br/>
-                                    <b>Verschil: </b> &euro; <?php echo round(str_replace("€ ", "", str_replace(",", ".", $_GET['cashOut'])) - round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2), 2);?><br />
+                                    <div><span>Kontant kasgeld-in: </span><span style="float: right;"> &euro;&nbsp;<?php echo round(str_replace("€ ", "", str_replace(",", ".", $_GET['cashOut'])) -  $row['cashIn'], 2); ?></span></div>
+                                    <div><span>Omzet kontant: </span><span style="float: right;"> &euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2); ?></span></div>
+                                    <div><b>Verschil: </b><span style="float: right;"> &euro; <?php echo round(round(str_replace("€ ", "", str_replace(",", ".", $_GET['cashOut'])) -  $row['cashIn'], 2) - round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2), 2);?></span></div>
                                     <br />
-                                    <b>Op rekening: </b><?php echo $_GET['bankOut']; ?><br /> <!-- Het bedrag wat op rekening is  -->
-                                    <b>Omzet rekening: </b>  &euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2); ?><br />
-                                    <b>Verschil: </b>  &euro; <?php echo round(str_replace("€ ", "", str_replace(",", ".", $_GET['bankOut'])) - round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2), 2); ?><br />
+                                    <div><span>Op rekening: </span><span style="float: right;"><?php echo $_GET['bankOut']; ?></span></div>
+                                    <div><span>Omzet rekening: </span><span style="float: right;">&euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2); ?></span></div>
+                                    <div><b>Verschil: </b><span style="float: right;">&euro; <?php echo round(str_replace("€ ", "", str_replace(",", ".", $_GET['bankOut'])) - round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2), 2); ?></span></div>
                                     <br />
-                                    <b>Marge:</b> &euro;&nbsp;<?php echo round(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2); ?><br />
-                                    <b>Totaal kasgeld: </b> &euro;&nbsp; <?php echo round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId) + Misc::sqlGet("cashIn", "cashsession", "cashSessionId", $cashSessionId)['cashIn'], 2); ?><br /><br />
+                                    <div><b>Marge:</b><span style="float: right;"> &euro;&nbsp;<?php echo round(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2); ?></span></div>
+                                    <div><b>Kasgeld-in: </b><span style="float: right;"> &euro;&nbsp;  <?php echo '' . round($row['cashIn'], 2) ?></span></div>
+                                    <div><b>Kasgeld-uit: </b><span style="float: right;"> &euro;&nbsp; <?php echo round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId) + Misc::sqlGet("cashIn", "cashsession", "cashSessionId", $cashSessionId)['cashIn'], 2); ?></span></div>
 
-                                    <div class="input-group">
+                                    <div class="input-group" style="padding-top: 16px;">
                                         <span class="input-group-addon" style="max-width: 120px; width: 120px;">Afromen</span>
                                         <input type="text" class="form-control" id="cashOut" placeholder="€&nbsp;0,00">
                                     </div>
                                 </div>
+                                <br />
                                 <button type="button" class="btn btn-primary" id="confirmClose">Bevestigen</button>
                                 <button type="button" class="btn btn-default" id="cancelClose">Annuleren</button><br /><br />
                                 <?php
@@ -474,19 +499,17 @@ else
                                 {
                                     $cashSessionId = Misc::sqlGet("currentSession", "cash_registers", "crStaticIP", $thisIp)['currentSession'];
                                     ?>
-                                    <b>Kas-in:</b> &euro; <?php echo '' . round($row['cashIn'], 2) ?><br /> <!-- kas-in is het bedrag in cash wat er in de kassa zit op het moment van kassa/winkel opening -->
-
-                                    <!-- <b>Bruto-omzet:</b> &euro;&nbsp;<?php //echo round(Calculate::getGrossTurnover(PaymentMethod::All, $cashSessionId), 2); ?><br />
-                                    Bruto omzet is de totale omzet. (Omzet is de optelsom van alle inkomsten) -->
-
-                                    <b>Omzet:</b> &euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2); ?><br />
-                                    <!-- De netto omzet wordt berekend aan de hand van de bruto omzet met aftrek van teruggenomen artikelen, schadevergoedingen en achteraf toegekende kortingen. -->
-
-                                    <b>Marge:</b> &euro;&nbsp;<?php echo round(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2); ?><br /><br />
-                                    <!-- De marge is het verschil tussen inkoop- en verkoopprijs. -->
-
-                                    <b>Kassa geopend op:</b> <?php echo $row['openDate']; ?><br />
-                                    <b>Geopend door:</b> <?php echo $_SESSION['login_ok']['nickName']; ?><br />
+                                    <b>Omzet:</b><br />
+                                    <div><span style="margin-left: 2.5em; font-size: 12px;">Omzet pin:</span><i style="float: right;">&euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2); ?></i></div><br />
+                                    <div style="position: relative; top: -16px;"><span style="margin-left: 2.5em; font-size: 12px;">Omzet kontant:</span><i style="float: right;">&euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2); ?></i></div><br />
+                                    <div style="position: relative; top: -32px;"><span style="margin-left: 2.5em; font-size: 12px;">Omzet op rekening:</span><i style="float: right;">&euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2); ?></i></div><br />
+                                    <div style="position: relative; top: -48px;"><b style="margin-left: 2.5em; font-size: 12px;">Totaal omzet:</b><i style="float: right;">&euro;&nbsp;<?php echo round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2); ?></i></div><br />
+                                    <div style="position: relative; top: -32px;"><b>Marge:</b><span style="float: right;"> &euro;&nbsp;<?php echo round(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2); ?></span></div><br />
+                                    <div style="position: relative; top: -48px;"><b>Kas-in:</b><span style="float: right;"> &euro; <?php echo '' . round($row['cashIn'], 2) ?></span><br /></div>
+                                    <div style="position: relative; top: -32px;">
+                                        <b>Kassa geopend op:</b> <?php echo $row['openDate']; ?><br />
+                                        <b>Geopend door:</b> <?php echo $_SESSION['login_ok']['nickName']; ?>
+                                    </div>
                                 </div>
                                 <button type="button" class="btn btn-primary" id="closeCashr">Sluiten</button>
                                 <button type="button" class="btn btn-default" id="printReport">Afdrukken</button><br /><br />

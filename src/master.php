@@ -244,6 +244,16 @@
                 </ul>
             </div>
             </nav>
+            <span style="color: #f1f1f1;
+                position: absolute;
+                margin-left: auto;
+                margin-right: auto;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                bottom: -8px;
+                font-size: 10px;">
+                Ontwikkelt door M.C. van Leeuwen (stardebris.net)
+            </span>
         </div>
         <div class="row">
             <div class="col-sm-3">
