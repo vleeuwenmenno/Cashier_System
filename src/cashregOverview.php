@@ -203,7 +203,7 @@ else if (isset($_GET['close']))
                                 <div style="position: relative; top: -48px;"><b>Kas-in:</b><span style="float: right;"> &euro; <?php echo number_format(round($row['cashIn'], 2), 2, ",", "."); ?></span><br /></div>
                                 <div style="position: relative; top: -32px; padding-bottom: 32px;">
                                     <b>Kassa geopend op:</b> <?php echo $row['openDate']; ?><br />
-                                    <b>Geopend door:</b> <?php echo $_SESSION['login_ok']['nickName']; ?>
+                                    <b>Geopend door:</b> <?php echo Misc::sqlGet("nickName", "users", "userId", Misc::sqlGet("openedBy", "cashsession", "cashSessionId", $cashSessionId)['openedBy'])['nickName']; ?>
                                 </div>
                                 <div style="position: relative; top: -32px;">
                                     <?php
@@ -511,7 +511,7 @@ else
                                     <div style="position: relative; top: -48px;"><b>Kas-in:</b><span style="float: right;"> &euro; <?php echo number_format(round($row['cashIn'], 2), 2, ",", "."); ?></span><br /></div>
                                     <div style="position: relative; top: -32px;">
                                         <b>Kassa geopend op:</b> <?php echo $row['openDate']; ?><br />
-                                        <b>Geopend door:</b> <?php echo $_SESSION['login_ok']['nickName']; ?>
+                                        <b>Geopend door:</b> <?php echo Misc::sqlGet("nickName", "users", "userId", Misc::sqlGet("openedBy", "cashsession", "cashSessionId", $cashSessionId)['openedBy'])['nickName']; ?>
                                     </div>
                                 </div>
                                 <button type="button" class="btn btn-primary" id="closeCashr">Sluiten</button>
