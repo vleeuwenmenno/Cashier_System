@@ -67,7 +67,7 @@ else if (isset($_GET['open']))
                         <b>Medewerker:</b> <?php echo $_SESSION['login_ok']['nickName'];?><br /><br />
                         <div class="input-group">
                             <span class="input-group-addon">Kas-in</span>
-                            <input type="text" class="form-control" id="cashInTxt" placeholder="<?php echo $cashOut; ?>">
+                            <input type="text" class="form-control" id="cashInTxt" placeholder="<?php echo $cashOut; ?>" value="<?php echo $cashOut; ?>">
                             <span class="input-group-addon">&euro;</span>
                         </div>
                     </div>
