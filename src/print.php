@@ -179,7 +179,7 @@ font-size: 10px; ">
             {
                 ?>
                 <tr>
-                    <td><?php echo urldecode(Misc::sqlGet("itemName", "items", "nativeId", $key)['itemName']); ?></td>
+                    <td><?php echo urldecode($val['itemDesc']); ?></td>
                     <td>€ <?php echo str_replace(".", ",", Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier'])); ?></td>
                     <td><?php echo $val['count']; ?>x</td>
                     <td>€ <?php echo str_replace(".", ",", (Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier']) * $val['count'])); ?></td>
