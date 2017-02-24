@@ -119,7 +119,86 @@ else if (isset($_GET['new']))
                             echo '<tr>';
                             echo '    <th><button id="trash' .  $key . '" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" style="font-size: 12px;"></span></button></th>';
                             echo '    <th><input class="form-control" style="width: 156px; display: none;" id="editable' . $key . '" value="' . $val['count'] . '" type="text" name="type"/><a style="float: left;" href="javascript:void(0);" id="editAmount' . $key . '">' . $val['count'] . '</a></th>';
-                            echo '    <th>' . urldecode(Items::getField("itemName", $key)) . '</th>';
+                            echo '    <th>
+                                          <a href="#" style="color: black;" id="itemDesc' . $key . '">' . $_SESSION['receipt']['items'][$key]['itemDesc'] . '</a>
+                                          <input class="form-control" type="input" id="newItemDesc' . $key . '" style="float: left; display: none; width: 50%;" value="' . $_SESSION['receipt']['items'][$key]['itemDesc'] . '">
+                                          <input type="button" class="btn btn-primary" style="float: left; display: none; width: 15%;" id="changeCDBtn' . $key . '" value="Wijzigen" />
+                                          <input type="button" class="btn btn-default" style="display: none; float: left; width: 15%;" id="cancelCDBtn' . $key . '" value="Annuleren" />
+                                          <script>
+                                            $(document).ready(function() {
+                                                $("#itemDesc' . $key . '").on("click", function () {
+                                                    $("#changeCDBtn' . $key . '").css("display", "");
+                                                    $("#newItemDesc' . $key . '").css("display", "");
+                                                    $("#cancelCDBtn' . $key . '").css("display", "");
+
+                                                    $("#itemDesc' . $key . '").css("display", "none");
+                                                });
+
+                                                $("#cancelCDBtn' . $key . '").on("click", function () {
+                                                    $("#changeCDBtn' . $key . '").css("display", "none");
+                                                    $("#newItemDesc' . $key . '").css("display", "none");
+                                                    $("#cancelCDBtn' . $key . '").css("display", "none");
+
+                                                    $("#itemDesc' . $key . '").css("display", "");
+                                                });
+
+                                                $("#changeCDBtn' . $key . '").on("click", function () {
+                                                    $.get(
+                                                        "receipt/changeItemDesc.php",
+                                                        {
+                                                            itemId: "' . $key . '",
+                                                            newDesc: encodeURIComponent($("#newItemDesc' . $key . '").val())
+                                                        },
+                                                        function (data)
+                                                        {
+                                                            if (data == "\nOK")
+                                                            {
+                                                                $("#itemDesc' . $key . '").html($("#newItemDesc' . $key . '").val());
+
+                                                                $("#changeCDBtn' . $key . '").css("display", "none");
+                                                                $("#newItemDesc' . $key . '").css("display", "none");
+                                                                $("#cancelCDBtn' . $key . '").css("display", "none");
+
+                                                                $("#itemDesc' . $key . '").css("display", "");
+
+                                                                $.notify({
+                                                                    icon: \'fa fa-check fa-2x\',
+                                                                    title: \'Artikel naam veranderd<br />\',
+                                                                    message: \'Artikel naam is voor deze bon veranderd.\'
+                                                                }, {
+                                                                    // settings
+                                                                    type: \'success\',
+                                                                    delay: 5000,
+                                                                    timer: 10,
+                                                                    placement: {
+                                                                        from: "bottom",
+                                                                        align: "right"
+                                                                    }
+                                                                });
+                                                            }
+                                                            else
+                                                            {
+                                                                $.notify({
+                                                                    icon: \'fa fa-exclamation-triangle fa-2x\',
+                                                                    title: \'Error<br />\',
+                                                                    message: data
+                                                                }, {
+                                                                    // settings
+                                                                    type: \'danger\',
+                                                                    delay: 5000,
+                                                                    timer: 10,
+                                                                    placement: {
+                                                                        from: "bottom",
+                                                                        align: "right"
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+                                                    );
+                                                });
+                                            });
+                                          </script>
+                                      </th>';
                             echo '    <th><span class="priceClickable" id="' . $key . '" data-placement="bottom" data-trigger="hover">';
                             echo '        <a href="javascript:void(0);" id="editPrice' . $key . '">';
                             echo '            &euro;&nbsp;' . number_format(round(round($total, 2) * $_SESSION['receipt']['items'][$key]['count'], 2), 2, ",", ".") . '</a>';
