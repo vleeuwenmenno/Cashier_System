@@ -1,5 +1,6 @@
 <?php
 //include_once("../includes.php"); //Better not load this as this allows the user to use SESSION variable and the defined classes while injecting php code
+error_reporting(0);
 
 if (isset($_GET['sum']))
 {
@@ -9,5 +10,8 @@ if (isset($_GET['sum']))
 
     $theSum = str_replace("(", "round(", str_replace(")", ", 2)", $sum));
     $result = eval('return ' . $theSum . ';');
+
     echo round($result, 2);
 }
+
+error_reporting(1);
