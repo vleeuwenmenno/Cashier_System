@@ -137,10 +137,22 @@
 														{
 														    $("#searchItem").on("click", function ()
 															{
-															    $("#pageLoaderIndicator").fadeIn();
-															    $("#PageContent").load("item.php", function() {
-															        $("#pageLoaderIndicator").fadeOut();
-															    });
+                                                                <?php if (!isset($_SESSION['receipt']['status']) || $_SESSION['receipt']['status'] != "open")
+                                                                {?>
+                                                                    $("#pageLoaderIndicator").fadeIn();
+                                                                    $("#PageContent").load("receipt.php?new", function () {
+        															    $("#PageContent").load("item.php", function() {
+        															        $("#pageLoaderIndicator").fadeOut();
+        															    });
+                                                                    });
+                                                                <?php }
+                                                                else
+                                                                {?>
+                                                                    $("#pageLoaderIndicator").fadeIn();
+    															    $("#PageContent").load("item.php", function() {
+    															        $("#pageLoaderIndicator").fadeOut();
+    															    });
+                                                                <?php }?>
 														    });
 
 														    $("#managementBtn").on("click", function () {
