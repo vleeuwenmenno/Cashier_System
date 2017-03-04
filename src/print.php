@@ -206,10 +206,10 @@ font-size: 10px; ">
     <div style="float: right; font-size: 14px;">
         <table style="float: right; font-size: 10px;">
             <tr style="font-size: larger;">
-                <td style=" padding-bottom: 8px;">Excl. Btw: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo number_format(str_replace(".", ",", round($totalIncl / $_CFG['VAT'], 2)), 2, ",", "."); ?></div></td>
+                <td style=" padding-bottom: 8px;">Excl. Btw: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo number_format(round($totalIncl / $_CFG['VAT'], 2), 2, ",", "."); ?></div></td>
             </tr>
             <tr style="font-size: larger;">
-                <td style=" padding-bottom: 8px;">Btw: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo number_format(str_replace(".", ",", round($totalIncl - round($totalIncl / $_CFG['VAT'], 2), 2)), 2, ",", "."); ?></div></td>
+                <td style=" padding-bottom: 8px;">Btw: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo number_format(round($totalIncl - round($totalIncl / $_CFG['VAT'], 2), 2), 2, ",", "."); ?></div></td>
             </tr>
 
             <?php if ($receipt['paymentMethod'] == "PC") { ?>
@@ -222,7 +222,7 @@ font-size: 10px; ">
             <?php } ?>
 
             <tr style="font-size: larger;">
-                <td style=" padding-bottom: 8px;"><b>Totaal:</b> <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo str_replace(".", ",", $totalIncl); ?></div></td>
+                <td style=" padding-bottom: 8px;"><b>Totaal:</b> <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo number_format($totalIncl, 2, ",", "."); ?></div></td>
             </tr>
         </table>
     </div>
