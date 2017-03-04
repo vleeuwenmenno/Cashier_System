@@ -1,10 +1,7 @@
 <?php
 include_once("../includes.php");
 
-if ($_GET['intials'] != "" && $_GET['famName'] != ""
-						   && $_GET['street'] != ""
-						   && $_GET['city'] != ""
-						   && $_GET['pHome'] != "")
+if ($_GET['intials'] != "" && $_GET['famName'] != "")
 {
 
 	$db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);

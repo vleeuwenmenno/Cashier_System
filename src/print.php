@@ -222,7 +222,7 @@ font-size: 10px; ">
             <?php } ?>
 
             <tr style="font-size: larger;">
-                <td style=" padding-bottom: 8px;"><b>Totaal:</b> <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo number_format(str_replace(".", ",", $totalIncl), 2, ",", "."); ?></div></td>
+                <td style=" padding-bottom: 8px;"><b>Totaal:</b> <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo str_replace(".", ",", $totalIncl); ?></div></td>
             </tr>
         </table>
     </div>

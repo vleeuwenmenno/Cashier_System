@@ -15,6 +15,8 @@
         <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/select2.min.css" />
         <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/bootstrap-combobox.css" />
         <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/font-awesome.css" />
+        <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/bootstrap-switch.min.css" />
+
 
         <script src="js/jquery.js"></script>
         <script src="js/bootstrap.min.js"></script>
@@ -23,6 +25,7 @@
         <script src="js/jquery.jeditable.js"></script>
         <script src="js/bootstrap-combobox.js"></script>
         <script src="js/jquery.printElement.js"></script>
+        <script src="js/bootstrap-switch.min.js"></script>
     </head>
     <body>
         <div class="row">

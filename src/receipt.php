@@ -620,6 +620,11 @@ else if (isset($_GET['new']))
                     <p>Wil de klant een bon?</p>
                 </div>
                 <div class="modal-footer">
+                    <?php if (isset($_SESSION['receipt']['customer'])) { ?>
+                    <span style="top: -8px; position: relative;">
+                        Bon emailen naar klant <input type="checkbox" name="emailToCustomer" id="emailToCustomer" 	data-size="small" data-on-text="Ja" data-off-text="Nee" checked></input><br />
+                    </span>
+                    <?php } ?>
                     <button type="button" class="btn btn-success" id="printReceipt" data-dismiss="modal">Bon printen</button>
                     <button type="button" class="btn btn-warning" id="printNoReceipt" data-dismiss="modal">Geen bon printen</button>
                 </div>
@@ -690,6 +695,7 @@ else if (isset($_GET['new']))
         }
 
         $(document).ready(function() {
+            $("#emailToCustomer").bootstrapSwitch();
 
             $("#saveReceipt").click(function () {
                 var rows = document.getElementById("listContents").getElementsByTagName("tr").length;
