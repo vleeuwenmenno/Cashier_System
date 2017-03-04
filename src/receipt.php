@@ -74,7 +74,10 @@ else if (isset($_GET['new']))
                 if (isset($_SESSION['receipt']['customer']))
                 {
                     echo Misc::sqlGet("initials", "customers", "customerId", $_SESSION['receipt']['customer'])['initials'] . ' ' . Misc::sqlGet("familyName", "customers", "customerId", $_SESSION['receipt']['customer'])['familyName'] . '<br />';
-                    echo Misc::sqlGet("companyName", "customers", "customerId", $_SESSION['receipt']['customer'])['companyName'] . '<br />';
+
+                    if (Misc::sqlGet("companyName", "customers", "customerId", $_SESSION['receipt']['customer'])['companyName'] != "")
+                        echo Misc::sqlGet("companyName", "customers", "customerId", $_SESSION['receipt']['customer'])['companyName'] . '<br />';
+
                     echo Misc::sqlGet("streetName", "customers", "customerId", $_SESSION['receipt']['customer'])['streetName'] . '<br />';
                     echo Misc::sqlGet("postalCode", "customers", "customerId", $_SESSION['receipt']['customer'])['postalCode'] . ' ';
                     echo Misc::sqlGet("city", "customers", "customerId", $_SESSION['receipt']['customer'])['city'] . '<br />';
@@ -588,7 +591,6 @@ else if (isset($_GET['new']))
         <label for="cashVal">Kontant bedrag:</label>
         <input class="form-control" id="cashVal">
     </div>
-    //TODO: Kontant en Pin op dezelfde bon wordt nog niet op de bon weergeven, ook worden de klant gegevens nog niet op de bon weergeven
 
     <h2 style="float: right; position: relative; left: -32px;">Totaal: &euro;<?php echo number_format(round(Calculate::getReceiptTotal($_SESSION['receipt']['id'], true)['total'], 2), 2, ",", "."); ?></h2>
     <div class="panel panel-default" id="debugPanel" style="display: none;">

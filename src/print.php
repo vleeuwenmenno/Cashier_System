@@ -161,6 +161,19 @@ line-height: 20px;">
         Betaalwijze: <?php if ($receipt['paymentMethod'] == "CASH") { echo "Kontant"; } else if ($receipt['paymentMethod'] == "PIN") { echo 'Pin'; } else if ($receipt['paymentMethod'] == "BANK") { echo 'Bankoverdracht'; } else if ($receipt['paymentMethod'] == "PC") { echo 'Pin en Kontant'; } ?><br />
     </div>
 
+    <?php if (Misc::sqlGet("customerId", "receipt", "receiptId", $_GET['receipt'])['customerId'] > 0) { ?>
+    <div style="margin-left: 48px; margin-top: 32px; font-size: 12px;">
+        <?php
+            $cust = Misc::sqlGet("*", "customers", "customerId", Misc::sqlGet("customerId", "receipt", "receiptId", $_GET['receipt'])['customerId']);
+
+        ?>
+        <?php echo $cust['initials'] . ' ' . $cust['familyName']; ?><br />
+        <?php if ($cust['companyName'] != "") echo $cust['companyName'] . '<br />'; ?>
+        <?php echo $cust['streetName']; ?><br />
+        <?php echo $cust['postalCode'] . ' ' . $cust['city']; ?><br />
+    </div>
+    <?php } ?>
+
     <table class="table" style="
 margin-left: 48px;
 margin-right: 48px;
@@ -193,13 +206,23 @@ font-size: 10px; ">
     <div style="float: right; font-size: 14px;">
         <table style="float: right; font-size: 10px;">
             <tr style="font-size: larger;">
-                <td style=" padding-bottom: 8px;">Excl. Btw: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo str_replace(".", ",", round($totalIncl / $_CFG['VAT'], 2)); ?></div></td>
+                <td style=" padding-bottom: 8px;">Excl. Btw: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo number_format(str_replace(".", ",", round($totalIncl / $_CFG['VAT'], 2)), 2, ",", "."); ?></div></td>
             </tr>
             <tr style="font-size: larger;">
-                <td style=" padding-bottom: 8px;">Btw: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo str_replace(".", ",", round($totalIncl - round($totalIncl / $_CFG['VAT'], 2), 2)); ?></div></td>
+                <td style=" padding-bottom: 8px;">Btw: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo number_format(str_replace(".", ",", round($totalIncl - round($totalIncl / $_CFG['VAT'], 2), 2)), 2, ",", "."); ?></div></td>
             </tr>
+
+            <?php if ($receipt['paymentMethod'] == "PC") { ?>
+                <tr style="font-size: larger;">
+                    <td style=" padding-bottom: 8px;">Pin: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo number_format(Misc::sqlGet("pinValue", "receipt", "receiptId", $_GET['receipt'])['pinValue'], 2, ",", "."); ?></div></td>
+                </tr>
+                <tr style="font-size: larger;">
+                    <td style=" padding-bottom: 8px;">Kontant: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo number_format(Misc::sqlGet("cashValue", "receipt", "receiptId", $_GET['receipt'])['cashValue'], 2, ",", "."); ?></div></td>
+                </tr>
+            <?php } ?>
+
             <tr style="font-size: larger;">
-                <td style=" padding-bottom: 8px;">Totaal: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo str_replace(".", ",", $totalIncl); ?></div></td>
+                <td style=" padding-bottom: 8px;"><b>Totaal:</b> <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo number_format(str_replace(".", ",", $totalIncl), 2, ",", "."); ?></div></td>
             </tr>
         </table>
     </div>
