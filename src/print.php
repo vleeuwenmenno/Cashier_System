@@ -257,6 +257,19 @@ font-size: 10px; ">
 
     if ($_GET['mail'] == "true")
     {
-        //Do the magic https://wkhtmltopdf.org/
+        $content = Misc::url_get_contents('http://127.0.0.1/CashRegister/src/receipt/viewReceipt.php?receipt=' . $_GET['receipt'] . '&mail=true');
+        file_put_contents(getcwd() . "/pdfs/" . $_GET['receipt'] . ".html", $content);
+
+        //Check which os we use to convert this to PDF
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
+        {
+            //Do the magic https://wkhtmltopdf.org/
+        }
+        else
+        {
+            //Do the magic https://wkhtmltopdf.org/
+            exec(getcwd() . "/../deps/wkhtmltopdf " . "pdfs/" . $_GET['receipt'] . ".html pdfs/" . $_GET['receipt'] . ".pdf");
+            unlink("pdfs/" . $_GET['receipt'] . ".html");
+        }
     }
 }

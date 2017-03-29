@@ -10,17 +10,23 @@
         if ($_CFG['THEME'] == "")
             $_CFG['THEME'] = 'Default';
         ?>
-        <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/bootstrap.css" />
-        <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/stylesheet.css">
-        <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/select2.min.css" />
-        <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/bootstrap-combobox.css" />
+        <?php
+        if (!isset($_SESSION['login_ok']['userTheme']))
+        {
+            $_SESSION['login_ok']['userTheme'] = "Yeti";
+        }
+        ?>
+        <link rel="stylesheet" href="../themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/bootstrap.css" />
+        <link rel="stylesheet" href="../themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/stylesheet.css">
+        <link rel="stylesheet" href="../themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/select2.min.css" />
+        <link rel="stylesheet" href="../themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/bootstrap-combobox.css" />
 
-        <script src="js/jquery.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/bootstrap-notify.min.js"></script>
-        <script src="js/select2.full.min.js"></script>
-        <script src="js/bootstrap-combobox.js"></script>
-        <script src="js/jquery.printElement.js"></script>
+        <script src="../js/jquery.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script src="../js/bootstrap-notify.min.js"></script>
+        <script src="../js/select2.full.min.js"></script>
+        <script src="../js/bootstrap-combobox.js"></script>
+        <script src="../js/jquery.printElement.js"></script>
     </head>
     <body>
         <?php
@@ -74,9 +80,9 @@
                         ?>
                         <tr>
                             <td><?php if (isset($val['itemDesc'])) { echo urldecode($val['itemDesc']); } else { echo urldecode(Misc::sqlGet("itemName", "items", "nativeId", $key)['itemName']); } ?></td>
-                            <td>€ <?php echo str_replace(".", ",", Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier'])); ?></td>
+                            <td>&euro; <?php echo str_replace(".", ",", Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier'])); ?></td>
                             <td><?php echo $val['count']; ?>x</td>
-                            <td>€ <?php echo str_replace(".", ",", (Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier']) * $val['count'])); ?></td>
+                            <td>&euro; <?php echo str_replace(".", ",", (Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier']) * $val['count'])); ?></td>
                         </tr>
                         <?php
 
@@ -87,27 +93,28 @@
             <div style="float: right; font-size: 14px;">
                 <table style="float: right; font-size: 10px;">
                     <tr style="font-size: larger;">
-                        <td style=" padding-bottom: 8px;">Excl. Btw: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo number_format(round($totalIncl / $_CFG['VAT'], 2), 2, ",", "."); ?></div></td>
+                        <td style=" padding-bottom: 8px;">Excl. Btw: <div style="margin-left: 12px; font-size: 10px; float: right;">&euro; <?php echo number_format(round($totalIncl / $_CFG['VAT'], 2), 2, ",", "."); ?></div></td>
                     </tr>
                     <tr style="font-size: larger;">
-                        <td style=" padding-bottom: 8px;">Btw: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo number_format(round($totalIncl - round($totalIncl / $_CFG['VAT'], 2), 2), 2, ",", "."); ?></div></td>
+                        <td style=" padding-bottom: 8px;">Btw: <div style="margin-left: 12px; font-size: 10px; float: right;">&euro; <?php echo number_format(round($totalIncl - round($totalIncl / $_CFG['VAT'], 2), 2), 2, ",", "."); ?></div></td>
                     </tr>
 
                     <?php if ($receipt['paymentMethod'] == "PC") { ?>
                         <tr style="font-size: larger;">
-                            <td style=" padding-bottom: 8px;">Pin: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo number_format(Misc::sqlGet("pinValue", "receipt", "receiptId", $_GET['receipt'])['pinValue'], 2, ",", "."); ?></div></td>
+                            <td style=" padding-bottom: 8px;">Pin: <div style="margin-left: 12px; font-size: 10px; float: right;">&euro; <?php echo number_format(Misc::sqlGet("pinValue", "receipt", "receiptId", $_GET['receipt'])['pinValue'], 2, ",", "."); ?></div></td>
                         </tr>
                         <tr style="font-size: larger;">
-                            <td style=" padding-bottom: 8px;">Kontant: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo number_format(Misc::sqlGet("cashValue", "receipt", "receiptId", $_GET['receipt'])['cashValue'], 2, ",", "."); ?></div></td>
+                            <td style=" padding-bottom: 8px;">Kontant: <div style="margin-left: 12px; font-size: 10px; float: right;">&euro; <?php echo number_format(Misc::sqlGet("cashValue", "receipt", "receiptId", $_GET['receipt'])['cashValue'], 2, ",", "."); ?></div></td>
                         </tr>
                     <?php } ?>
 
                     <tr style="font-size: larger;">
-                        <td style=" padding-bottom: 8px;"><b>Totaal:</b> <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo number_format($totalIncl, 2, ",", "."); ?></div></td>
+                        <td style=" padding-bottom: 8px;"><b>Totaal:</b> <div style="margin-left: 12px; font-size: 10px; float: right;">&euro; <?php echo number_format($totalIncl, 2, ",", "."); ?></div></td>
                     </tr>
                 </table>
             </div>
         </div>
+        <?php if (!isset($_GET['mail']) || $_GET['mail'] == "false") { ?>
         <center style="
             position: relative;
             top: 128px;
@@ -123,5 +130,6 @@
                 });
             });
         </script>
+        <?php } ?>
     </body>
 </html>

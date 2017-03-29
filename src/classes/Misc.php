@@ -13,6 +13,21 @@ class Misc
         return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);
     }
 
+    function url_get_contents ($Url)
+    {
+        if (!function_exists('curl_init'))
+        {
+            echo 'CURL is not installed!';
+        }
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $Url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        return $output;
+    }
+
     function filter_bad_words($matches)
     {
 		$replace = $_LANG_BAD_EN[$matches[0]];
