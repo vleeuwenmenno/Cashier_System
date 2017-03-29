@@ -151,7 +151,7 @@ font-size: 14px;
 font-style: normal;
 font-variant: normal;
 font-weight: 400;
-line-height: 20px;">
+line-height: 20px;" id="bill">
 
     <div style="margin-left: 48px;margin-top: 128px; font-size: 12px;">
         Bon Nr. <?php echo $_GET['receipt']; ?><br />
@@ -254,37 +254,9 @@ font-size: 10px; ">
         });
     ';
     echo '</script>';
-    echo $_GET['mail'];
+
     if ($_GET['mail'] == "true")
     {
-        ?>
-
-        <script src="js/jspdf.min.js"></script>
-        <div id="bill">
-            <h3>Hello, this is a H3 tag</h3>
-
-            <p>a pararaph</p>
-        </div>
-        <div id="editor"></div>
-        <button id="cmd">generate PDF</button>
-
-        <script>
-            var doc = new jsPDF();
-            var specialElementHandlers = {
-                '#editor': function (element, renderer) {
-                    return true;
-                }
-            };
-
-            $('#cmd').click(function () {
-                doc.fromHTML($('#bill').html(), 15, 15, {
-                    'width': 170,
-                    'elementHandlers': specialElementHandlers
-                });
-                doc.save('<?php echo $_GET['receipt']; ?>.pdf');
-            });
-        </script>
-        <?php
+        //Do the magic https://wkhtmltopdf.org/
     }
-
 }
