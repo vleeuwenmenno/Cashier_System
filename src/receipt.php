@@ -827,7 +827,7 @@ else if (isset($_GET['new']))
 
                             $("#pageLoaderIndicator").fadeIn();
                             $("#sideBarMenu").addClass("disabledbutton");
-                            $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&printAmount=" + printAmount + "&paymentMethod=" + $( "#paymentMethod" ).val() + "&pin=" + pinVal + "&cash=" + cashVal, function () {
+                            $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=" + printAmount + "&paymentMethod=" + $( "#paymentMethod" ).val() + "&pin=" + pinVal + "&cash=" + cashVal, function () {
                                 $("#pageLoaderIndicator").fadeOut();
                                 $("#sideBarMenu").removeClass("disabledbutton");
                             });
@@ -836,7 +836,7 @@ else if (isset($_GET['new']))
                        {
                            $("#pageLoaderIndicator").fadeIn();
                            $("#sideBarMenu").addClass("disabledbutton");
-                           $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&printAmount=" + printAmount + "&paymentMethod=" + $( "#paymentMethod" ).val(), function () {
+                           $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=" + printAmount + "&paymentMethod=" + $( "#paymentMethod" ).val(), function () {
                                $("#pageLoaderIndicator").fadeOut();
                                $("#sideBarMenu").removeClass("disabledbutton");
                            });

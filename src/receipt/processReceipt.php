@@ -65,8 +65,9 @@ else
     echo '
     <script>
         $(document).ready(function() {
+
             $("#pageLoaderIndicator").fadeIn();
-            $("#PageContent").load("print.php?receipt=' . str_pad($receiptId, 4, '0', STR_PAD_LEFT) . '&print=' . $printAmount . '", function () {
+            $("#PageContent").load("print.php?receipt=' . str_pad($receiptId, 4, '0', STR_PAD_LEFT) . '&mail=' . $_GET['mail'] . '&print=' . $printAmount . '", function () {
                 $("#pageLoaderIndicator").fadeOut();
             });
 
