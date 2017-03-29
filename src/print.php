@@ -1,5 +1,7 @@
 <?php
 include_once("includes.php");
+require 'classes/PHPMailer/PHPMailerAutoload.php';
+
 Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 
 if (isset($_GET['openReport']))
@@ -269,7 +271,70 @@ font-size: 10px; ">
         {
             //Do the magic https://wkhtmltopdf.org/
             exec(getcwd() . "/../deps/wkhtmltopdf " . "pdfs/" . $_GET['receipt'] . ".html pdfs/" . $_GET['receipt'] . ".pdf");
+
+            while (!file_exists("pdfs/" . $_GET['receipt'] . ".pdf"))
+            { }
+
             unlink("pdfs/" . $_GET['receipt'] . ".html");
+
+            $cust = Misc::sqlGet("*", "customers", "customerId", Misc::sqlGet("customerId", "receipt", "receiptId", $_GET['receipt'])['customerId']);
+
+            $mail = new PHPMailer;
+
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'menno.worldwar132@gmail.com';
+            $mail->Password = 'Menno180523';
+            $mail->SMTPSecure = 'tls';
+            $mail->Port = 587;
+
+            $mail->setFrom('info@comtoday.nl', 'ComToday Heemskerk');
+            $mail->addAddress($cust['email'], $cust['initials'] . ' ' . $cust['familyName']);
+
+            $mail->addAttachment("pdfs/" . $_GET['receipt'] . ".pdf");
+            $mail->isHTML(true);
+
+            $mail->Subject = 'Een kopie van uw factuur';
+            $mail->Body    = 'Geachte klant,<br /><br />
+
+                                Bedankt voor uw aankoop bij Com Today.<br />
+                                De bijlage bevat een kopie van uw factuur.<br /><br />
+
+                                Wij wensen u veel plezier met uw aankoop<br /><br />
+
+                                Met vriendelijke groeten,<br /><br />
+
+                                ComToday<br />';
+
+            if(!$mail->send())
+            {
+                echo 'Message could not be sent.';
+                echo 'Mailer Error: ' . $mail->ErrorInfo;
+            }
+            else
+            {
+                ?>
+                <script>
+                $(document).ready(function() {
+                    $.notify({
+                        icon: 'fa fa-envelope-o fa-2x',
+                        title: 'Mail verstuurd<br />',
+                        message: 'De email is succesvol verstuurd naar de klant.'
+                    }, {
+                        // settings
+                        type: 'success',
+                        delay: 5000,
+                        timer: 10,
+                        placement: {
+                            from: "bottom",
+                            align: "right"
+                        }
+                    });
+                });
+                </script>
+                <?php
+            }
         }
     }
 }
