@@ -284,8 +284,8 @@ font-size: 10px; ">
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'menno.worldwar132@gmail.com';
-            $mail->Password = 'Menno180523';
+            $mail->Username = '';
+            $mail->Password = '';
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
 
@@ -295,11 +295,11 @@ font-size: 10px; ">
             $mail->addAttachment("pdfs/" . $_GET['receipt'] . ".pdf");
             $mail->isHTML(true);
 
-            $mail->Subject = 'Een kopie van uw factuur';
+            $mail->Subject = 'Uw factuur';
             $mail->Body    = 'Geachte klant,<br /><br />
 
                                 Bedankt voor uw aankoop bij Com Today.<br />
-                                De bijlage bevat een kopie van uw factuur.<br /><br />
+                                De bijlage bevat uw factuur.<br /><br />
 
                                 Wij wensen u veel plezier met uw aankoop<br /><br />
 
