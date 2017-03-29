@@ -1,1 +1,3 @@
 src/pdfs/*
+
+!somefolder/.gitkeep 
