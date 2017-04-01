@@ -5,6 +5,7 @@ include_once('../includes.php');
 if (count($_SESSION['receipt']['items']) < 1)
 {
     echo '
+    <script src="../js/jquery.js"></script>
     <script>
         $(document).ready(function() {
             $("#pageLoaderIndicator").fadeIn();
@@ -65,11 +66,26 @@ else
     echo '
     <script>
         $(document).ready(function() {
+            ';
 
-            $("#pageLoaderIndicator").fadeIn();
-            $("#PageContent").load("print.php?receipt=' . str_pad($receiptId, 4, '0', STR_PAD_LEFT) . '&mail=' . $_GET['mail'] . '&print=' . $printAmount . '", function () {
-                $("#pageLoaderIndicator").fadeOut();
-            });
+    if (Misc::sqlGet("paymentMethod", "receipt", "receiptId", $receiptId)['paymentMethod'] == "BANK")
+    {
+        echo '
+        $("#pageLoaderIndicator").fadeIn();
+        $("#PageContent").load("print.php?receipt=' . str_pad($receiptId, 4, '0', STR_PAD_LEFT) . '&mail=' . $_GET['mail'] . '&print=' . $printAmount . '&mailList=' . urlencode($_GET['mailList']) . '", function () {
+            $("#pageLoaderIndicator").fadeOut();
+        });';
+    }
+    else
+    {
+        echo '
+        $("#pageLoaderIndicator").fadeIn();
+        $("#PageContent").load("print.php?receipt=' . str_pad($receiptId, 4, '0', STR_PAD_LEFT) . '&mail=' . $_GET['mail'] . '&print=' . $printAmount . '&nobcc=1&mailList=' . urlencode($_GET['mailList']) . '", function () {
+            $("#pageLoaderIndicator").fadeOut();
+        });';
+    }
+
+    echo '
 
             $("#newReceipt").html("<i class=\"fa fa-file-text fa-2x\" aria-hidden=\"true\"></i>&nbsp;&nbsp; Nieuwe Bon");
 

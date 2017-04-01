@@ -120,6 +120,7 @@
             top: 128px;
         ">
             <button id="printAgain" type="button" class="btn btn-default">Afdrukken</button>
+            <button id="emailAgain" type="button" class="btn btn-default">Emailen</button>
         </center>
         <script>
             $(document).ready(function() {
@@ -127,6 +128,10 @@
                     $("#printAgain").css("display", "none");
                     $("#PageContent").printElement({ printMode:'popup' });
                     $("#printAgain").css("display", "inline");
+                });
+
+                $("#emailAgain").on("click", function() {
+                    
                 });
             });
         </script>

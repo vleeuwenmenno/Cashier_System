@@ -266,15 +266,18 @@ font-size: 10px; ">
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
         {
             //Do the magic https://wkhtmltopdf.org/
+            die("!!!!!!!!!!--Windows is not fully supported yet--!!!!!!!!!!");
         }
         else
         {
             //Do the magic https://wkhtmltopdf.org/
             exec(getcwd() . "/../deps/wkhtmltopdf " . "pdfs/" . $_GET['receipt'] . ".html pdfs/" . $_GET['receipt'] . ".pdf");
 
+            //Wait for the exec to complete
             while (!file_exists("pdfs/" . $_GET['receipt'] . ".pdf"))
             { }
 
+            //Delete junk
             unlink("pdfs/" . $_GET['receipt'] . ".html");
 
             $cust = Misc::sqlGet("*", "customers", "customerId", Misc::sqlGet("customerId", "receipt", "receiptId", $_GET['receipt'])['customerId']);
@@ -282,15 +285,26 @@ font-size: 10px; ">
             $mail = new PHPMailer;
 
             $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
+            $mail->Host = 'smtp02.hostnet.nl';
             $mail->SMTPAuth = true;
-            $mail->Username = '';
-            $mail->Password = '';
-            $mail->SMTPSecure = 'tls';
+            $mail->Username = 'smtp@comforttoday.nl';
+            $mail->Password = 'Maerelaan26';
+            $mail->SMTPSecure = 'STARTTLS';
             $mail->Port = 587;
 
             $mail->setFrom('info@comtoday.nl', 'ComToday Heemskerk');
-            $mail->addAddress($cust['email'], $cust['initials'] . ' ' . $cust['familyName']);
+
+            $object = json_decode(urldecode($_GET['mailList']), TRUE);
+            $mail->addAddress($object[0], $cust['initials'] . ' ' . $cust['familyName']);
+
+            if (!isset($_GET['nobcc']))
+                $mail->addBCC('menno@comtoday.nl'); //$mail->addBCC('facturen@comforttoday.nl'); //TODO: Turn this back on when deployed for normal use!!!!!!!!!
+
+            for($i = 0; $i < count($object); $i++)
+            {
+                if ($i > 0)
+                    $mail->addAddress($object[$i], "");
+            }
 
             $mail->addAttachment("pdfs/" . $_GET['receipt'] . ".pdf");
             $mail->isHTML(true);
@@ -298,19 +312,41 @@ font-size: 10px; ">
             $mail->Subject = 'Uw factuur';
             $mail->Body    = 'Geachte klant,<br /><br />
 
-                                Bedankt voor uw aankoop bij Com Today.<br />
+                                Bedankt voor uw aankoop bij ComToday.<br />
                                 De bijlage bevat uw factuur.<br /><br />
 
                                 Wij wensen u veel plezier met uw aankoop<br /><br />
 
                                 Met vriendelijke groeten,<br /><br />
 
-                                ComToday<br />';
+                                <b>ComToday </b><br />
+                                Maerelaan 26 <br />
+                                1962 KC Heemskerk <br />
+                                0251 200627 <br />
+                                info@comtoday.nl<br />';
 
             if(!$mail->send())
             {
-                echo 'Message could not be sent.';
-                echo 'Mailer Error: ' . $mail->ErrorInfo;
+                ?>
+                <script>
+                $(document).ready(function() {
+                    $.notify({
+                        icon: 'fa fa-envelope-o fa-2x',
+                        title: 'Mail NIET verstuurd<br />',
+                        message: 'De email is niet verstuurd naar de klant wegens een fout!.'
+                    }, {
+                        // settings
+                        type: 'warning',
+                        delay: 5000,
+                        timer: 10,
+                        placement: {
+                            from: "bottom",
+                            align: "right"
+                        }
+                    });
+                });
+                </script>
+                <?php
             }
             else
             {
@@ -337,4 +373,13 @@ font-size: 10px; ">
             }
         }
     }
+
+    ?>
+    <script>
+        $(document).ready(function() {
+            $("#pageLoaderIndicator").fadeOut();
+            $("#sideBarMenu").removeClass("disabledbutton");
+        });
+    </script>
+    <?php
 }

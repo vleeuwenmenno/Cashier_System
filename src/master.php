@@ -16,9 +16,11 @@
         <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/bootstrap-combobox.css" />
         <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/font-awesome.css" />
         <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/bootstrap-switch.min.css" />
+        <link rel="stylesheet" href="themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/multiple-emails.css" />
 
 
         <script src="js/jquery.js"></script>
+        <script src="js/multiple-emails.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script src="js/bootstrap-notify.min.js"></script>
         <script src="js/select2.full.min.js"></script>

@@ -624,6 +624,38 @@ else if (isset($_GET['new']))
                     <span style="top: -8px; position: relative;">
                         Bon emailen naar klant <input type="checkbox" name="emailToCustomer" id="emailToCustomer" 	data-size="small" data-on-text="Ja" data-off-text="Nee" checked></input><br />
                     </span>
+                    <div class="row" id="emailList">
+    					<div class="column">
+    						<input type='text' id='example_email' name='example_emailSUI' class='form-control' value='["<?php echo Misc::sqlGet("email", "customers", "customerId", $_SESSION['receipt']['customer'])['email']; ?>"]'>
+    					</div>
+    				</div>
+                	<script type="text/javascript">
+                        $(document).ready(function() {
+                            $("#emailToCustomer").bootstrapSwitch();
+                            $('#emailToCustomer').on('switchChange.bootstrapSwitch', function (event, state) {
+                                if($("#emailToCustomer").is(":checked"))
+                                {
+                                    $("#emailList").children().prop('disabled',false);
+                                    $("#emailList").fadeTo(500, 1);
+                                    $("#emailList").css("pointer-events", "");
+                                }
+                                else
+                                {
+                                    $("#emailList").children().prop('disabled', true);
+                                    $("#emailList").fadeTo(500, 0.2);
+                                    $("#emailList").css("pointer-events", "none");
+                                }
+                            });
+                        });
+
+                		$(function() {
+                			$('#example_email').multiple_emails( { position: "top" });
+                			$('#example_email').change( function(){
+                				$('#current_emails').text($(this).val());
+                			});
+                		});
+                	</script>
+                    <br />
                     <?php } ?>
                     <button type="button" class="btn btn-success" id="printReceipt" data-dismiss="modal">Bon printen</button>
                     <button type="button" class="btn btn-warning" id="printNoReceipt" data-dismiss="modal">Geen bon printen</button>
@@ -695,8 +727,6 @@ else if (isset($_GET['new']))
         }
 
         $(document).ready(function() {
-            $("#emailToCustomer").bootstrapSwitch();
-
             $("#saveReceipt").click(function () {
                 var rows = document.getElementById("listContents").getElementsByTagName("tr").length;
                 if (rows > 0)
@@ -808,6 +838,11 @@ else if (isset($_GET['new']))
                     $('#pinValDiv').css("display", "inline");
                 }
 
+                if (this.value == "BANK")
+                    $("#emailToCustomer").bootstrapSwitch('state', true);
+                else
+                    $("#emailToCustomer").bootstrapSwitch('state', false);
+
                 $('#statusText').html('');
 
                 checkTotalValue();
@@ -818,6 +853,8 @@ else if (isset($_GET['new']))
                 {
                     isButtonClick = false;
 
+                    console.log($('#example_email').val());
+
                     if ($( "#paymentMethod" ).val() != "")
                     {
                         if ($('#paymentMethod').val() == "PC")
@@ -827,19 +864,13 @@ else if (isset($_GET['new']))
 
                             $("#pageLoaderIndicator").fadeIn();
                             $("#sideBarMenu").addClass("disabledbutton");
-                            $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=" + printAmount + "&paymentMethod=" + $( "#paymentMethod" ).val() + "&pin=" + pinVal + "&cash=" + cashVal, function () {
-                                $("#pageLoaderIndicator").fadeOut();
-                                $("#sideBarMenu").removeClass("disabledbutton");
-                            });
+                            $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=" + printAmount + "&paymentMethod=" + $( "#paymentMethod" ).val() + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&pin=" + pinVal + "&cash=" + cashVal, function () { });
                        }
                        else
                        {
                            $("#pageLoaderIndicator").fadeIn();
                            $("#sideBarMenu").addClass("disabledbutton");
-                           $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=" + printAmount + "&paymentMethod=" + $( "#paymentMethod" ).val(), function () {
-                               $("#pageLoaderIndicator").fadeOut();
-                               $("#sideBarMenu").removeClass("disabledbutton");
-                           });
+                           $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=" + printAmount + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&paymentMethod=" + $( "#paymentMethod" ).val(), function () { });
                        }
                     }
                     else
