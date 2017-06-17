@@ -7,4 +7,4 @@ D:\XAMPP\htdocs\CashRegister_PrintHelper\CashRegister_PrintHelper\obj\Debug\Cash
 D:\XAMPP\htdocs\CashRegister_PrintHelper\CashRegister_PrintHelper\obj\Debug\CashRegister_PrintHelper.exe
 D:\XAMPP\htdocs\CashRegister_PrintHelper\CashRegister_PrintHelper\obj\Debug\CashRegister_PrintHelper.pdb
 D:\XAMPP\htdocs\CashRegister_PrintHelper\CashRegister_PrintHelper\bin\Debug\Newtonsoft.Json.dll
-D:\XAMPP\htdocs\CashRegister_PrintHelper\CashRegister_PrintHelper\bin\Debug\Newtonsoft.Json.xml
+D:\XAMPP\htdocs\CashRegister_PrintHelper\CashRegister_PrintHelper\bin\Debug\NDde.dll

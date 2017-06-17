@@ -14,6 +14,10 @@ using System.Management;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using System.IO;
+using System.Threading;
+using System.Diagnostics;
+using System.Net;
+using System.Windows.Automation;
 
 namespace CashRegister_PrintHelper
 {
@@ -29,6 +33,25 @@ namespace CashRegister_PrintHelper
 	    public static extern Boolean SetDefaultPrinter(String name);
 	   	
 	    public Settings prefs = new Settings();
+	    
+  		public static string GetChromeUrl(Process process)
+	    {
+	        if (process == null)
+	            throw new ArgumentNullException("process");
+	
+	        if (process.MainWindowHandle == IntPtr.Zero)
+	            return null;
+	
+	        AutomationElement element = AutomationElement.FromHandle(process.MainWindowHandle);
+	        if (element == null)
+	            return null;
+	
+	        AutomationElementCollection edits5 = element.FindAll(TreeScope.Subtree, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Edit));
+	        AutomationElement edit = edits5[0];
+	        string vp = ((ValuePattern)edit.GetCurrentPattern(ValuePattern.Pattern)).Current.Value as string;
+	        Console.WriteLine(vp);
+	        return vp;
+	    }
 	    
 		public MainForm()
 		{
@@ -195,6 +218,47 @@ namespace CashRegister_PrintHelper
 		void StopBtnClick(object sender, EventArgs e)
 		{
 			afsluitenToolStripMenuItem.PerformClick();
+		}
+		
+		void Button1Click(object sender, EventArgs e)
+		{
+			printHelperTray.ShowBalloonTip(1000, "Print taak", "Uw print taak is verwerkt naar de printer.", ToolTipIcon.Info);
+		}
+		
+		public void downloadFileToTemp(string url, string fileName)
+		{
+			using (var client = new WebClient())
+			{
+				if (!Directory.Exists(Environment.CurrentDirectory + "/temp"))
+					Directory.CreateDirectory(Environment.CurrentDirectory + "/temp");
+				
+			    client.DownloadFile(url, Environment.CurrentDirectory + "/temp/" + fileName);
+			}
+		}
+		
+		public void printFile(string path)
+		{
+		 	ProcessStartInfo info = new ProcessStartInfo();
+	        info.Verb = "print";
+	        info.FileName =path;
+	        info.CreateNoWindow = true;
+	        info.WindowStyle = ProcessWindowStyle.Hidden;
+	
+	        Process p = new Process();
+	        p.StartInfo = info;
+	        p.Start();
+		}
+		
+		void UrlHandlerTick(object sender, EventArgs e)
+		{
+			foreach (Process process in Process.GetProcessesByName("chrome"))
+	        {
+	            string url = GetChromeUrl(process);
+	            if (url == null)
+	                continue;
+	
+	            Console.WriteLine("CH Url for '" + process.MainWindowTitle + "' is " + url);
+	        }
 		}
 	}
 }

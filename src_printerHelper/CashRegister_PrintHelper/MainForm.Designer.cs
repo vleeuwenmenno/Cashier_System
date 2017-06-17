@@ -26,6 +26,9 @@ namespace CashRegister_PrintHelper
 		private System.Windows.Forms.Timer startup;
 		private System.Windows.Forms.Label printerInfo;
 		private System.Windows.Forms.Button stopBtn;
+		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Timer urlHandler;
+		private System.Windows.Forms.ListBox listBox1;
 		
 		/// <summary>
 		/// Disposes resources used by the form.
@@ -62,13 +65,16 @@ namespace CashRegister_PrintHelper
 			this.startup = new System.Windows.Forms.Timer(this.components);
 			this.printerInfo = new System.Windows.Forms.Label();
 			this.stopBtn = new System.Windows.Forms.Button();
+			this.button1 = new System.Windows.Forms.Button();
+			this.urlHandler = new System.Windows.Forms.Timer(this.components);
+			this.listBox1 = new System.Windows.Forms.ListBox();
 			this.trayIconMenu.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// saveBtn
 			// 
 			this.saveBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.saveBtn.Location = new System.Drawing.Point(343, 114);
+			this.saveBtn.Location = new System.Drawing.Point(343, 288);
 			this.saveBtn.Name = "saveBtn";
 			this.saveBtn.Size = new System.Drawing.Size(75, 23);
 			this.saveBtn.TabIndex = 0;
@@ -96,7 +102,7 @@ namespace CashRegister_PrintHelper
 			// hideFormBtn
 			// 
 			this.hideFormBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.hideFormBtn.Location = new System.Drawing.Point(424, 114);
+			this.hideFormBtn.Location = new System.Drawing.Point(424, 288);
 			this.hideFormBtn.Name = "hideFormBtn";
 			this.hideFormBtn.Size = new System.Drawing.Size(75, 23);
 			this.hideFormBtn.TabIndex = 3;
@@ -153,24 +159,50 @@ namespace CashRegister_PrintHelper
 			| System.Windows.Forms.AnchorStyles.Right)));
 			this.printerInfo.Location = new System.Drawing.Point(12, 42);
 			this.printerInfo.Name = "printerInfo";
-			this.printerInfo.Size = new System.Drawing.Size(487, 69);
+			this.printerInfo.Size = new System.Drawing.Size(487, 243);
 			this.printerInfo.TabIndex = 4;
 			// 
 			// stopBtn
 			// 
-			this.stopBtn.Location = new System.Drawing.Point(12, 114);
+			this.stopBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.stopBtn.Location = new System.Drawing.Point(12, 288);
 			this.stopBtn.Name = "stopBtn";
 			this.stopBtn.Size = new System.Drawing.Size(75, 23);
 			this.stopBtn.TabIndex = 5;
-			this.stopBtn.Text = "Stoppen";
+			this.stopBtn.Text = "Afsluiten";
 			this.stopBtn.UseVisualStyleBackColor = true;
 			this.stopBtn.Click += new System.EventHandler(this.StopBtnClick);
+			// 
+			// button1
+			// 
+			this.button1.Location = new System.Drawing.Point(411, 233);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(88, 23);
+			this.button1.TabIndex = 6;
+			this.button1.Text = "button1";
+			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Click += new System.EventHandler(this.Button1Click);
+			// 
+			// urlHandler
+			// 
+			this.urlHandler.Enabled = true;
+			this.urlHandler.Tick += new System.EventHandler(this.UrlHandlerTick);
+			// 
+			// listBox1
+			// 
+			this.listBox1.FormattingEnabled = true;
+			this.listBox1.Location = new System.Drawing.Point(12, 132);
+			this.listBox1.Name = "listBox1";
+			this.listBox1.Size = new System.Drawing.Size(487, 95);
+			this.listBox1.TabIndex = 7;
 			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(511, 149);
+			this.ClientSize = new System.Drawing.Size(511, 323);
+			this.Controls.Add(this.listBox1);
+			this.Controls.Add(this.button1);
 			this.Controls.Add(this.stopBtn);
 			this.Controls.Add(this.printerInfo);
 			this.Controls.Add(this.hideFormBtn);
