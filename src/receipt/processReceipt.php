@@ -72,7 +72,7 @@ else
     {
         echo '
         $("#pageLoaderIndicator").fadeIn();
-        $("#PageContent").load("print.php?receipt=' . str_pad($receiptId, 4, '0', STR_PAD_LEFT) . '&mail=' . $_GET['mail'] . '&print=' . $printAmount . '&mailList=' . urlencode($_GET['mailList']) . '", function () {
+        $("#PageContent").load("print.php?receipt=' . str_pad($receiptId, 4, '0', STR_PAD_LEFT) . '&printLetterPaper=' . $_GET['printLetterPaper'] . '&mail=' . $_GET['mail'] . '&print=' . $printAmount . '&mailList=' . urlencode($_GET['mailList']) . '", function () {
             $("#pageLoaderIndicator").fadeOut();
         });';
     }
@@ -80,7 +80,7 @@ else
     {
         echo '
         $("#pageLoaderIndicator").fadeIn();
-        $("#PageContent").load("print.php?receipt=' . str_pad($receiptId, 4, '0', STR_PAD_LEFT) . '&mail=' . $_GET['mail'] . '&print=' . $printAmount . '&nobcc=1&mailList=' . urlencode($_GET['mailList']) . '", function () {
+        $("#PageContent").load("print.php?receipt=' . str_pad($receiptId, 4, '0', STR_PAD_LEFT) . '&printLetterPaper=' . $_GET['printLetterPaper'] . '&mail=' . $_GET['mail'] . '&print=' . $printAmount . '&nobcc=1&mailList=' . urlencode($_GET['mailList']) . '", function () {
             $("#pageLoaderIndicator").fadeOut();
         });';
     }

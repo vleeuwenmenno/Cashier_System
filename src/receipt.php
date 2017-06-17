@@ -233,36 +233,51 @@ else if (isset($_GET['new']))
                                             <h4 class="modal-title">Prijs aanpasssen</h4>
                                         </div>
                                         <div class="modal-body">
-                                            <div class="form-group">
-                                                <label for="priceExclVat' .  $key . '">Inkoop prijs: </label>
-                                                <input type="text" class="form-control" id="priceExclVat' . $key . '" placeholder="26,66" value="' . round($_SESSION['receipt']['items'][$key]['priceAPiece']['priceExclVat'], 2) . '" />
+                                            <div id="absolutePriceDiv' . $Key . '">
+                                                <div class="form-group">
+                                                    <label for="priceExclVat' .  $key . '">Inkoop prijs: </label>
+                                                    <input type="text" class="form-control" id="absolutePriceExclVat' . $key . '" placeholder="26,66" value="' . round($_SESSION['receipt']['items'][$key]['priceAPiece']['priceExclVat'], 2) . '" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="priceExclVat' .  $key . '">Absolute prijs: </label>
+                                                    <input type="text" class="form-control" id="absolutePriceVal' . $key . '" placeholder="26,66" value="" />
+                                                </div>
                                             </div>
-                                            <label for="priceModifier' .  $key . '">Prijs berekening: </label>
-                                            <div class="input-group">
-                                                <span class="input-group-addon" id="priceExclVatLabel' .  $key . '" style="min-width: 96px; border-bottom-left-radius: 0px !important;">
-                                                    Inkoop<br />
-                                                    &euro;&nbsp;
-                                                </span>
-                                                <span class="input-group-addon" id="priceVatOnly' .  $key . '" style="border-bottom-right-radius: 0px !important;">
-                                                    Btw<br />
-                                                    &nbsp;&euro;&nbsp;
-                                                </span>
-                                                <span class="input-group-addon" id="priceMarginOnly' .  $key . '" style="border-bottom-right-radius: 0px !important;">
-                                                    Marge<br />
-                                                    &nbsp;&euro;&nbsp;
-                                                </span>
-                                                <span class="input-group-addon" id="priceResell' .  $key . '" style="border-bottom-right-radius: 0px !important;">
-                                                    Verkoop<br />
-                                                    &nbsp;&euro;&nbsp;
-                                                </span>
-                                            </div>
-                                            <div class="input-group">
-                                                <span class="input-group-addon" id="" style="border-top-left-radius: 0px !important;">
-                                                    ($INKOOP * $BTW)<br />
-                                                </span>
-                                                <input type="text" style="height: 42px; border-top-right-radius: 0px !important;" class="form-control" id="priceModifier' .  $key . '" aria-describedby="priceModifierLabel" placeholder=" * 1.375" value="' . str_replace('.',',', $_SESSION['receipt']['items'][$key]['priceAPiece']['priceModifier']) . '" />
+                                            <div id="nonAbsoluteDiv' . $key . '"" hidden>
+                                                <div class="form-group">
+                                                    <label for="priceExclVat' .  $key . '">Inkoop prijs: </label>
+                                                    <input type="text" class="form-control" id="priceExclVat' . $key . '" placeholder="26,66" value="' . round($_SESSION['receipt']['items'][$key]['priceAPiece']['priceExclVat'], 2) . '" />
+                                                </div>
+                                                <label for="priceModifier' .  $key . '">Prijs berekening: </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon" id="priceExclVatLabel' .  $key . '" style="min-width: 96px; border-bottom-left-radius: 0px !important;">
+                                                        Inkoop<br />
+                                                        &euro;&nbsp;
+                                                    </span>
+                                                    <span class="input-group-addon" id="priceVatOnly' .  $key . '" style="border-bottom-right-radius: 0px !important;">
+                                                        Btw<br />
+                                                        &nbsp;&euro;&nbsp;
+                                                    </span>
+                                                    <span class="input-group-addon" id="priceMarginOnly' .  $key . '" style="border-bottom-right-radius: 0px !important;">
+                                                        Marge<br />
+                                                        &nbsp;&euro;&nbsp;
+                                                    </span>
+                                                    <span class="input-group-addon" id="priceResell' .  $key . '" style="border-bottom-right-radius: 0px !important;">
+                                                        Verkoop<br />
+                                                        &nbsp;&euro;&nbsp;
+                                                    </span>
+                                                </div>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon" id="" style="border-top-left-radius: 0px !important;">
+                                                        ($INKOOP * $BTW)<br />
+                                                    </span>
+                                                    <input type="text" style="height: 42px; border-top-right-radius: 0px !important;" class="form-control" id="priceModifier' .  $key . '" aria-describedby="priceModifierLabel" placeholder=" * 1.375" value="' . str_replace('.',',', $_SESSION['receipt']['items'][$key]['priceAPiece']['priceModifier']) . '" />
+                                                </div>
                                             </div>
 
+                                            <div class="checkbox">
+                                              <label><input type="checkbox" value="" id="absolutePrice' . $key . '" checked>Absolute prijs berekening</label>
+                                            </div>
                                             <div class="checkbox">
                                               <label><input type="checkbox" value="" id="global' . $key . '" checked>Artikel prijs aanpassen voor alleen deze bon.</label>
                                             </div>
@@ -277,6 +292,27 @@ else if (isset($_GET['new']))
 
                             echo '<script>
                             $(document).ready(function() {
+                                // Disable function
+                                jQuery.fn.extend({
+                                    disable: function(state) {
+                                        return this.each(function() {
+                                            this.disabled = state;
+                                        });
+                                    }
+                                });
+
+                                $("#absolutePrice' . $key . '").change(function() {
+                                    if(this.checked) 
+                                    {
+                                        $("#nonAbsoluteDiv' . $key . '").hide();
+                                        $("#absolutePriceDiv' . $Key . '").show();
+                                    }
+                                    else
+                                    {
+                                        $("#nonAbsoluteDiv' . $key . '").show();
+                                        $("#absolutePriceDiv' . $Key . '").hide();
+                                    }
+                                });
 
                                 $("#' . $key . '").popover({
                                     html : true,
@@ -314,6 +350,18 @@ else if (isset($_GET['new']))
                                     },
                                     function (data)
                                     {
+                                        $("#absolutePriceVal' . $key . '").val(data);
+                                    }
+                                );
+
+                                //Set resell price and margin only price
+                                $.get(
+                                    "item/calcString.php",
+                                    {
+                                        sum: encodeURIComponent("(" +  $(\'#priceExclVat' . $key . '\').val().replace(",", ".") + " * " + vat  + ") " + $("#priceModifier' . $key . '").val())
+                                    },
+                                    function (data)
+                                    {
                                         $("#priceResell' . $key . '").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
 
                                         $.get(
@@ -338,22 +386,46 @@ else if (isset($_GET['new']))
                                     if (shouldReload)
                                     {
                                         shouldReload = false;
-                                        $.get(
-                                            "receipt/updateModifier.php",
-                                            {
-                                                modifier: $("#priceModifier' . $key . '").val(),
-                                                global: $("#global' . $key . '").is(\':checked\'),
-                                                nativeId: "' . $key . '",
-                                                priceExclVat: $("#priceExclVat' . $key . '").val().replace(",", ".")
-                                            },
-                                            function (data)
-                                            {
-                                                $("#pageLoaderIndicator").fadeIn();
-                                                $("#PageContent").load("receipt.php?new", function () {
-                                                    $("#pageLoaderIndicator").fadeOut();
-                                                });
-                                            }
-                                        );
+
+                                        if ($("#absolutePrice' . $key . '").is(\':checked\'))
+                                        {
+                                            $.get(
+                                                "receipt/updateModifier.php",
+                                                {
+                                                    //Update values here damn it!
+                                                    modifier: " + " + ($("#absolutePriceVal' . $key . '").val().replace(",", ".") - ($("#absolutePriceExclVat' . $key . '").val().replace(",", ".") * vat)).toFixed(2),
+                                                    global: $("#global' . $key . '").is(\':checked\'),
+                                                    nativeId: "' . $key . '",
+                                                    priceExclVat: $("#absolutePriceExclVat' . $key . '").val().replace(",", ".")
+                                                },
+                                                function (data)
+                                                {
+                                                    $("#pageLoaderIndicator").fadeIn();
+                                                    $("#PageContent").load("receipt.php?new", function () {
+                                                        $("#pageLoaderIndicator").fadeOut();
+                                                    });
+                                                }
+                                            );
+                                        }
+                                        else
+                                        {
+                                            $.get(
+                                                "receipt/updateModifier.php",
+                                                {
+                                                    modifier: $("#priceModifier' . $key . '").val(),
+                                                    global: $("#global' . $key . '").is(\':checked\'),
+                                                    nativeId: "' . $key . '",
+                                                    priceExclVat: $("#priceExclVat' . $key . '").val().replace(",", ".")
+                                                },
+                                                function (data)
+                                                {
+                                                    $("#pageLoaderIndicator").fadeIn();
+                                                    $("#PageContent").load("receipt.php?new", function () {
+                                                        $("#pageLoaderIndicator").fadeOut();
+                                                    });
+                                                }
+                                            );
+                                        }
                                     }
                                 });
 
@@ -609,7 +681,6 @@ else if (isset($_GET['new']))
     <!-- Modal -->
     <div class="modal fade" id="printAmount" role="dialog">
         <div class="modal-dialog">
-
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
@@ -619,6 +690,7 @@ else if (isset($_GET['new']))
                 <div class="modal-body">
                     <p>Wil de klant een bon?</p>
                 </div>
+
                 <div class="modal-footer">
                     <?php if (isset($_SESSION['receipt']['customer'])) { ?>
                     <span style="top: -8px; position: relative;">
@@ -657,6 +729,12 @@ else if (isset($_GET['new']))
                 	</script>
                     <br />
                     <?php } ?>
+                    <input id="letterPaperInput" type="checkbox" name="letterPaperInput"> Print briefpapier op bon</input>
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $("#letterPaperInput").bootstrapSwitch();
+                        });
+                    </script>
                     <button type="button" class="btn btn-success" id="printReceipt" data-dismiss="modal">Bon printen</button>
                     <button type="button" class="btn btn-warning" id="printNoReceipt" data-dismiss="modal">Geen bon printen</button>
                 </div>
@@ -864,13 +942,13 @@ else if (isset($_GET['new']))
 
                             $("#pageLoaderIndicator").fadeIn();
                             $("#sideBarMenu").addClass("disabledbutton");
-                            $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=" + printAmount + "&paymentMethod=" + $( "#paymentMethod" ).val() + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&pin=" + pinVal + "&cash=" + cashVal, function () { });
+                            $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&printLetterPaper=" + $("#letterPaperInput").is(':checked') + "&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=" + printAmount + "&paymentMethod=" + $( "#paymentMethod" ).val() + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&pin=" + pinVal + "&cash=" + cashVal, function () { });
                        }
                        else
                        {
                            $("#pageLoaderIndicator").fadeIn();
                            $("#sideBarMenu").addClass("disabledbutton");
-                           $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=" + printAmount + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&paymentMethod=" + $( "#paymentMethod" ).val(), function () { });
+                           $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&printLetterPaper=" + $("#letterPaperInput").is(':checked') + "&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=" + printAmount + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&paymentMethod=" + $( "#paymentMethod" ).val(), function () { });
                        }
                     }
                     else

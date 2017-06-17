@@ -289,7 +289,7 @@
 
             </div>
             <div class="col-sm-8">
-                <div id="PageContent" style="position: relative; left: -62px;">
+                <div id="PageContent" style="position: relative; left: -8px;">
 
                 </div>
 			</div>

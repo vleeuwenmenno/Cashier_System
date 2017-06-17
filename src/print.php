@@ -33,6 +33,7 @@ if (isset($_GET['openReport']))
         echo '<script>';
         echo '
             $(document).ready(function() {
+                $("#letterPaperCheck").bootstrapSwitch();
                 $("#printAgain").css("display", "none");
                 $("#printPart").printElement();
                 $("#printAgain").css("display", "inline");
@@ -70,7 +71,7 @@ else if (isset($_GET['closeReport']))
             <script src="js/select2.full.min.js"></script>
             <script src="js/jquery.jeditable.js"></script>
             <script src="js/bootstrap-combobox.js"></script>
-            <script src="js/jquery.printElement.js"></script>
+            <script src="js/jquery.print.js"></script>
         </head>
         <body>
             <div id="reportPrint" style="margin: 32px; font-size: 12px;">
@@ -109,10 +110,6 @@ else if (isset($_GET['closeReport']))
                     <div><b>Totaal Inkoop:</b><span style="float: right;"> &euro;&nbsp;<?php echo number_format(round(round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId) / $_CFG['VAT'], 2) - round(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2), 2), 2, ",", "."); ?></span></div>
                     <div><b>Netto Winst:</b><span style="float: right;"> &euro;&nbsp;<?php echo number_format(round(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2), 2, ",", "."); ?></span></div>
                 </div>
-                <?php
-                    //LOOP ALL ITEMS WE SOLD TODAY
-                    echo '//TODO: Zorg dat de artikelen die verkocht zijn vandaag hier worden weergeven.';
-                ?>
             </div>
             <center>
                 <button type="button" id="printBtn" class="btn btn-primary">Afdrukken</button>
@@ -149,109 +146,149 @@ else if (isset($_GET['receipt']))
 ?>
 
 <div style="font-family: Verdana, Geneva, sans-serif;
-font-size: 14px;
-font-style: normal;
-font-variant: normal;
-font-weight: 400;
-line-height: 20px;" id="bill">
+	font-size: 14px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 400;
+	line-height: 20px;
+    background: white;
+    width: 21cm;
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+    position: absolute;">
+    <?php if ($_GET['printLetterPaper'] == "true") { ?> <img src="/CashRegister/src/images/A4-Template.png" id="letterPaper" style="position: absolute; top: -32px; width: 21cm;" /><?php } ?>
+    <div style="position: absolute; top: 196px; width: 18cm;">
+        <div style="position: relative; left: 48px; font-size: 12px;">
+            Bon Nr. <?php echo $_GET['receipt']; ?><br />
+            Tijd/Datum: <?php echo $receipt['paidDt']; ?><br />
+            Kassa: <?php echo Misc::sqlGet("crName", "cash_registers", "id", Misc::sqlGet("cashRegisterId", "cashsession", "cashSessionId", $receipt['parentSession'])['cashRegisterId'])['crName']; ?><br />
+            Medewerker: <?php echo Misc::sqlGet("nickname", "users", "userId", $receipt['creator'])['nickname']; ?><br />
+            Betaalwijze: <?php if ($receipt['paymentMethod'] == "CASH") { echo "Kontant"; } else if ($receipt['paymentMethod'] == "PIN") { echo 'Pin'; } else if ($receipt['paymentMethod'] == "BANK") { echo 'Bankoverdracht'; } else if ($receipt['paymentMethod'] == "PC") { echo 'Pin en Kontant'; } ?><br />
+        </div>
 
-    <div style="margin-left: 48px;margin-top: 128px; font-size: 12px;">
-        Bon Nr. <?php echo $_GET['receipt']; ?><br />
-        Tijd/Datum: <?php echo $receipt['paidDt']; ?><br />
-        Kassa: <?php echo Misc::sqlGet("crName", "cash_registers", "id", Misc::sqlGet("cashRegisterId", "cashsession", "cashSessionId", $receipt['parentSession'])['cashRegisterId'])['crName']; ?><br />
-        Medewerker: <?php echo Misc::sqlGet("nickname", "users", "userId", $receipt['creator'])['nickname']; ?><br />
-        Betaalwijze: <?php if ($receipt['paymentMethod'] == "CASH") { echo "Kontant"; } else if ($receipt['paymentMethod'] == "PIN") { echo 'Pin'; } else if ($receipt['paymentMethod'] == "BANK") { echo 'Bankoverdracht'; } else if ($receipt['paymentMethod'] == "PC") { echo 'Pin en Kontant'; } ?><br />
-    </div>
+        <?php if (Misc::sqlGet("customerId", "receipt", "receiptId", $_GET['receipt'])['customerId'] > 0) { ?>
+        <div style="margin-left: 48px; margin-top: 32px; font-size: 12px;">
+            <?php
+                $cust = Misc::sqlGet("*", "customers", "customerId", Misc::sqlGet("customerId", "receipt", "receiptId", $_GET['receipt'])['customerId']);
 
-    <?php if (Misc::sqlGet("customerId", "receipt", "receiptId", $_GET['receipt'])['customerId'] > 0) { ?>
-    <div style="margin-left: 48px; margin-top: 32px; font-size: 12px;">
-        <?php
-            $cust = Misc::sqlGet("*", "customers", "customerId", Misc::sqlGet("customerId", "receipt", "receiptId", $_GET['receipt'])['customerId']);
+            ?>
+            <?php echo $cust['initials'] . ' ' . $cust['familyName']; ?><br />
+            <?php if ($cust['companyName'] != "") echo $cust['companyName'] . '<br />'; ?>
+            <?php echo $cust['streetName']; ?><br />
+            <?php echo $cust['postalCode'] . ' ' . $cust['city']; ?><br />
+        </div>
+        <?php } ?>
 
-        ?>
-        <?php echo $cust['initials'] . ' ' . $cust['familyName']; ?><br />
-        <?php if ($cust['companyName'] != "") echo $cust['companyName'] . '<br />'; ?>
-        <?php echo $cust['streetName']; ?><br />
-        <?php echo $cust['postalCode'] . ' ' . $cust['city']; ?><br />
-    </div>
-    <?php } ?>
-
-    <table class="table" style="
-margin-left: 48px;
-margin-right: 48px;
+        <table class="table" style="
+position: relative;
+left: 48px;
 margin-top: 32px;
-font-size: 10px; ">
-        <tr>
-            <th style="width: 60%;">Omschrijving</th>
-            <th style="width: 15%;">Prijs per stuk</th>
-            <th style="width: 10%;">Aantal</th>
-            <th style="width: 15%;">Totaal prijs</th>
-        </tr>
-        <?php
-            $totalIncl = 0;
-
-            foreach ($json as $key => $val)
-            {
-                ?>
-                <tr>
-                    <td><?php if (isset($val['itemDesc'])) { echo urldecode($val['itemDesc']); } else { echo urldecode(Misc::sqlGet("itemName", "items", "nativeId", $key)['itemName']); } ?></td>
-                    <td>€ <?php echo str_replace(".", ",", Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier'])); ?></td>
-                    <td><?php echo $val['count']; ?>x</td>
-                    <td>€ <?php echo str_replace(".", ",", (Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier']) * $val['count'])); ?></td>
-                </tr>
-                <?php
-
-                $totalIncl += (Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier']) * $val['count']);
-            }
-        ?>
-    </table>
-    <div style="float: right; font-size: 14px;">
-        <table style="float: right; font-size: 10px;">
-            <tr style="font-size: larger;">
-                <td style=" padding-bottom: 8px;">Excl. Btw: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo number_format(round($totalIncl / $_CFG['VAT'], 2), 2, ",", "."); ?></div></td>
+font-size: 10px; 
+width: 100%;">
+            <tr>
+                <th style="width: 60%;">Omschrijving</th>
+                <th style="width: 15%;">Prijs per stuk</th>
+                <th style="width: 10%;">Aantal</th>
+                <th style="width: 15%;">Totaal prijs</th>
             </tr>
-            <tr style="font-size: larger;">
-                <td style=" padding-bottom: 8px;">Btw: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo number_format(round($totalIncl - round($totalIncl / $_CFG['VAT'], 2), 2), 2, ",", "."); ?></div></td>
-            </tr>
+            <?php
+                $totalIncl = 0;
 
-            <?php if ($receipt['paymentMethod'] == "PC") { ?>
-                <tr style="font-size: larger;">
-                    <td style=" padding-bottom: 8px;">Pin: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo number_format(Misc::sqlGet("pinValue", "receipt", "receiptId", $_GET['receipt'])['pinValue'], 2, ",", "."); ?></div></td>
-                </tr>
-                <tr style="font-size: larger;">
-                    <td style=" padding-bottom: 8px;">Kontant: <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo number_format(Misc::sqlGet("cashValue", "receipt", "receiptId", $_GET['receipt'])['cashValue'], 2, ",", "."); ?></div></td>
-                </tr>
-            <?php } ?>
+                foreach ($json as $key => $val)
+                {
+                    ?>
+                    <tr>
+                        <td><?php if (isset($val['itemDesc'])) { echo urldecode($val['itemDesc']); } else { echo urldecode(Misc::sqlGet("itemName", "items", "nativeId", $key)['itemName']); } ?></td>
+                        <td>&euro; <?php echo number_format(Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier']), 2, ",", "."); ?></td>
+                        <td><?php echo $val['count']; ?>x</td>
+                        <td>&euro; <?php echo number_format ((Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier']) * $val['count']) ,2 ,"," ,"."); ?></td>
+                    </tr>
+                    <?php
 
-            <tr style="font-size: larger;">
-                <td style=" padding-bottom: 8px;"><b>Totaal:</b> <div style="margin-left: 12px; font-size: 10px; float: right;">€ <?php echo number_format($totalIncl, 2, ",", "."); ?></div></td>
-            </tr>
+                    $totalIncl += (Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier']) * $val['count']);
+                }
+            ?>
         </table>
+        <div style="float: right; font-size: 14px;">
+            <table style="float: right; font-size: 10px;">
+                <tr style="font-size: larger;">
+                    <td style=" padding-bottom: 8px;">Excl. Btw: <div style="margin-left: 12px; font-size: 10px; float: right;">&euro; <?php echo number_format(round($totalIncl / $_CFG['VAT'], 2), 2, ",", "."); ?></div></td>
+                </tr>
+                <tr style="font-size: larger;">
+                    <td style=" padding-bottom: 8px;">Btw: <div style="margin-left: 12px; font-size: 10px; float: right;">&euro; <?php echo number_format(round($totalIncl - round($totalIncl / $_CFG['VAT'], 2), 2), 2, ",", "."); ?></div></td>
+                </tr>
+
+                <?php if ($receipt['paymentMethod'] == "PC") { ?>
+                    <tr style="font-size: larger;">
+                        <td style=" padding-bottom: 8px;">Pin: <div style="margin-left: 12px; font-size: 10px; float: right;">&euro; <?php echo number_format(Misc::sqlGet("pinValue", "receipt", "receiptId", $_GET['receipt'])['pinValue'], 2, ",", "."); ?></div></td>
+                    </tr>
+                    <tr style="font-size: larger;">
+                        <td style=" padding-bottom: 8px;">Kontant: <div style="margin-left: 12px; font-size: 10px; float: right;">&euro; <?php echo number_format(Misc::sqlGet("cashValue", "receipt", "receiptId", $_GET['receipt'])['cashValue'], 2, ",", "."); ?></div></td>
+                    </tr>
+                <?php } ?>
+
+                <tr style="font-size: larger;">
+                    <td style=" padding-bottom: 8px;"><b>Totaal:</b> <div style="margin-left: 12px; font-size: 10px; float: right;">&euro; <?php echo number_format($totalIncl, 2, ",", "."); ?></div></td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>
 <?php
 
     echo '</div>';
-    echo '<center><button id="printAgain" type="button" class="btn btn-default">';
+    echo '<center style="
+            position: relative;
+            top: 16px;
+            left: 36%;
+        "><button id="printAgain" type="button" class="btn btn-default">';
     if ($_GET['print'] > 0)
     {
         echo 'Nogmaals ';
     }
-    echo 'Afdrukken</button></center>';
+    echo 'Afdrukken</button>';
+
+    if ($_GET['mail'] == "true")
+        echo '  <button id="emailAgain" type="button" class="btn btn-default">Nogmaals Emailen</button>';
+    else
+        echo '  <button id="emailAgain" type="button" class="btn btn-default">Emailen</button>';
+
+    if ($_GET['printLetterPaper'] == "true")
+        echo '  <div id="letterPaperInput" style="position: relative; top: 16px; display: block;"><input type="checkbox" id="letterPaperCheck" name="letterPaperCheck" checked> Weergeef briefpapier</input></div>';
+    else
+        echo '  <div id="letterPaperInput" style="position: relative; top: 16px; display: block;"><input type="checkbox" id="letterPaperCheck" name="letterPaperCheck"> Weergeef briefpapier</input></div>';
+    
     echo '<script>
-        $(document).ready(function() {';
+        $(document).ready(function() {
+            $("#letterPaper").css("display", "none");
+            $("#emailAgain").css("display", "none");
+            $("#letterPaperInput").css("display", "none");';
 
     if ($_GET['print'] > 0)
     {
         echo '$("#printAgain").css("display", "none");
-            $("#PageContent").printElement({ printMode:\'popup\' });
-            $("#printAgain").css("display", "inline");';
+            $("#PageContent").printElement();
+            $("#emailAgain").css("display", "inline");
+            $("#letterPaper").css("display", "inline");
+            $("#printAgain").css("display", "inline");
+            $("#letterPaperInput").css("display", "block");';
     }
 
-    echo '  $("#printAgain").on("click", function() {
+
+    echo '  
+        $("#printAgain").on("click", function() {
                 $("#printAgain").css("display", "none");
-                $("#PageContent").printElement({ printMode:\'popup\' });
+                $("#letterPaper").css("display", "none");
+                $("#emailAgain").css("display", "none");
+                $("#letterPaperInput").css("display", "none");
+
+                $("#PageContent").printElement();
+
+                $("#emailAgain").css("display", "inline");
+                $("#letterPaper").css("display", "inline");
                 $("#printAgain").css("display", "inline");
+                $("#letterPaperInput").css("display", "block");
             });
         });
     ';
@@ -266,7 +303,28 @@ font-size: 10px; ">
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
         {
             //Do the magic https://wkhtmltopdf.org/
-            die("!!!!!!!!!!--Windows is not fully supported yet--!!!!!!!!!!");
+            echo "!!!!!!!!!!--Windows is not supported--!!!!!!!!!!";
+
+            ?>
+                <script>
+                $(document).ready(function() {
+                    $.notify({
+                        icon: 'fa fa-envelope-o fa-2x',
+                        title: 'Mail niet verstuurd<br />',
+                        message: 'Kassa op Windows host ondersteund geen PDF printen'
+                    }, {
+                        // settings
+                        type: 'warning',
+                        delay: 5000,
+                        timer: 10,
+                        placement: {
+                            from: "bottom",
+                            align: "right"
+                        }
+                    });
+                });
+                </script>
+            <?php
         }
         else
         {
@@ -278,7 +336,7 @@ font-size: 10px; ">
             { }
 
             //Delete junk
-            unlink("pdfs/" . $_GET['receipt'] . ".html");
+            //unlink("pdfs/" . $_GET['receipt'] . ".html"); //TODO: Keep this disabled for now
 
             $cust = Misc::sqlGet("*", "customers", "customerId", Misc::sqlGet("customerId", "receipt", "receiptId", $_GET['receipt'])['customerId']);
 
@@ -288,7 +346,7 @@ font-size: 10px; ">
             $mail->Host = 'smtp02.hostnet.nl';
             $mail->SMTPAuth = true;
             $mail->Username = 'smtp@comforttoday.nl';
-            $mail->Password = 'Maerelaan26';
+            $mail->Password = 'Maerelaan26!';
             $mail->SMTPSecure = 'STARTTLS';
             $mail->Port = 587;
 
@@ -298,7 +356,7 @@ font-size: 10px; ">
             $mail->addAddress($object[0], $cust['initials'] . ' ' . $cust['familyName']);
 
             if (!isset($_GET['nobcc']))
-                $mail->addBCC('menno@comtoday.nl'); //$mail->addBCC('facturen@comforttoday.nl'); //TODO: Turn this back on when deployed for normal use!!!!!!!!!
+               $mail->addBCC('facturen@comforttoday.nl');
 
             for($i = 0; $i < count($object); $i++)
             {

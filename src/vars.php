@@ -7,11 +7,11 @@
     );
 
     $config = array(
-        'SQL_PASS' => "",
+        'SQL_PASS' => "Not4You2",
         'SQL_USER' => "root",
         'SQL_HOST' => "localhost",
         'SQL_DB' => 'ct_kassa',
-		'timeout' => 60 // Session timeout
+		'timeout' => 480 // Session timeout
     );
 
 ?>
