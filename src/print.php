@@ -157,7 +157,7 @@ else if (isset($_GET['receipt']))
     margin: 0 auto;
     box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
     position: absolute;">
-    <?php if ($_GET['printLetterPaper'] == "true") { ?> <img src="/CashRegister/src/images/A4-Template.png" id="letterPaper" style="position: absolute; top: -32px; width: 21cm;" /><?php } ?>
+    <?php if ($_GET['printLetterPaper'] == "true") { ?> <img src="images/A4-Template.png" id="letterPaper" style="position: absolute; top: -32px; width: 21cm;" /><?php } ?>
     <div style="position: absolute; top: 196px; width: 18cm;">
         <div style="position: relative; left: 48px; font-size: 12px;">
             Bon Nr. <?php echo $_GET['receipt']; ?><br />
@@ -329,7 +329,8 @@ width: 100%;">
         else
         {
             //Do the magic https://wkhtmltopdf.org/
-            exec(getcwd() . "/../deps/wkhtmltopdf " . "pdfs/" . $_GET['receipt'] . ".html pdfs/" . $_GET['receipt'] . ".pdf");
+            //wkhtmltopdf -T 0 -R 0 -B 0 -L 0 --orientation Portrait --page-size A4 --disable-smart-shrinking 1182791971.html 1182791971.pdf
+            exec(getcwd() . "/../deps/wkhtmltopdf -T 0 -R 0 -B 0 -L 0 --orientation Portrait --page-size A4 --disable-smart-shrinking " . "pdfs/" . $_GET['receipt'] . ".html pdfs/" . $_GET['receipt'] . ".pdf");
 
             //Wait for the exec to complete
             while (!file_exists("pdfs/" . $_GET['receipt'] . ".pdf"))

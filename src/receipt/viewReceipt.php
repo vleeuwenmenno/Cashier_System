@@ -48,7 +48,7 @@
     margin: 0 auto;
     box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
     position: absolute;">
-            <img src="/CashRegister/src/images/A4-Template.png" id="letterPaper" style="position: absolute; top: -32px; width: 21cm;" />
+            <img src="images/A4-Template.png" id="letterPaper" style="position: absolute; top: -32px; width: 21cm;" />
             <div style="position: absolute; top: 196px; width: 18cm;">
                 <div style="position: relative; left: 48px; font-size: 12px;">
                     Bon Nr. <?php echo $_GET['receipt']; ?><br />

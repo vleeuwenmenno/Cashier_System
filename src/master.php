@@ -28,6 +28,8 @@
         <script src="js/bootstrap-combobox.js"></script>
         <script src="js/jquery.printElement.js"></script>
         <script src="js/bootstrap-switch.min.js"></script>
+
+        
     </head>
     <body>
         <div class="row">
