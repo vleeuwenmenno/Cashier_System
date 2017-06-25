@@ -192,9 +192,10 @@ else
         <div class="input-group">
             <input type="text" class="form-control" name="searchBar" id="searchBar" placeholder="Zoek term... (Id, voorletter, achternaam, enz.)" aria-describedby="basic-addon2">
             <span class="input-group-btn">
-            <button class="btn btn-primary" type="submit" id="searchBtn" style="height: 34px;">
+            <button class="btn btn-primary" type="submit" id="searchBtn" style="height: 38px;">
                 <i class="fa fa-search fa-1x" aria-hidden="true"></i>
             </button>
+            
             </span>
         </div>
         </div>

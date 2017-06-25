@@ -1,10 +1,7 @@
 <?php
 include_once("../includes.php");
 
-if ($_GET['itemId'] != "" && $_GET['supplier'] != ""
-						   && $_GET['factoryId'] != ""
-						   && $_GET['itemName'] != ""
-						   && $_GET['priceExclVat'] != ""
+if ($_GET['itemId'] != ""  && $_GET['priceExclVat'] != ""
                            && $_GET['priceModifier'] != "")
 {
 

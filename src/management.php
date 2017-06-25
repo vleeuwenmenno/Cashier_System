@@ -22,7 +22,6 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 					<div id="userManagement">
 						<h2>Gebruikers Beheer</h2>
 					    <br />
-                        //TODO: Zorg dat wijzigingen worden verwerkt in het systeem
 					    <div class="form-group">
 							<table class="table">
 					            <thead>
@@ -32,12 +31,12 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 					                            Weergavenaam
 					                        </a>
 					                    </th>
-					                    <th id="userNameBox" width="50%">
+					                    <th id="userNameBox" width="45%">
 					                        <a href="#" class="mustFocus">
 					                            Gebruikersnaam
 					                        </a>
 					                    </th>
-					                    <th id="changePwBox" width="10%">
+					                    <th id="changePwBox" width="15%">
 					                        <a href="#" class="mustFocus">
 					                            Wachtwoord
 					                        </a>
@@ -52,7 +51,7 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 
 					            <tbody id="userListContents">
 									<?php
-									$sql = "SELECT nickName, username, userTheme, managementUser FROM `users` WHERE 1;";
+									$sql = "SELECT userId, nickName, username, userTheme, managementUser FROM `users` WHERE 1;";
 
 									$db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
@@ -76,12 +75,114 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 											<input class="form-control" id="displayNameText<?php echo $i; ?>" style="float: left; display: none; width: 60%;" value="<?php echo $row['nickName']; ?>">
 											<input type="button" class="btn btn-primary" style="float: left; display: none; width: 20%;" id="applyDisplayName<?php echo $i; ?>" value="Wijzigen" />
 											<input type="button" class="btn btn-default" style="display: none; float: left; width: 20%" id="changeDNCancel<?php echo $i; ?>" value="Annuleren" />
+											<script>
+												$(document).ready(function() {
+													$("#applyDisplayName<?php echo $i; ?>").click(function() {
+														$.get(
+															"management/updateUser.php",
+															{
+																userId: "<?php echo $row['userId']; ?>",
+																nickName: encodeURI($('#displayNameText<?php echo $i; ?>').val())
+															},
+															function (data)
+															{
+																if (data.replace(/(\r\n|\n|\r)/gm,"") == "OK")
+																{
+																	$.notify({
+																		icon: 'glyphicon glyphicon-warning-sign',
+																		title: 'Weergavenaam is gewijzigt',
+																		message: '<br / >'
+																	},{
+																		// settings
+																		type: 'success',
+																		placement: {
+																			from: "bottom",
+																			align: "right"
+																		}
+																	});
+
+																	$("#pageLoaderIndicator").fadeIn();
+																	$("#PageContent").load("management.php", function () {
+																		$("#pageLoaderIndicator").fadeOut();
+																	});
+																}
+																else
+																{
+																	$.notify({
+																		icon: 'glyphicon glyphicon-warning-sign',
+																		title: 'Fout',
+																		message: '<br / >' + data
+																	},{
+																		// settings
+																		type: 'danger',
+																		placement: {
+																			from: "bottom",
+																			align: "right"
+																		}
+																	});
+																}
+															}
+														);
+													});
+												});
+											</script>
 										</td>
 										<td>
 											<a href="#" style="color: black;" id="userNameLabel<?php echo $i; ?>"><?php echo $row['username']; ?></a>
 											<input class="form-control" id="userNameText<?php echo $i; ?>" style="float: left; display: none; width: 60%;" value="<?php echo $row['username']; ?>">
 											<input type="button" class="btn btn-primary" style="float: left; display: none; width: 20%;" id="applyUserName<?php echo $i; ?>" value="Wijzigen" />
 											<input type="button" class="btn btn-default" style="display: none; float: left; width: 20%" id="changeUNCancel<?php echo $i; ?>" value="Annuleren" />
+											<script>
+												$(document).ready(function() {
+													$("#applyUserName<?php echo $i; ?>").click(function() {
+														$.get(
+															"management/updateUser.php",
+															{
+																userId: "<?php echo $row['userId']; ?>",
+																username: $('#userNameText<?php echo $i; ?>').val()
+															},
+															function (data)
+															{
+																if (data.replace(/(\r\n|\n|\r)/gm,"") == "OK")
+																{
+																	$.notify({
+																		icon: 'glyphicon glyphicon-warning-sign',
+																		title: 'Gebruikersnaam is gewijzigt',
+																		message: '<br / >'
+																	},{
+																		// settings
+																		type: 'success',
+																		placement: {
+																			from: "bottom",
+																			align: "right"
+																		}
+																	});
+
+																	$("#pageLoaderIndicator").fadeIn();
+																	$("#PageContent").load("management.php", function () {
+																		$("#pageLoaderIndicator").fadeOut();
+																	});
+																}
+																else
+																{
+																	$.notify({
+																		icon: 'glyphicon glyphicon-warning-sign',
+																		title: 'Fout',
+																		message: '<br / >' + data
+																	},{
+																		// settings
+																		type: 'danger',
+																		placement: {
+																			from: "bottom",
+																			align: "right"
+																		}
+																	});
+																}
+															}
+														);
+													});
+												});
+											</script>
 										</td>
 										<td>
 											<input class="form-control" type="password" id="changePwTextbox<?php echo $i; ?>" style="float: left; display: none; width: 65%;">
@@ -93,7 +194,7 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
                                                 Is Beheerder: <input id="isAdmin<?php echo $i; ?>" type="checkbox" <?php if ($row['managementUser'] == 1) echo 'checked'; ?>>
     											<br />
     											Thema:
-    											<select class="combobox">
+    											<select id="userThemeCombo<?php echo $i; ?>" class="combobox">
     												<?php
     												$folders = scandir("themes");
 
@@ -116,10 +217,133 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
     												}
     												?>
     											</select>
+												<script>
+													$(document).ready(function() {
+														$("#userThemeCombo<?php echo $i; ?>").change(function() {
+															$.get(
+																"management/updateUser.php",
+																{
+																	userId: "<?php echo $row['userId']; ?>",
+																	userTheme: $('#userThemeCombo<?php echo $i; ?>').val()
+																},
+																function (data)
+																{
+																	if (data.replace(/(\r\n|\n|\r)/gm,"") == "OK")
+																	{
+																		$("#pageLoaderIndicator").fadeIn();
+																		$("#PageContent").load("management.php", function () {
+																			$("#pageLoaderIndicator").fadeOut();
+																		});
+																	}
+																	else
+																	{
+																		$.notify({
+																			icon: 'glyphicon glyphicon-warning-sign',
+																			title: 'Fout',
+																			message: '<br / >' + data
+																		},{
+																			// settings
+																			type: 'danger',
+																			placement: {
+																				from: "bottom",
+																				align: "right"
+																			}
+																		});
+																	}
+																}
+															);
+														});
+
+														$("#isAdmin<?php echo $i; ?>").change(function() {
+															$.get(
+																"management/updateUser.php",
+																{
+																	userId: "<?php echo $row['userId']; ?>",
+																	managementUser: this.checked
+																},
+																function (data)
+																{
+																	if (data.replace(/(\r\n|\n|\r)/gm,"") == "OK")
+																	{
+																		$("#pageLoaderIndicator").fadeIn();
+																		$("#PageContent").load("management.php", function () {
+																			$("#pageLoaderIndicator").fadeOut();
+																		});
+																	}
+																	else
+																	{
+																		$.notify({
+																			icon: 'glyphicon glyphicon-warning-sign',
+																			title: 'Fout',
+																			message: '<br / >' + data
+																		},{
+																			// settings
+																			type: 'danger',
+																			placement: {
+																				from: "bottom",
+																				align: "right"
+																			}
+																		});
+																	}
+																}
+															);
+														});
+													});
+												 </script>
                                              </div>
                                              <div style="float: left; padding-left: 12px;">
                                                  <?php if ($i > 0) { ?>
                                                  <button id="deleteUser<?php echo $i; ?>" type="button" class="btn btn-warning"><span class="glyphicon glyphicon-trash"></span></button>
+												 <script>
+													$(document).ready(function() {
+														$("#deleteUser<?php echo $i; ?>").click(function() {
+															$.get(
+																"management/deleteUser.php",
+																{
+																	userId: "<?php echo $row['userId']; ?>",
+																},
+																function (data)
+																{
+																	if (data.replace(/(\r\n|\n|\r)/gm,"") == "OK")
+																	{
+																		$.notify({
+																			icon: 'glyphicon glyphicon-ok',
+																			title: 'Gebruiker is verwijderd',
+																			message: '<br / >De gebruiker is succesvol verwijderd uit het systeem'
+																		},{
+																			// settings
+																			type: 'success',
+																			placement: {
+																				from: "bottom",
+																				align: "right"
+																			}
+																		});
+
+																		$("#pageLoaderIndicator").fadeIn();
+																		$("#PageContent").load("management.php", function () {
+																			$("#pageLoaderIndicator").fadeOut();
+																		});
+																	}
+																	else
+																	{
+																		$.notify({
+																			icon: 'glyphicon glyphicon-warning-sign',
+																			title: 'Fout',
+																			message: '<br / >' + data
+																		},{
+																			// settings
+																			type: 'danger',
+																			placement: {
+																				from: "bottom",
+																				align: "right"
+																			}
+																		});
+																	}
+																}
+															);
+														});
+													});
+												 </script>
                                                  <?php } ?>
                                              </div>
 										</td>
@@ -128,8 +352,57 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 									<script>
 										$(document).ready(function() {
 											$("#changePw<?php echo $i; ?>").click(function() {
-												$("#userNameBox").prop("width", "10%");
-												$("#changePwBox").prop("width", "50%");
+												if ($("#changePwTextbox<?php echo $i; ?>").is(":visible"))
+												{
+													$.get(
+														"management/updateUser.php",
+														{
+															userId: "<?php echo $row['userId']; ?>",
+															pass: encodeURI($('#changePwTextbox<?php echo $i; ?>').val())
+														},
+														function (data)
+														{
+															if (data.replace(/(\r\n|\n|\r)/gm,"") == "OK")
+															{
+																$.notify({
+																	icon: 'glyphicon glyphicon-warning-sign',
+																	title: 'Wachtwoord is gewijzigt',
+																	message: '<br / >'
+																},{
+																	// settings
+																	type: 'success',
+																	placement: {
+																		from: "bottom",
+																		align: "right"
+																	}
+																});
+
+																$("#pageLoaderIndicator").fadeIn();
+																$("#PageContent").load("management.php", function () {
+																	$("#pageLoaderIndicator").fadeOut();
+																});
+															}
+															else
+															{
+																$.notify({
+																	icon: 'glyphicon glyphicon-warning-sign',
+																	title: 'Fout',
+																	message: '<br / >' + data
+																},{
+																	// settings
+																	type: 'danger',
+																	placement: {
+																		from: "bottom",
+																		align: "right"
+																	}
+																});
+															}
+														}
+													);
+												}
+												
+												$("#userNameBox").prop("width", "15%");
+												$("#changePwBox").prop("width", "45%");
 
 												$("#changePw<?php echo $i; ?>").css("width", "15%");
 												$("#changePwTextbox<?php echo $i; ?>").css("display", "");
@@ -137,8 +410,8 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 											});
 
 											$("#changePwCancel<?php echo $i; ?>").click(function() {
-												$("#userNameBox").prop("width", "50%");
-												$("#changePwBox").prop("width", "10%");
+												$("#userNameBox").prop("width", "45%");
+												$("#changePwBox").prop("width", "15%");
 
 												$("#changePw<?php echo $i; ?>").css("width", "");
 												$("#changePwTextbox<?php echo $i; ?>").css("display", "none");
@@ -205,7 +478,7 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 											Thema:
 											<select id="userThemeCombo" class="combobox">
 												<?php
-												$folders = scandir("../themes");
+												$folders = scandir("themes");
 
 												foreach ($folders as $key => $val)
 												{
@@ -224,6 +497,24 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 												?>
 											</select>
 										</td>
+										<script>
+											$(document).ready(function() {
+												$( "#userNameText" ).focusin(function() {
+													$("#changePwBox").prop("width", "15%");
+													$("#userNameBox").prop("width", "45%");
+												});
+
+												$( "#passwordText" ).focusin(function() {
+													$("#changePwBox").prop("width", "45%");
+													$("#userNameBox").prop("width", "15%");
+												});
+
+												$( "#passwordText" ).focusout(function() {
+													$("#changePwBox").prop("width", "15%");
+													$("#userNameBox").prop("width", "45%");
+												});
+											});
+										</script>
 									</td>
 								</tbody>
 							</table>
@@ -234,6 +525,7 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 
 								<script>
 									$(document).ready(function() {
+
 										$("#addUser").click(function() {
 											$("#userListContents").html($("#userListContents").html() + $("#newUserBox").html())
 
@@ -332,6 +624,7 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 					<div id="managementForm">
 					    <h2>Database Beheer</h2>
 					    <br />
+						//TODO: Zorg dat import werkt voor alleen prijs update en nieuwe artikelen!
 					    <div class="form-group">
 					        Gistron XML Aanwezig: <?php if (file_exists(dirname(__FILE__) . '/import/gistron.xml')) { echo 'Ja'; } else { echo 'Nee'; } ?>
 					        <br />
