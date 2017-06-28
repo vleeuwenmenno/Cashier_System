@@ -17,7 +17,8 @@ using System.IO;
 using System.Threading;
 using System.Diagnostics;
 using System.Net;
-using System.Windows.Automation;
+using Spire.Pdf;
+using System.Drawing.Printing;
 
 namespace CashRegister_PrintHelper
 {
@@ -34,31 +35,12 @@ namespace CashRegister_PrintHelper
 	   	
 	    public Settings prefs = new Settings();
 	    
-  		public static string GetChromeUrl(Process process)
-	    {
-	        if (process == null)
-	            throw new ArgumentNullException("process");
-	
-	        if (process.MainWindowHandle == IntPtr.Zero)
-	            return null;
-	
-	        AutomationElement element = AutomationElement.FromHandle(process.MainWindowHandle);
-	        if (element == null)
-	            return null;
-	
-	        AutomationElementCollection edits5 = element.FindAll(TreeScope.Subtree, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Edit));
-	        AutomationElement edit = edits5[0];
-	        string vp = ((ValuePattern)edit.GetCurrentPattern(ValuePattern.Pattern)).Current.Value as string;
-	        Console.WriteLine(vp);
-	        return vp;
-	    }
-	    
 		public MainForm()
 		{
 			InitializeComponent();
 			
-			if (File.Exists(Environment.CurrentDirectory + "/settings.json"))
-				prefs = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(Environment.CurrentDirectory + "/settings.json"));
+			if (File.Exists(Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents") + "/print_helper_tasks/settings.json"))
+				prefs = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents") + "/print_helper_tasks/settings.json"));
 			
 			var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
 			foreach (var printer in printerQuery.Get())
@@ -102,10 +84,13 @@ namespace CashRegister_PrintHelper
 		
 		void AfsluitenToolStripMenuItemClick(object sender, EventArgs e)
 		{
-			DialogResult res = MessageBox.Show("Weet je zeker dat je de printer helper wilt sluiten?\nAls je de printer helper sluit kan je geen bonnen meer printen op de kassa!", "Weet je het zeker?", MessageBoxButtons.YesNo);
-			
-			if (res == DialogResult.Yes)
-				Application.Exit();
+			DialogResult res = MessageBox.Show("Weet je zeker dat je de printer helper wilt sluiten?\nAls je de printer helper sluit kan je geen bonnen meer printen op de kassa!", "Weet je het zeker?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+
+            if (res == DialogResult.Yes)
+            {
+                printHelperTray.Visible = false;
+                Environment.Exit(-1);
+            }
 		}
 		
 		void HideFormBtnClick(object sender, EventArgs e)
@@ -119,7 +104,7 @@ namespace CashRegister_PrintHelper
 			prefs.defaultPrinter = comboBox1.Text;
 			
 			string output = JsonConvert.SerializeObject(prefs);
-			File.WriteAllText(Environment.CurrentDirectory + "/settings.json", output);
+			File.WriteAllText(Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents") + "/print_helper_tasks/settings.json", output);
 			
 			comboBox1.Items.Clear();
 			comboBox1.Text = "";
@@ -229,10 +214,10 @@ namespace CashRegister_PrintHelper
 		{
 			using (var client = new WebClient())
 			{
-				if (!Directory.Exists(Environment.CurrentDirectory + "/temp"))
-					Directory.CreateDirectory(Environment.CurrentDirectory + "/temp");
+				if (!Directory.Exists(Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents") + "/print_helper_tasks/temp"))
+					Directory.CreateDirectory(Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents") + "/print_helper_tasks/temp");
 				
-			    client.DownloadFile(url, Environment.CurrentDirectory + "/temp/" + fileName);
+			    client.DownloadFile(url, Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents") + "/print_helper_tasks/temp/" + fileName);
 			}
 		}
 		
@@ -248,17 +233,100 @@ namespace CashRegister_PrintHelper
 	        p.StartInfo = info;
 	        p.Start();
 		}
-		
+
+        List<string> busy = new List<string>();
+        List<string> uibusy = new List<string>();
+
 		void UrlHandlerTick(object sender, EventArgs e)
 		{
-			foreach (Process process in Process.GetProcessesByName("chrome"))
-	        {
-	            string url = GetChromeUrl(process);
-	            if (url == null)
-	                continue;
-	
-	            Console.WriteLine("CH Url for '" + process.MainWindowTitle + "' is " + url);
-	        }
-		}
-	}
+            if (!Directory.Exists(Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents") + "/print_helper_tasks"))
+                Directory.CreateDirectory(Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents") + "/print_helper_tasks");
+
+            //Check the task folder for new tasks
+            String[] allfiles = Directory.GetFiles(Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents") + "/print_helper_tasks", "*.*", System.IO.SearchOption.TopDirectoryOnly);
+            List<string> stillBusy = new List<string>();
+
+            foreach (var file in allfiles)
+            {
+                FileInfo info = new FileInfo(file);
+                if (!busy.Contains(info.FullName))
+                {
+                    if (info.Extension == ".lock")
+                    {
+                        stillBusy.Add(info.FullName);
+                        printHelperTray.ShowBalloonTip(1000, "Printer taak", "Printer taak wordt verwerkt...", ToolTipIcon.Info);
+                        prefs.printLog.Add(new Log("Catched new print task | " + info.FullName));
+                        prefs.Save();
+                    }
+                    else if (info.Extension == ".pdf")
+                    {
+                        if (!uibusy.Contains(info.FullName))
+                        {
+                            uibusy.Add(info.FullName);
+
+                            string id = info.Name.Split('-')[0];
+                            short count = 1;
+
+                            PdfDocument pdfdocument = new PdfDocument();
+                            pdfdocument.LoadFromFile(info.FullName);
+                            pdfdocument.PrinterName = prefs.defaultPrinter;
+                            pdfdocument.PrintDocument.PrinterSettings.Copies = count;
+                            pdfdocument.PrintDocument.DocumentName = info.FullName;
+
+                            prefs.printLog.Add(new Log("Print task sent to printer | " + info.FullName));
+                            prefs.Save();
+
+                            pdfdocument.PrintDocument.EndPrint += PrintDocument_EndPrint;
+                            pdfdocument.PrintDocument.Print();
+                            pdfdocument.Dispose();
+                        }
+                    }
+                }
+                else
+                {
+                    stillBusy.Add(info.FullName);
+                }
+            }
+
+            busy = stillBusy;
+
+            activeTasks.Items.Clear();
+            foreach (String s in uibusy)
+            {
+                FileInfo info = new FileInfo(s);
+                activeTasks.Items.Add(info.Name.Replace(".pdf", "") + " naar " + prefs.defaultPrinter + " (Status: Verstuurt naar printer)");
+            }
+
+            foreach (String s in busy)
+            {
+                FileInfo info = new FileInfo(s);
+
+                try
+                {
+                    string name = info.Name.Replace(".lock", "");
+                    activeTasks.Items.Add(name + " naar " + prefs.defaultPrinter + " (Status: " + File.ReadAllText(info.FullName) + ")");
+                }
+                catch (Exception ex) { }
+            }
+        }
+
+        private void PrintDocument_EndPrint(object sender, System.Drawing.Printing.PrintEventArgs e)
+        {
+            PrintDocument doc = (PrintDocument)sender;
+            FileInfo info = new FileInfo(doc.DocumentName);
+
+            uibusy.Remove(info.FullName);
+            File.Delete(info.FullName);
+            File.Delete(info.DirectoryName + "/" + info.Name + ".lock");
+
+            prefs.printLog.Add(new Log("Finished print task | " + info.FullName));
+            prefs.Save();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            logViewer log = new logViewer(prefs);
+            log.Show();
+        }
+    }
 }

@@ -6,7 +6,10 @@
  * 
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace CashRegister_PrintHelper
 {
@@ -17,9 +20,17 @@ namespace CashRegister_PrintHelper
 	{
 		public Settings()
 		{
-
+            printLog = new List<Log>();
 		}
 		
 		public string defaultPrinter { get; set; }
+
+        public List<Log> printLog { get; set; }
+
+        public void Save()
+        {
+            string output = JsonConvert.SerializeObject(this);
+            File.WriteAllText(Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents") + "/print_helper_tasks/settings.json", output);
+        }
 	}
 }
