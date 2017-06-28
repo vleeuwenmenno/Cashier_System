@@ -53,7 +53,7 @@ else if (isset($_GET['new']))
             die('Unable to connect to database [' . $db->connect_error . ']');
         }
 
-        $sql = "INSERT INTO receipt (receiptId, creator, items, createDt, parentSession) VALUES ((UNIX_TIMESTAMP() - 315360000) + " . rand(0, 300) . ", '" . $_SESSION['login_ok']['userId'] . "', '', '" .  date("H:i:s d-m-Y") . "', '" . Misc::sqlGet("currentSession", "cash_registers", "crStaticIP", $thisIp)['currentSession'] . "')";
+        $sql = "INSERT INTO receipt (receiptId, creator, items, createDt, parentSession) VALUES ((UNIX_TIMESTAMP() - 315360000) " . ", '" . $_SESSION['login_ok']['userId'] . "', '', '" .  date("H:i:s d-m-Y") . "', '" . Misc::sqlGet("currentSession", "cash_registers", "crStaticIP", $thisIp)['currentSession'] . "')";
 
         if(!$result = $db->query($sql))
         {
@@ -377,6 +377,7 @@ else if (isset($_GET['new']))
                                     }
                                 );
                                 //END!!!!!!!
+                                var shouldReload;
 
                                 $("#update' .  $key . '").click(function() {
                                     shouldReload = true;
@@ -718,9 +719,7 @@ else if (isset($_GET['new']))
                                     $("#emailList").css("pointer-events", "none");
                                 }
                             });
-                        });
 
-                		$(function() {
                 			$('#example_email').multiple_emails( { position: "top" });
                 			$('#example_email').change( function(){
                 				$('#current_emails').text($(this).val());
@@ -1251,6 +1250,11 @@ else
                     <th>
                         <a href="#" class="mustFocus">
                             <input type="text" class="form-control" placeholder="Bon totaal" disabled />
+                        </a>
+                    </th>
+                    <th>
+                        <a href="#" class="mustFocus">
+                            <input type="text" class="form-control" placeholder="Betaal Methode" disabled />
                         </a>
                     </th>
                 </tr>

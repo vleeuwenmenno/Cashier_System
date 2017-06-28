@@ -2,6 +2,13 @@
     include_once("../includes.php");
     Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 
+    $content = Misc::url_get_contents('http://127.0.0.1/CashRegister/src/print.php?receipt=' . $_GET['receipt']);
+    file_put_contents(getcwd() . "/pdfs/" . $_GET['receipt'] . ".html", $content);
+
+    //Do the magic https://wkhtmltopdf.org/
+    //wkhtmltopdf -T 0 -R 0 -B 0 -L 0 --orientation Portrait --page-size A4 --disable-smart-shrinking 1182791971.html 1182791971.pdf
+    exec(getcwd() . "/../deps/wkhtmltopdf -T 0 -R 0 -B 0 -L 0 --orientation Portrait --page-size A4 --disable-smart-shrinking " . "pdfs/" . $_GET['receipt'] . ".html pdfs/" . $_GET['receipt'] . ".pdf");
+    unlink(getcwd() . "/pdfs/" . $_GET['receipt'] . ".html");
 ?>
 <html>
     <head>
@@ -134,36 +141,22 @@
         ">
             <button id="printAgain" type="button" class="btn btn-default">Afdrukken</button>
             <button id="emailAgain" type="button" class="btn btn-default">Emailen</button>
-            <div id="letterPaperInput" style="position: relative; top: 16px; display: block;"><input type="checkbox" id="letterPaperCheck" name="letterPaperCheck"> Weergeef briefpapier</input></div>
         </center>
         <script>
             $(document).ready(function() {
                 $("#letterPaperCheck").bootstrapSwitch();
                 $("#printAgain").on("click", function() {
-                    $("#printAgain").css("display", "none");
-
-                    if(document.getElementById('letterPaperCheck').checked) {
-                        $("#letterPaper").css("display", "inline");
-                    } else {
-                        $("#letterPaper").css("display", "none");
-                    }
-
-                    $("#emailAgain").css("display", "none");
-                    $("#letterPaperInput").css("display", "none");
-                    $("#PageContent").printElement();
-                    $("#emailAgain").css("display", "inline");
-                    $("#letterPaper").css("display", "inline");
-                    $("#printAgain").css("display", "inline");
-                    $("#letterPaperInput").css("display", "block");
+                    var w = (window.parent)?window.parent:window
+                    w.location.assign('printhelp://<?php echo urlencode('http://' . $_SERVER[HTTP_HOST] . '/CashRegister/src/pdfs/' . $_GET['receipt'] . '.pdf'); ?>')
                 });
 
                 $("#emailAgain").on("click", function() {
                     <?php
                         /*echo '
-                            $("#pageLoaderIndicator").fadeIn();
-                            $("#PageContent").load("print.php?receipt=' . str_pad($receiptId, 4, '0', STR_PAD_LEFT) . '&mail=true&print=0&mailList=' . urlencode($_GET['mailList']) . '", function () {
-                                $("#pageLoaderIndicator").fadeOut();
-                            });';*/
+                        $("#pageLoaderIndicator").fadeIn();
+                        $("#PageContent").load("print.php?receipt=' . str_pad($receiptId, 4, '0', STR_PAD_LEFT) . '&mail=true&print=0&mailList=' . urlencode($_GET['mailList']) . '", function () {
+                            $("#pageLoaderIndicator").fadeOut();
+                        });';*/
                     ?>
                 });
             });
