@@ -624,74 +624,164 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 					<div id="managementForm">
 					    <h2>Database Beheer</h2>
 					    <br />
-						//TODO: Zorg dat import werkt voor alleen prijs update en nieuwe artikelen!
-					    <div class="form-group">
-					        Gistron XML Aanwezig: <?php if (file_exists(dirname(__FILE__) . '/import/gistron.xml')) { echo 'Ja'; } else { echo 'Nee'; } ?>
-					        <br />
-					        <input type="button" class="btn btn-warning" id="importGistron" value="Gistron Importeren" />
+						<div class="container">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<button type="button" class="btn btn-default btn-xs spoiler-trigger" data-toggle="collapse">Artikelen Importeren</button>
+								</div>
+								<div class="panel-collapse collapse out">
+									<div class="panel-body">
+										<div class="form-group">
+											Gistron XML Aanwezig: <?php if (file_exists(dirname(__FILE__) . '/import/gistron.xml')) { echo 'Ja'; } else { echo 'Nee'; } ?>
+											<br />
+											<input type="button" class="btn btn-warning" id="importGistron" value="Gistron Importeren" />
 
-					        <script>
-								var startTime = Math.floor(Date.now() / 1000);
-								var intervalObject;
+											<script>
+												var startTime = Math.floor(Date.now() / 1000);
+												var intervalObject;
 
-					            $(document).ready(function () {
-					                $("#importGistron").click(function () {
-										startTime = Math.floor(Date.now() / 1000);
-										intervalObject = setInterval(updateText, 1000);
+												$(document).ready(function () {
+													$("#importGistron").click(function () {
+														startTime = Math.floor(Date.now() / 1000);
+														intervalObject = setInterval(updateText, 1000);
 
-					                    $("#loaderAnimation").fadeIn();
-					                    $("#managementForm").fadeOut();
-										$("#balanceManagement").fadeOut();
-					                    $("#PageContent").load("item/itemManage.php?import=gistron", function () {
-					                        $("#loaderAnimation").fadeOut();
-					                    });
-					                });
-					            });
-					        </script>
-					    </div>
-					    <div class="form-group">
-					        Copaco XML Aanwezig: <?php if (file_exists(dirname(__FILE__) . '/import/copaco.xml')) { echo 'Ja'; } else { echo 'Nee'; } ?>
-					        <br />
-					        <input type="button" class="btn btn-warning" id="importCopaco" value="Copaco Importeren" />
+														$("#loaderAnimation").fadeIn();
+														$("#managementForm").fadeOut();
+														$("#balanceManagement").fadeOut();
+														$("#PageContent").load("item/itemManage.php?import=gistron", function () {
+															$("#loaderAnimation").fadeOut();
+														});
+													});
+												});
+											</script>
+										</div>
+										<div class="form-group">
+											Copaco XML Aanwezig: <?php if (file_exists(dirname(__FILE__) . '/import/copaco.xml')) { echo 'Ja'; } else { echo 'Nee'; } ?>
+											<br />
+											<input type="button" class="btn btn-warning" id="importCopaco" value="Copaco Importeren" />
 
-					        <script>
-					            $(document).ready(function () {
-					                $("#importCopaco").click(function () {
-										startTime = Math.floor(Date.now() / 1000);
-										intervalObject = setInterval(updateText, 1000);
+											<script>
+												$(document).ready(function () {
+													$("#importCopaco").click(function () {
+														startTime = Math.floor(Date.now() / 1000);
+														intervalObject = setInterval(updateText, 1000);
 
-					                    $("#loaderAnimation").fadeIn();
-					                    $("#managementForm").fadeOut();
-										$("#balanceManagement").fadeOut();
-					                    $("#PageContent").load("item/itemManage.php?import=copaco", function () {
-					                        $("#loaderAnimation").fadeOut();
-					                    });
-					                });
-					            });
-					        </script>
-					    </div>
-					    <div class="form-group">
-                            //TODO: Is hier een XML voor??<br />
-					        United Supplies XML Aanwezig: <?php if (file_exists(dirname(__FILE__) . '/import/unitedsupplies.xml')) { echo 'Ja'; } else { echo 'Nee'; } ?>
-					        <br />
-					        <input type="button" class="btn btn-warning" id="importUSupplies" value="United Supplies Importeren" disabled/ />
+														$("#loaderAnimation").fadeIn();
+														$("#managementForm").fadeOut();
+														$("#balanceManagement").fadeOut();
+														$("#PageContent").load("item/itemManage.php?import=copaco", function () {
+															$("#loaderAnimation").fadeOut();
+														});
+													});
+												});
+											</script>
+										</div>
+										<div class="form-group">
+											United Supplies XML Aanwezig: <?php if (file_exists(dirname(__FILE__) . '/import/unitedsupplies.xml')) { echo 'Ja'; } else { echo 'Nee'; } ?>
+											<br />
+											<input type="button" class="btn btn-warning" id="importUSupplies" value="United Supplies Importeren" disabled/ />
 
-					        <script>
-					            $(document).ready(function () {
-					                $("#importUSupplies").click(function () {
-										startTime = Math.floor(Date.now() / 1000);
-										intervalObject = setInterval(updateText, 1000);
+											<script>
+												$(document).ready(function () {
+													$("#importUSupplies").click(function () {
+														startTime = Math.floor(Date.now() / 1000);
+														intervalObject = setInterval(updateText, 1000);
 
-					                    $("#loaderAnimation").fadeIn();
-					                    $("#managementForm").fadeOut();
-										$("#balanceManagement").fadeOut();
-					                    $("#PageContent").load("item/itemManage.php?import=unitedsupplies", function () {
-					                        $("#loaderAnimation").fadeOut();
-					                    });
-					                });
-					            });
-					        </script>
-					    </div>
+														$("#loaderAnimation").fadeIn();
+														$("#managementForm").fadeOut();
+														$("#balanceManagement").fadeOut();
+														$("#PageContent").load("item/itemManage.php?import=unitedsupplies", function () {
+															$("#loaderAnimation").fadeOut();
+														});
+													});
+												});
+											</script>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="panel panel-default">
+								<div class="panel-heading">
+								<button type="button" class="btn btn-default btn-xs spoiler-trigger" data-toggle="collapse">Artikelen Updaten</button>
+								</div>
+								<div class="panel-collapse collapse out">
+									<div class="panel-body">
+										<div class="form-group">
+											Gistron XML Aanwezig: <?php if (file_exists(dirname(__FILE__) . '/import/gistron.xml')) { echo 'Ja'; } else { echo 'Nee'; } ?>
+											<br />
+											<input type="button" class="btn btn-success" id="importGistronU" value="Gistron Updaten" />
+
+											<script>
+												var startTime = Math.floor(Date.now() / 1000);
+												var intervalObject;
+
+												$(document).ready(function () {
+													$("#importGistronU").click(function () {
+														startTime = Math.floor(Date.now() / 1000);
+														intervalObject = setInterval(updateText, 1000);
+
+														$("#loaderAnimationU").fadeIn();
+														$("#managementForm").fadeOut();
+														$("#balanceManagement").fadeOut();
+														$("#PageContent").load("item/itemManage.php?import=gistron", function () {
+															$("#loaderAnimationU").fadeOut();
+														});
+													});
+												});
+											</script>
+										</div>
+										<div class="form-group">
+											Copaco XML Aanwezig: <?php if (file_exists(dirname(__FILE__) . '/import/copaco.xml')) { echo 'Ja'; } else { echo 'Nee'; } ?>
+											<br />
+											<input type="button" class="btn btn-success" id="importCopacoU" value="Copaco Updaten" />
+
+											<script>
+												$(document).ready(function () {
+													$("#importCopacoU").click(function () {
+														startTime = Math.floor(Date.now() / 1000);
+														intervalObject = setInterval(updateText, 1000);
+
+														$("#loaderAnimationU").fadeIn();
+														$("#managementForm").fadeOut();
+														$("#balanceManagement").fadeOut();
+														$("#PageContent").load("item/itemManage.php?import=copaco", function () {
+															$("#loaderAnimationU").fadeOut();
+														});
+													});
+												});
+											</script>
+										</div>
+										<div class="form-group">
+											United Supplies XML Aanwezig: <?php if (file_exists(dirname(__FILE__) . '/import/unitedsupplies.xml')) { echo 'Ja'; } else { echo 'Nee'; } ?>
+											<br />
+											<input type="button" class="btn btn-success" id="importUSuppliesU" value="United Supplies Updaten" disabled/ />
+
+											<script>
+												$(document).ready(function () {
+													$("#importUSuppliesU").click(function () {
+														startTime = Math.floor(Date.now() / 1000);
+														intervalObject = setInterval(updateText, 1000);
+
+														$("#loaderAnimationU").fadeIn();
+														$("#managementForm").fadeOut();
+														$("#balanceManagement").fadeOut();
+														$("#PageContent").load("item/itemManage.php?import=unitedsupplies", function () {
+															$("#loaderAnimationU").fadeOut();
+														});
+													});
+												});
+											</script>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<script>
+							$(".spoiler-trigger").click(function() {
+								$(this).parent().next().collapse('toggle');
+							});
+						</script>
+
 						<div class="form-group">
 					        Database naar standaard waarde resetten.
 					        <br />
@@ -843,6 +933,48 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
     <div class="blob blob-5"></div>
     <center>
         Bezig met importeren van producten...
+        <br />(Dit kan enige tijd duren)<br />
+
+		Verstreken tijd: <label id="minutes">00</label>:<label id="seconds">00</label>
+	    <script type="text/javascript">
+			function updateText()
+			{
+				var currentTime = Math.floor(Date.now() / 1000);
+				var totalElapsedTimeSeconds = Math.abs(startTime - currentTime);
+				var elapsedTimeSeconds = Math.floor(totalElapsedTimeSeconds%60);
+				var elapsedTimeMinutes = Math.floor(totalElapsedTimeSeconds/60);
+
+				$("#minutes").html(pad(elapsedTimeMinutes, 2));
+				$("#seconds").html(pad(elapsedTimeSeconds, 2));
+			}
+
+			function pad(num, size) {
+			    var s = num+"";
+			    while (s.length < size) s = "0" + s;
+			    return s;
+			}
+	    </script>
+    </center>
+</div>
+
+<div id="loaderAnimationU" style="display: none;">
+    <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+        <defs>
+            <filter id="gooey">
+                <fegaussianblur in="SourceGraphic" stddeviation="10" result="blur"></fegaussianblur>
+                <fecolormatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo"></fecolormatrix>
+                <feblend in="SourceGraphic" in2="goo"></feblend>
+            </filter>
+        </defs>
+    </svg>
+    <div class="blob blob-0"></div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+    <div class="blob blob-5"></div>
+    <center>
+        Bezig met updaten van producten...
         <br />(Dit kan enige tijd duren)<br />
 
 		Verstreken tijd: <label id="minutes">00</label>:<label id="seconds">00</label>

@@ -52,7 +52,7 @@ else if (isset($_GET['open']))
     $cashOut = 0.0;
     while ($row = $result->fetch_assoc())
     {
-        $cashOut = round($row['cashOut'], 2);
+        $cashOut = round($row['cashOut'] - $row['cutOut'], 2);
     }
     ?>
     <div class="container container-table">

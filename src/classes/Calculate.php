@@ -252,7 +252,7 @@ class Calculate
                 {
                     $itemPrice = Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . " " . $val['priceAPiece']['priceModifier']);
                     $itemMargin = $itemPrice - (round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) - $val['priceAPiece']['priceExclVat']) - $val['priceAPiece']['priceExclVat'];
-                    $final += $itemMargin;
+                    $final += round($itemMargin * $val['count'], 2);
                 }
             }
             return $final;
@@ -283,7 +283,7 @@ class Calculate
                 {
                     $itemPrice = Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . " " . $val['priceAPiece']['priceModifier']);
                     $itemMargin = $itemPrice - (round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) - $val['priceAPiece']['priceExclVat']) - $val['priceAPiece']['priceExclVat'];
-                    $final += $itemMargin;
+                    $final += round($itemMargin * $val['count'], 2);
                 }
             }
             return $final;
@@ -314,7 +314,7 @@ class Calculate
                 {
                     $itemPrice = Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . " " . $val['priceAPiece']['priceModifier']);
                     $itemMargin = $itemPrice - (round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) - $val['priceAPiece']['priceExclVat']) - $val['priceAPiece']['priceExclVat'];
-                    $final += $itemMargin;
+                    $final += round($itemMargin * $val['count'], 2);
                 }
             }
             return $final;
@@ -345,7 +345,7 @@ class Calculate
                 {
                     $itemPrice = Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . " " . $val['priceAPiece']['priceModifier']);
                     $itemMargin = $itemPrice - (round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) - $val['priceAPiece']['priceExclVat']) - $val['priceAPiece']['priceExclVat'];
-                    $final += $itemMargin;
+                    $final += round($itemMargin * $val['count'], 2);
                 }
             }
             return $final;
