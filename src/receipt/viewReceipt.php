@@ -8,34 +8,32 @@
     //Do the magic https://wkhtmltopdf.org/
     //wkhtmltopdf -T 0 -R 0 -B 0 -L 0 --orientation Portrait --page-size A4 --disable-smart-shrinking 1182791971.html 1182791971.pdf
     exec(getcwd() . "/../deps/wkhtmltopdf -T 0 -R 0 -B 0 -L 0 --orientation Portrait --page-size A4 --disable-smart-shrinking " . "pdfs/" . $_GET['receipt'] . ".html pdfs/" . $_GET['receipt'] . ".pdf");
-    unlink(getcwd() . "/pdfs/" . $_GET['receipt'] . ".html");
 ?>
 <html>
     <head>
         <!-- Bootstrap and all it's dependencies -->
         <?php
-        if ($_CFG['THEME'] == "")
-            $_CFG['THEME'] = 'Default';
-        ?>
-        <?php
         if (!isset($_SESSION['login_ok']['userTheme']))
         {
             $_SESSION['login_ok']['userTheme'] = "Yeti";
         }
+        
+        if ($_CFG['THEME'] == "")
+            $_CFG['THEME'] = 'Default';
         ?>
-        <link rel="stylesheet" href="/CashRegister/src/themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/bootstrap.css" />
-        <link rel="stylesheet" href="/CashRegister/src/themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/stylesheet.css">
-        <link rel="stylesheet" href="/CashRegister/src/themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/select2.min.css" />
-        <link rel="stylesheet" href="/CashRegister/src/themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/bootstrap-combobox.css" />
-        <link rel="stylesheet" href="/CashRegister/src/themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/bootstrap-switch.min.css" />
+        <link rel="stylesheet" href="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/bootstrap.css" />
+        <link rel="stylesheet" href="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/stylesheet.css">
+        <link rel="stylesheet" href="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/select2.min.css" />
+        <link rel="stylesheet" href="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/bootstrap-combobox.css" />
+        <link rel="stylesheet" href="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/font-awesome.css" />
 
-        <script src="/CashRegister/src/js/jquery.js"></script>
-        <script src="/CashRegister/src/js/bootstrap.min.js"></script>
-        <script src="/CashRegister/src/js/bootstrap-notify.min.js"></script>
-        <script src="/CashRegister/src/js/select2.full.min.js"></script>
-        <script src="/CashRegister/src/js/bootstrap-switch.min.js"></script>
-        <script src="/CashRegister/src/js/bootstrap-combobox.js"></script>
-        <script src="/CashRegister/src/js/jquery.printElement.js"></script>
+        <script src="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/js/jquery.js"></script>
+        <script src="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/js/bootstrap.min.js"></script>
+        <script src="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/js/bootstrap-notify.min.js"></script>
+        <script src="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/js/select2.full.min.js"></script>
+        <script src="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/js/jquery.jeditable.js"></script>
+        <script src="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/js/bootstrap-combobox.js"></script>
+        <script src="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/js/jquery.print.js"></script>
     </head>
     <body>
         <?php
