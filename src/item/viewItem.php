@@ -271,7 +271,7 @@ if (isset($_GET['id']))
 						$.get(
                             "item/itemUpdate.php",
                             {
-                                itemId: "<?php if ($row['EAN'] != "") echo $row['EAN']; else echo $row['itemId']; ?>",
+                                nativeId: "<?php echo $row['nativeId']; ?>",
                                 EAN: $("#EAN").val(),
                                 supplier: $("#supplier").val(),
                                 factoryId: $("#factoryId").val(),

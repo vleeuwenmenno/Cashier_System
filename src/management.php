@@ -723,7 +723,7 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 														$("#loaderAnimationU").fadeIn();
 														$("#managementForm").fadeOut();
 														$("#balanceManagement").fadeOut();
-														$("#PageContent").load("item/itemManage.php?import=gistron", function () {
+														$("#PageContent").load("item/itemManage.php?update=gistron", function () {
 															$("#loaderAnimationU").fadeOut();
 														});
 													});
@@ -744,7 +744,7 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 														$("#loaderAnimationU").fadeIn();
 														$("#managementForm").fadeOut();
 														$("#balanceManagement").fadeOut();
-														$("#PageContent").load("item/itemManage.php?import=copaco", function () {
+														$("#PageContent").load("item/itemManage.php?update=copaco", function () {
 															$("#loaderAnimationU").fadeOut();
 														});
 													});
@@ -765,13 +765,15 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 														$("#loaderAnimationU").fadeIn();
 														$("#managementForm").fadeOut();
 														$("#balanceManagement").fadeOut();
-														$("#PageContent").load("item/itemManage.php?import=unitedsupplies", function () {
+														$("#PageContent").load("item/itemManage.php?update=unitedsupplies", function () {
 															$("#loaderAnimationU").fadeOut();
 														});
 													});
 												});
 											</script>
 										</div>
+										<br />
+										Waarschuwing, het bijwerken van artikelen in het database kan lang duren.
 									</div>
 								</div>
 							</div>
@@ -793,7 +795,10 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 											<div class="col-md-12">
 												<h2>Database reset opties</h2>
 												<div class="checkbox">
-													<label><input type="checkbox" id="deleteAll" value="">Alle artikelen uit database verwijderen. (DELETE FROM `items` WHERE 1)</label>
+													<label><input type="checkbox" id="deleteAll" value="">Alle artikelen uit database verwijderen. (DELETE FROM `items` WHERE manuallyInserted=0)</label>
+												</div>
+												<div class="checkbox">
+													<label style="padding-left: 5em;"><input type="checkbox" id="deleteAllInclManual" value="" disabled>Ook handmatig toegevoegde artikelen verwijderen (DELETE FROM `items` WHERE manuallyInserted=1)</label>
 												</div>
 												<div class="checkbox">
 													<label><input type="checkbox" id="resetAll" value="">Voorraad naar NUL zetten voor alle artikelen. (UPDATE items SET itemStock=0;)</label>
@@ -820,10 +825,14 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 													{
 														$("#resetAll").prop("checked", true);
 														$("#resetAll").prop("disabled", true);
+														$('#deleteAllInclManual').prop("checked", false);
+														$('#deleteAllInclManual').prop("disabled", false);
 													}
 													else
 													{
 														$("#resetAll").prop("disabled", false);
+														$('#deleteAllInclManual').prop("checked", false);
+														$('#deleteAllInclManual').prop("disabled", true);
 													}
 												});
 
@@ -845,6 +854,7 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 											            "item/dbWipe.php",
 											            {
 											                deleteAll: $("#deleteAll").is(":checked"),
+															deleteAllInclManual: $("#deleteAllInclManual").is(":checked"),
 															resetAll: $("#resetAll").is(":checked"),
 															deleteAllReceipts: $("#deleteAllReceipts").is(":checked"),
 															deleteAllSessions: $("#deleteAllSessions").is(":checked")
@@ -852,7 +862,12 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 											            function (data)
 											            {
 															var test = "";
-											                if ($("#deleteAll").is(":checked"))
+															if ($("#deleteAll").is(":checked"))
+																test += "1"
+															else
+																test += "0";
+
+											                if ($("#deleteAllInclManual").is(":checked"))
 																test += "1"
 															else
 																test += "0";

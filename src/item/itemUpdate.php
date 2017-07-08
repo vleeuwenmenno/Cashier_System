@@ -1,7 +1,7 @@
 <?php
 include_once("../includes.php");
 
-if ($_GET['itemId'] != ""  && $_GET['priceExclVat'] != ""
+if ($_GET['nativeId'] != ""  && $_GET['priceExclVat'] != ""
                            && $_GET['priceModifier'] != "")
 {
 
@@ -12,7 +12,7 @@ if ($_GET['itemId'] != ""  && $_GET['priceExclVat'] != ""
 		die('Unable to connect to database [' . $db->connect_error . ']');
 	}
 
-	$sql = "UPDATE items SET EAN='" . $_GET['EAN'] . "', supplier='" . $_GET['supplier'] . "', factoryId='" . $_GET['factoryId'] . "', itemName='" . $_GET['itemName'] . "', itemCategory='" . $_GET['itemCategory'] . "', itemStock='" . $_GET['itemStock'] . "', priceExclVat='" . $_GET['priceExclVat'] . "', priceModifier='" . $_GET['priceModifier'] . "' WHERE itemId=" . $_GET['itemId'] . ' OR EAN=' . $_GET['itemId'];
+	$sql = "UPDATE items SET EAN='" . $_GET['EAN'] . "', supplier='" . $_GET['supplier'] . "', factoryId='" . $_GET['factoryId'] . "', itemName='" . $_GET['itemName'] . "', itemCategory='" . $_GET['itemCategory'] . "', itemStock='" . $_GET['itemStock'] . "', priceExclVat='" . $_GET['priceExclVat'] . "', priceModifier='" . $_GET['priceModifier'] . "' WHERE nativeId=" . $_GET['nativeId'] . ';';
 
 	if(!$result = $db->query($sql))
 	{
@@ -25,6 +25,12 @@ if ($_GET['itemId'] != ""  && $_GET['priceExclVat'] != ""
 	}
 }
 else
-die("Form is niet volledig ingevult, vul alle velden en verstuur hem opnieuw.");
+{
+	//echo "'".$_GET['nativeId']. "'";
+	//echo "'".$_GET['priceExclVat']. "'";
+	//echo "'".$_GET['priceModifier']. "'";
+
+die("Form is niet volledig ingevult, vul alle velden en verstuur hem opnieuw. (Let op! Artikel nummer moet ingevult zijn.)");
+}
 
 ?>

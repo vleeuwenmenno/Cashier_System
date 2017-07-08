@@ -13,7 +13,7 @@ if ($_GET['supplier'] != "" && $_GET['itemName'] != ""
 		die('Unable to connect to database [' . $db->connect_error . ']');
 	}
 
-	$sql = "INSERT INTO items (itemId, EAN, supplier, factoryId, itemName, itemCategory, itemStock, priceExclVat, priceModifier) VALUES ('" . $_GET['itemId'] . "', '" . $_GET['EAN'] . "', '" . $_GET['supplier'] . "', '" . $_GET['factoryId'] . "', '" . $_GET['itemName'] . "', '" . $_GET['itemCategory'] . "', '" . $_GET['itemStock'] . "', '" . $_GET['priceExclVat'] . "', '" . $_GET['priceModifier'] . "');";
+	$sql = "INSERT INTO items (itemId, EAN, supplier, factoryId, itemName, itemCategory, itemStock, priceExclVat, priceModifier, manuallyInserted) VALUES ('" . $_GET['itemId'] . "', '" . $_GET['EAN'] . "', '" . $_GET['supplier'] . "', '" . $_GET['factoryId'] . "', '" . $_GET['itemName'] . "', '" . $_GET['itemCategory'] . "', '" . $_GET['itemStock'] . "', '" . $_GET['priceExclVat'] . "', '" . $_GET['priceModifier'] . "', 1);";
 
 	if(!$result = $db->query($sql))
 	{
