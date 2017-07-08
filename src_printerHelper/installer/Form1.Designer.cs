@@ -114,6 +114,7 @@
             // createShortcut
             // 
             this.createShortcut.AutoSize = true;
+            this.createShortcut.Enabled = false;
             this.createShortcut.Location = new System.Drawing.Point(48, 95);
             this.createShortcut.Name = "createShortcut";
             this.createShortcut.Size = new System.Drawing.Size(154, 17);

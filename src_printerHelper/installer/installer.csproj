@@ -81,13 +81,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\ca-bundle.crt" />
     <None Include="Resources\cli.exe" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\NDde.dll" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Newtonsoft.Json.dll" />
@@ -96,13 +96,37 @@
     <None Include="Resources\ui.exe" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Spire.License.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Spire.Pdf.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\uninstall.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ssleay32.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\libeay32.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\libgcc_s_dw2-1.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\libstdc++-6.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\libwinpthread-1.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\PrintHtml.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\QtCore4.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\QtGui4.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\QtNetwork4.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\QtWebKit4.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -3,11 +3,7 @@
     Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 
     $content = Misc::url_get_contents('http://127.0.0.1/CashRegister/src/print.php?receipt=' . $_GET['receipt']);
-    file_put_contents(getcwd() . "/pdfs/" . $_GET['receipt'] . ".html", $content);
-
-    //Do the magic https://wkhtmltopdf.org/
-    //wkhtmltopdf -T 0 -R 0 -B 0 -L 0 --orientation Portrait --page-size A4 --disable-smart-shrinking 1182791971.html 1182791971.pdf
-    exec(getcwd() . "/../deps/wkhtmltopdf -T 0 -R 0 -B 0 -L 0 --orientation Portrait --page-size A4 --disable-smart-shrinking " . "pdfs/" . $_GET['receipt'] . ".html pdfs/" . $_GET['receipt'] . ".pdf");
+    file_put_contents(getcwd() . "/temp/" . $_GET['receipt'] . ".html", $content);
 ?>
 <html>
     <head>
@@ -21,19 +17,24 @@
         if ($_CFG['THEME'] == "")
             $_CFG['THEME'] = 'Default';
         ?>
-        <link rel="stylesheet" href="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/bootstrap.css" />
-        <link rel="stylesheet" href="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/stylesheet.css">
-        <link rel="stylesheet" href="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/select2.min.css" />
-        <link rel="stylesheet" href="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/bootstrap-combobox.css" />
-        <link rel="stylesheet" href="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/themes/<?php echo $_SESSION['login_ok']['userTheme']; ?>/font-awesome.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/bootstrap-switch.min.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/multiple-emails.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/bootstrap.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/stylesheet.css">
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/select2.min.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/bootstrap-combobox.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/font-awesome.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/multiple-emails.css" />
 
-        <script src="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/js/jquery.js"></script>
-        <script src="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/js/bootstrap.min.js"></script>
-        <script src="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/js/bootstrap-notify.min.js"></script>
-        <script src="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/js/select2.full.min.js"></script>
-        <script src="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/js/jquery.jeditable.js"></script>
-        <script src="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/js/bootstrap-combobox.js"></script>
-        <script src="http://<?php echo $_SERVER[HTTP_HOST]; ?>/CashRegister/src/js/jquery.print.js"></script>
+
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/multiple-emails.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap.min.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap-notify.min.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/select2.full.min.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.jeditable.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap-combobox.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.print.js"></script>
     </head>
     <body>
         <?php
@@ -53,7 +54,7 @@
     margin: 0 auto;
     box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
     position: absolute;">
-            <img src="images/A4-Template.png" id="letterPaper" style="position: absolute; top: -32px; width: 21cm;" />
+            <img src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/images/A4-Template.png" id="letterPaper" style="position: absolute; top: -32px; width: 21cm;" />
             <div style="position: absolute; top: 196px; width: 18cm;">
                 <div style="position: relative; left: 48px; font-size: 12px;">
                     Bon Nr. <?php echo $_GET['receipt']; ?><br />
@@ -138,24 +139,12 @@
             left: 36%;
         ">
             <button id="printAgain" type="button" class="btn btn-default">Afdrukken</button>
-            <button id="emailAgain" type="button" class="btn btn-default">Emailen</button>
         </center>
         <script>
             $(document).ready(function() {
-                $("#letterPaperCheck").bootstrapSwitch();
                 $("#printAgain").on("click", function() {
                     var w = (window.parent)?window.parent:window
-                    w.location.assign('printhelp://<?php echo urlencode('http://' . $_SERVER[HTTP_HOST] . '/CashRegister/src/pdfs/' . $_GET['receipt'] . '.pdf'); ?>')
-                });
-
-                $("#emailAgain").on("click", function() {
-                    <?php
-                        /*echo '
-                        $("#pageLoaderIndicator").fadeIn();
-                        $("#PageContent").load("print.php?receipt=' . str_pad($receiptId, 4, '0', STR_PAD_LEFT) . '&mail=true&print=0&mailList=' . urlencode($_GET['mailList']) . '", function () {
-                            $("#pageLoaderIndicator").fadeOut();
-                        });';*/
-                    ?>
+                    w.location.assign('printhelp://<?php echo urlencode('http://' . $_SERVER['HTTP_HOST'] . '/CashRegister/src/temp/' . $_GET['receipt'] . '.html'); ?>')
                 });
             });
         </script>

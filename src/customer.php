@@ -340,7 +340,7 @@ else
                 </tbody>
             </table>
             <?php
-                if ($i >= 25)
+                if (0 >= 25)
                 {
             ?>
                     <button type="button" class="btn btn-info center-block" id="loadMore">Laad Meer</button><br />

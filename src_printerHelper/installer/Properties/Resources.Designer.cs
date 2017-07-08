@@ -63,6 +63,16 @@ namespace installer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] ca_bundle {
+            get {
+                object obj = ResourceManager.GetObject("ca_bundle", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] cli {
             get {
                 object obj = ResourceManager.GetObject("cli", resourceCulture);
@@ -73,9 +83,39 @@ namespace installer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] NDde {
+        internal static byte[] libeay32 {
             get {
-                object obj = ResourceManager.GetObject("NDde", resourceCulture);
+                object obj = ResourceManager.GetObject("libeay32", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] libgcc_s_dw2_1 {
+            get {
+                object obj = ResourceManager.GetObject("libgcc_s_dw2_1", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] libstdc___6 {
+            get {
+                object obj = ResourceManager.GetObject("libstdc___6", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] libwinpthread_1 {
+            get {
+                object obj = ResourceManager.GetObject("libwinpthread_1", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -93,9 +133,9 @@ namespace installer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] Spire_License {
+        internal static byte[] PrintHtml {
             get {
-                object obj = ResourceManager.GetObject("Spire_License", resourceCulture);
+                object obj = ResourceManager.GetObject("PrintHtml", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -103,9 +143,49 @@ namespace installer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] Spire_Pdf {
+        internal static byte[] QtCore4 {
             get {
-                object obj = ResourceManager.GetObject("Spire_Pdf", resourceCulture);
+                object obj = ResourceManager.GetObject("QtCore4", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] QtGui4 {
+            get {
+                object obj = ResourceManager.GetObject("QtGui4", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] QtNetwork4 {
+            get {
+                object obj = ResourceManager.GetObject("QtNetwork4", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] QtWebKit4 {
+            get {
+                object obj = ResourceManager.GetObject("QtWebKit4", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] ssleay32 {
+            get {
+                object obj = ResourceManager.GetObject("ssleay32", resourceCulture);
                 return ((byte[])(obj));
             }
         }

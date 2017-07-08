@@ -13,6 +13,16 @@ IF %ERRORLEVEL% EQU 0 (
     DEL Spire.License.dll
     DEL Spire.Pdf.dll
     DEL ui.exe
+    DEL libeay32.dll 
+    DEL libstdc++-6.dll
+    DEL PrintHtml.exe
+    DEL QtGui4.dll
+    DEL QtWebKit4.dll
+    DEL libgcc_s_dw2-1.dll
+    DEL libwinpthread-1.dll
+    DEL QtCore4.dll
+    DEL QtNetwork4.dll 
+    DEL ssleay32.dll
     echo msgbox "Uninstall success!" > %tmp%\tmp.vbs
     cscript /nologo %tmp%\tmp.vbs
     del %tmp%\tmp.vbs

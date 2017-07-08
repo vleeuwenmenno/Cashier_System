@@ -17,7 +17,6 @@ using System.IO;
 using System.Threading;
 using System.Diagnostics;
 using System.Net;
-using Spire.Pdf;
 using System.Drawing.Printing;
 
 namespace CashRegister_PrintHelper
@@ -258,7 +257,7 @@ namespace CashRegister_PrintHelper
                         prefs.printLog.Add(new Log("Catched new print task | " + info.FullName));
                         prefs.Save();
                     }
-                    else if (info.Extension == ".pdf")
+                    else if (info.Extension == ".html")
                     {
                         if (!uibusy.Contains(info.FullName))
                         {
@@ -267,18 +266,38 @@ namespace CashRegister_PrintHelper
                             string id = info.Name.Split('-')[0];
                             short count = 1;
 
-                            PdfDocument pdfdocument = new PdfDocument();
-                            pdfdocument.LoadFromFile(info.FullName);
-                            pdfdocument.PrinterName = prefs.defaultPrinter;
-                            pdfdocument.PrintDocument.PrinterSettings.Copies = count;
-                            pdfdocument.PrintDocument.DocumentName = info.FullName;
-
-                            prefs.printLog.Add(new Log("Print task sent to printer | " + info.FullName));
+                            prefs.printLog.Add(new Log("Print task sent to printer | " + info.FullName + ".pdf"));
                             prefs.Save();
 
-                            pdfdocument.PrintDocument.EndPrint += PrintDocument_EndPrint;
-                            pdfdocument.PrintDocument.Print();
-                            pdfdocument.Dispose();
+                            try
+                            {
+                                Console.WriteLine(Environment.CurrentDirectory + "\\PrintHtml.exe" + " -t 0 -b 0 -p \"" + prefs.defaultPrinter + "\" \"" + info.FullName + "\"");
+                                var process = Process.Start(Environment.CurrentDirectory + "\\PrintHtml.exe", " -t 0 -b 0 -p \"" + prefs.defaultPrinter + "\" \"" + info.FullName + "\"");
+                                process.WaitForExit();
+
+                                if (process.ExitCode == 0)
+                                {
+
+                                    prefs.printLog.Add(new Log("Finished print task | " + info.FullName));
+                                    prefs.Save();
+                                }
+                                else
+                                {
+                                    printHelperTray.ShowBalloonTip(5000, "Printer taak", "Printer taak mislukt, zie print helper log bestand for details", ToolTipIcon.Info);
+                                    prefs.printLog.Add(new Log("Printer task failed, something went wrong PrintHtml.exe ended with code " + process.ExitCode + " | " + info.FullName));
+                                    prefs.Save();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                printHelperTray.ShowBalloonTip(5000, "Printer taak", "Printer taak mislukt, zie print helper log bestand for details", ToolTipIcon.Info);
+                                prefs.printLog.Add(new Log("Printer task failed, PrintHtml is missing? | " + info.FullName + " | " + ex.Message));
+                                prefs.Save();
+                            }
+
+                            uibusy.Remove(info.FullName);
+                            File.Delete(info.FullName);
+                            File.Delete(info.DirectoryName + "/" + info.Name + ".lock");
                         }
                     }
                 }
@@ -294,7 +313,7 @@ namespace CashRegister_PrintHelper
             foreach (String s in uibusy)
             {
                 FileInfo info = new FileInfo(s);
-                activeTasks.Items.Add(info.Name.Replace(".pdf", "") + " naar " + prefs.defaultPrinter + " (Status: Verstuurt naar printer)");
+                activeTasks.Items.Add(info.Name.Replace(".html", "") + " naar " + prefs.defaultPrinter + " (Status: Verstuurt naar printer)");
             }
 
             foreach (String s in busy)
@@ -310,23 +329,15 @@ namespace CashRegister_PrintHelper
             }
         }
 
-        private void PrintDocument_EndPrint(object sender, System.Drawing.Printing.PrintEventArgs e)
-        {
-            PrintDocument doc = (PrintDocument)sender;
-            FileInfo info = new FileInfo(doc.DocumentName);
-
-            uibusy.Remove(info.FullName);
-            File.Delete(info.FullName);
-            File.Delete(info.DirectoryName + "/" + info.Name + ".lock");
-
-            prefs.printLog.Add(new Log("Finished print task | " + info.FullName));
-            prefs.Save();
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             logViewer log = new logViewer(prefs);
             log.Show();
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -113,56 +113,57 @@ else if (isset($_GET['new']))
 
                 <tbody id="listContents">
                     <?php
-                        foreach ($_SESSION['receipt']['items'] as $key => $val)
+                        if (!empty($_SESSION['receipt']['items']))
+                        while ($val = current($_SESSION['receipt']['items'])) 
                         {
-                            $total = Misc::calculate(round($_SESSION['receipt']['items'][$key]['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . " " . $_SESSION['receipt']['items'][$key]['priceAPiece']['priceModifier']);
-                            $purchase = $_SESSION['receipt']['items'][$key]['priceAPiece']['priceExclVat'];
-                            $vatOnly = (($_SESSION['receipt']['items'][$key]['priceAPiece']['priceExclVat'] * $_CFG['VAT']) - $_SESSION['receipt']['items'][$key]['priceAPiece']['priceExclVat']);
+                            $total = Misc::calculate(round($_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . " " . $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['priceAPiece']['priceModifier']);
+                            $purchase = $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['priceAPiece']['priceExclVat'];
+                            $vatOnly = (($_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['priceAPiece']['priceExclVat'] * $_CFG['VAT']) - $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['priceAPiece']['priceExclVat']);
 
                             echo '<tr>';
-                            echo '    <th><button id="trash' .  $key . '" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" style="font-size: 12px;"></span></button></th>';
-                            echo '    <th><input class="form-control" style="width: 156px; display: none;" id="editable' . $key . '" value="' . $val['count'] . '" type="text" name="type"/><a style="float: left;" href="javascript:void(0);" id="editAmount' . $key . '">' . $val['count'] . '</a></th>';
+                            echo '    <th><button id="trash' .  key($_SESSION['receipt']['items']) . '" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" style="font-size: 12px;"></span></button></th>';
+                            echo '    <th><input class="form-control" style="width: 156px; display: none;" id="editable' . key($_SESSION['receipt']['items']) . '" value="' . $val['count'] . '" type="text" name="type"/><a style="float: left;" href="javascript:void(0);" id="editAmount' . key($_SESSION['receipt']['items']) . '">' . $val['count'] . '</a></th>';
                             echo '    <th>
-                                          <a href="#" style="color: black;" id="itemDesc' . $key . '">' . $_SESSION['receipt']['items'][$key]['itemDesc'] . '</a>
-                                          <input class="form-control" type="input" id="newItemDesc' . $key . '" style="float: left; display: none; width: 50%;" value="' . $_SESSION['receipt']['items'][$key]['itemDesc'] . '">
-                                          <input type="button" class="btn btn-primary" style="float: left; display: none; width: 15%;" id="changeCDBtn' . $key . '" value="Wijzigen" />
-                                          <input type="button" class="btn btn-default" style="display: none; float: left; width: 15%;" id="cancelCDBtn' . $key . '" value="Annuleren" />
+                                          <a href="#" style="color: black;" id="itemDesc' . key($_SESSION['receipt']['items']) . '">' . $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['itemDesc'] . '</a>
+                                          <input class="form-control" type="input" id="newItemDesc' . key($_SESSION['receipt']['items']) . '" style="float: left; display: none; width: 50%;" value="' . $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['itemDesc'] . '">
+                                          <input type="button" class="btn btn-primary" style="float: left; display: none; width: 15%;" id="changeCDBtn' . key($_SESSION['receipt']['items']) . '" value="Wijzigen" />
+                                          <input type="button" class="btn btn-default" style="display: none; float: left; width: 15%;" id="cancelCDBtn' . key($_SESSION['receipt']['items']) . '" value="Annuleren" />
                                           <script>
                                             $(document).ready(function() {
-                                                $("#itemDesc' . $key . '").on("click", function () {
-                                                    $("#changeCDBtn' . $key . '").css("display", "");
-                                                    $("#newItemDesc' . $key . '").css("display", "");
-                                                    $("#cancelCDBtn' . $key . '").css("display", "");
+                                                $("#itemDesc' . key($_SESSION['receipt']['items']) . '").on("click", function () {
+                                                    $("#changeCDBtn' . key($_SESSION['receipt']['items']) . '").css("display", "");
+                                                    $("#newItemDesc' . key($_SESSION['receipt']['items']) . '").css("display", "");
+                                                    $("#cancelCDBtn' . key($_SESSION['receipt']['items']) . '").css("display", "");
 
-                                                    $("#itemDesc' . $key . '").css("display", "none");
+                                                    $("#itemDesc' . key($_SESSION['receipt']['items']) . '").css("display", "none");
                                                 });
 
-                                                $("#cancelCDBtn' . $key . '").on("click", function () {
-                                                    $("#changeCDBtn' . $key . '").css("display", "none");
-                                                    $("#newItemDesc' . $key . '").css("display", "none");
-                                                    $("#cancelCDBtn' . $key . '").css("display", "none");
+                                                $("#cancelCDBtn' . key($_SESSION['receipt']['items']) . '").on("click", function () {
+                                                    $("#changeCDBtn' . key($_SESSION['receipt']['items']) . '").css("display", "none");
+                                                    $("#newItemDesc' . key($_SESSION['receipt']['items']) . '").css("display", "none");
+                                                    $("#cancelCDBtn' . key($_SESSION['receipt']['items']) . '").css("display", "none");
 
-                                                    $("#itemDesc' . $key . '").css("display", "");
+                                                    $("#itemDesc' . key($_SESSION['receipt']['items']) . '").css("display", "");
                                                 });
 
-                                                $("#changeCDBtn' . $key . '").on("click", function () {
+                                                $("#changeCDBtn' . key($_SESSION['receipt']['items']) . '").on("click", function () {
                                                     $.get(
                                                         "receipt/changeItemDesc.php",
                                                         {
-                                                            itemId: "' . $key . '",
-                                                            newDesc: encodeURIComponent($("#newItemDesc' . $key . '").val())
+                                                            itemId: "' . key($_SESSION['receipt']['items']) . '",
+                                                            newDesc: encodeURIComponent($("#newItemDesc' . key($_SESSION['receipt']['items']) . '").val())
                                                         },
                                                         function (data)
                                                         {
                                                             if (data == "\nOK")
                                                             {
-                                                                $("#itemDesc' . $key . '").html($("#newItemDesc' . $key . '").val());
+                                                                $("#itemDesc' . key($_SESSION['receipt']['items']) . '").html($("#newItemDesc' . key($_SESSION['receipt']['items']) . '").val());
 
-                                                                $("#changeCDBtn' . $key . '").css("display", "none");
-                                                                $("#newItemDesc' . $key . '").css("display", "none");
-                                                                $("#cancelCDBtn' . $key . '").css("display", "none");
+                                                                $("#changeCDBtn' . key($_SESSION['receipt']['items']) . '").css("display", "none");
+                                                                $("#newItemDesc' . key($_SESSION['receipt']['items']) . '").css("display", "none");
+                                                                $("#cancelCDBtn' . key($_SESSION['receipt']['items']) . '").css("display", "none");
 
-                                                                $("#itemDesc' . $key . '").css("display", "");
+                                                                $("#itemDesc' . key($_SESSION['receipt']['items']) . '").css("display", "");
 
                                                                 $.notify({
                                                                     icon: \'fa fa-check fa-2x\',
@@ -202,20 +203,20 @@ else if (isset($_GET['new']))
                                             });
                                           </script>
                                       </th>';
-                            echo '    <th><span class="priceClickable" id="' . $key . '" data-placement="bottom" data-trigger="hover">';
-                            echo '        <a href="javascript:void(0);" id="editPrice' . $key . '">';
-                            echo '            &euro;&nbsp;' . number_format(round(round($total, 2) * $_SESSION['receipt']['items'][$key]['count'], 2), 2, ",", ".") . '</a>';
+                            echo '    <th><span class="priceClickable" id="' . key($_SESSION['receipt']['items']) . '" data-placement="bottom" data-trigger="hover">';
+                            echo '        <a href="javascript:void(0);" id="editPrice' . key($_SESSION['receipt']['items']) . '">';
+                            echo '            &euro;&nbsp;' . number_format(round(round($total, 2) * $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['count'], 2), 2, ",", ".") . '</a>';
                             echo '        </span>';
-                            echo '        <div id="popover-title' . $key . '" class="hidden">';
+                            echo '        <div id="popover-title' . key($_SESSION['receipt']['items']) . '" class="hidden">';
                             echo '            <b>Prijs berekening</b>';
                             echo '        </div>';
-                            echo '        <div id="popover-content' . $key . '" class="hidden">';
+                            echo '        <div id="popover-content' . key($_SESSION['receipt']['items']) . '" class="hidden">';
                             echo '            <div>';
                             echo '            Inkoop: &euro;&nbsp;' . number_format(round($purchase, 2), 2, ",", ".") . '<br/>
                                               Btw. : &nbsp;&nbsp;&nbsp;&euro;&nbsp;' . number_format(round($vatOnly, 2), 2, ",", ".") . '<br />
                                               Marge: &euro;&nbsp;' . number_format(round($total - (round($purchase, 2) + round($vatOnly, 2)), 2), 2, ",", ".") . '<br />
                                               P.S: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&euro;&nbsp; ' . number_format(round($total, 2), 2, ",", ".") . '<br />
-                                              Totaal:&nbsp; &euro;&nbsp;' . number_format(round(round($total, 2) * $_SESSION['receipt']['items'][$key]['count'], 2), 2, ",", ".") . '<br />';
+                                              Totaal:&nbsp; &euro;&nbsp;' . number_format(round(round($total, 2) * $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['count'], 2), 2, ",", ".") . '<br />';
                             echo '            </div>';
                             echo '        </div>';
                             echo '    </th>';
@@ -223,7 +224,7 @@ else if (isset($_GET['new']))
 
                             echo '
                             <!-- Modal -->
-                            <div class="modal fade" id="priceChange' .  $key . '" role="dialog">
+                            <div class="modal fade" id="priceChange' .  key($_SESSION['receipt']['items']) . '" role="dialog">
                                 <div class="modal-dialog">
 
                                     <!-- Modal content-->
@@ -233,36 +234,36 @@ else if (isset($_GET['new']))
                                             <h4 class="modal-title">Prijs aanpasssen</h4>
                                         </div>
                                         <div class="modal-body">
-                                            <div id="absolutePriceDiv' . $Key . '">
+                                            <div id="absolutePriceDiv' . key($_SESSION['receipt']['items']) . '">
                                                 <div class="form-group">
-                                                    <label for="priceExclVat' .  $key . '">Inkoop prijs: </label>
-                                                    <input type="text" class="form-control" id="absolutePriceExclVat' . $key . '" placeholder="26,66" value="' . round($_SESSION['receipt']['items'][$key]['priceAPiece']['priceExclVat'], 2) . '" />
+                                                    <label for="priceExclVat' .  key($_SESSION['receipt']['items']) . '">Inkoop prijs: </label>
+                                                    <input type="text" class="form-control" id="absolutePriceExclVat' . key($_SESSION['receipt']['items']) . '" placeholder="26,66" value="' . round($_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['priceAPiece']['priceExclVat'], 2) . '" />
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="priceExclVat' .  $key . '">Absolute prijs: </label>
-                                                    <input type="text" class="form-control" id="absolutePriceVal' . $key . '" placeholder="26,66" value="" />
+                                                    <label for="priceExclVat' .  key($_SESSION['receipt']['items']) . '">Absolute prijs: </label>
+                                                    <input type="text" class="form-control" id="absolutePriceVal' . key($_SESSION['receipt']['items']) . '" placeholder="26,66" value="" />
                                                 </div>
                                             </div>
-                                            <div id="nonAbsoluteDiv' . $key . '"" hidden>
+                                            <div id="nonAbsoluteDiv' . key($_SESSION['receipt']['items']) . '"" hidden>
                                                 <div class="form-group">
-                                                    <label for="priceExclVat' .  $key . '">Inkoop prijs: </label>
-                                                    <input type="text" class="form-control" id="priceExclVat' . $key . '" placeholder="26,66" value="' . round($_SESSION['receipt']['items'][$key]['priceAPiece']['priceExclVat'], 2) . '" />
+                                                    <label for="priceExclVat' .  key($_SESSION['receipt']['items']) . '">Inkoop prijs: </label>
+                                                    <input type="text" class="form-control" id="priceExclVat' . key($_SESSION['receipt']['items']) . '" placeholder="26,66" value="' . round($_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['priceAPiece']['priceExclVat'], 2) . '" />
                                                 </div>
-                                                <label for="priceModifier' .  $key . '">Prijs berekening: </label>
+                                                <label for="priceModifier' .  key($_SESSION['receipt']['items']) . '">Prijs berekening: </label>
                                                 <div class="input-group">
-                                                    <span class="input-group-addon" id="priceExclVatLabel' .  $key . '" style="min-width: 96px; border-bottom-left-radius: 0px !important;">
+                                                    <span class="input-group-addon" id="priceExclVatLabel' .  key($_SESSION['receipt']['items']) . '" style="min-width: 96px; border-bottom-left-radius: 0px !important;">
                                                         Inkoop<br />
                                                         &euro;&nbsp;
                                                     </span>
-                                                    <span class="input-group-addon" id="priceVatOnly' .  $key . '" style="border-bottom-right-radius: 0px !important;">
+                                                    <span class="input-group-addon" id="priceVatOnly' .  key($_SESSION['receipt']['items']) . '" style="border-bottom-right-radius: 0px !important;">
                                                         Btw<br />
                                                         &nbsp;&euro;&nbsp;
                                                     </span>
-                                                    <span class="input-group-addon" id="priceMarginOnly' .  $key . '" style="border-bottom-right-radius: 0px !important;">
+                                                    <span class="input-group-addon" id="priceMarginOnly' .  key($_SESSION['receipt']['items']) . '" style="border-bottom-right-radius: 0px !important;">
                                                         Marge<br />
                                                         &nbsp;&euro;&nbsp;
                                                     </span>
-                                                    <span class="input-group-addon" id="priceResell' .  $key . '" style="border-bottom-right-radius: 0px !important;">
+                                                    <span class="input-group-addon" id="priceResell' .  key($_SESSION['receipt']['items']) . '" style="border-bottom-right-radius: 0px !important;">
                                                         Verkoop<br />
                                                         &nbsp;&euro;&nbsp;
                                                     </span>
@@ -271,19 +272,19 @@ else if (isset($_GET['new']))
                                                     <span class="input-group-addon" id="" style="border-top-left-radius: 0px !important;">
                                                         ($INKOOP * $BTW)<br />
                                                     </span>
-                                                    <input type="text" style="height: 42px; border-top-right-radius: 0px !important;" class="form-control" id="priceModifier' .  $key . '" aria-describedby="priceModifierLabel" placeholder=" * 1.375" value="' . str_replace('.',',', $_SESSION['receipt']['items'][$key]['priceAPiece']['priceModifier']) . '" />
+                                                    <input type="text" style="height: 42px; border-top-right-radius: 0px !important;" class="form-control" id="priceModifier' .  key($_SESSION['receipt']['items']) . '" aria-describedby="priceModifierLabel" placeholder=" * 1.375" value="' . str_replace('.',',', $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['priceAPiece']['priceModifier']) . '" />
                                                 </div>
                                             </div>
 
                                             <div class="checkbox">
-                                              <label><input type="checkbox" value="" id="absolutePrice' . $key . '" checked>Absolute prijs berekening</label>
+                                              <label><input type="checkbox" value="" id="absolutePrice' . key($_SESSION['receipt']['items']) . '" checked>Absolute prijs berekening</label>
                                             </div>
                                             <div class="checkbox">
-                                              <label><input type="checkbox" value="" id="global' . $key . '" checked>Artikel prijs aanpassen voor alleen deze bon.</label>
+                                              <label><input type="checkbox" value="" id="global' . key($_SESSION['receipt']['items']) . '" checked>Artikel prijs aanpassen voor alleen deze bon.</label>
                                             </div>
                                         </div>
                                         <div class="modal-footer" id="stockWarningFooter">
-                                            <button id="update' .  $key . '" type="button" class="btn btn-primary" data-dismiss="modal">Opslaan</button>
+                                            <button id="update' .  key($_SESSION['receipt']['items']) . '" type="button" class="btn btn-primary" data-dismiss="modal">Opslaan</button>
                                             <button type="button" data-dismiss="modal" class="btn btn-default">Annuleren</button>
                                         </div>
                                     </div>
@@ -301,26 +302,26 @@ else if (isset($_GET['new']))
                                     }
                                 });
 
-                                $("#absolutePrice' . $key . '").change(function() {
+                                $("#absolutePrice' . key($_SESSION['receipt']['items']) . '").change(function() {
                                     if(this.checked) 
                                     {
-                                        $("#nonAbsoluteDiv' . $key . '").hide();
-                                        $("#absolutePriceDiv' . $Key . '").show();
+                                        $("#nonAbsoluteDiv' . key($_SESSION['receipt']['items']) . '").hide();
+                                        $("#absolutePriceDiv' . key($_SESSION['receipt']['items']) . '").show();
                                     }
                                     else
                                     {
-                                        $("#nonAbsoluteDiv' . $key . '").show();
-                                        $("#absolutePriceDiv' . $Key . '").hide();
+                                        $("#nonAbsoluteDiv' . key($_SESSION['receipt']['items']) . '").show();
+                                        $("#absolutePriceDiv' . key($_SESSION['receipt']['items']) . '").hide();
                                     }
                                 });
 
-                                $("#' . $key . '").popover({
+                                $("#' . key($_SESSION['receipt']['items']) . '").popover({
                                     html : true,
                                     content: function() {
-                                      return $("#popover-content' . $key . '").html();
+                                      return $("#popover-content' . key($_SESSION['receipt']['items']) . '").html();
                                     },
                                     title: function() {
-                                      return $("#popover-title' . $key . '").html();
+                                      return $("#popover-title' . key($_SESSION['receipt']['items']) . '").html();
                                     }
                                 });
 
@@ -328,17 +329,17 @@ else if (isset($_GET['new']))
                                 var vat = "' . $_CFG['VAT'] . '";
 
                                 //Set price excl vat label
-                                $("#priceExclVatLabel' . $key . '").html("Inkoop<br />&euro;&nbsp;" + $(\'#priceExclVat' . $key . '\').val().replace(".", ","));
+                                $("#priceExclVatLabel' . key($_SESSION['receipt']['items']) . '").html("Inkoop<br />&euro;&nbsp;" + $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(".", ","));
 
                                 //Set vat price
                                 $.get(
                                     "item/calcString.php",
                                     {
-                                        sum: encodeURIComponent($(\'#priceExclVat' . $key . '\').val().replace(",", ".") + " * " + vat)
+                                        sum: encodeURIComponent($(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(",", ".") + " * " + vat)
                                     },
                                     function (data)
                                     {
-                                        $(\'#priceVatOnly' . $key . '\').html("Btw<br />&nbsp;&euro;&nbsp;" + parseFloat(data.replace(",", ".") - $(\'#priceExclVat' . $key . '\').val().replace(",", ".")).toFixed(2).replace(".", ","));
+                                        $(\'#priceVatOnly' . key($_SESSION['receipt']['items']) . '\').html("Btw<br />&nbsp;&euro;&nbsp;" + parseFloat(data.replace(",", ".") - $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(",", ".")).toFixed(2).replace(".", ","));
                                     }
                                 );
 
@@ -346,11 +347,11 @@ else if (isset($_GET['new']))
                                 $.get(
                                     "item/calcString.php",
                                     {
-                                        sum: encodeURIComponent("(" +  $(\'#priceExclVat' . $key . '\').val().replace(",", ".") + " * " + vat  + ") " + $("#priceModifier' . $key . '").val())
+                                        sum: encodeURIComponent("(" +  $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(",", ".") + " * " + vat  + ") " + $("#priceModifier' . key($_SESSION['receipt']['items']) . '").val())
                                     },
                                     function (data)
                                     {
-                                        $("#absolutePriceVal' . $key . '").val(data);
+                                        $("#absolutePriceVal' . key($_SESSION['receipt']['items']) . '").val(data);
                                     }
                                 );
 
@@ -358,20 +359,20 @@ else if (isset($_GET['new']))
                                 $.get(
                                     "item/calcString.php",
                                     {
-                                        sum: encodeURIComponent("(" +  $(\'#priceExclVat' . $key . '\').val().replace(",", ".") + " * " + vat  + ") " + $("#priceModifier' . $key . '").val())
+                                        sum: encodeURIComponent("(" +  $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(",", ".") + " * " + vat  + ") " + $("#priceModifier' . key($_SESSION['receipt']['items']) . '").val())
                                     },
                                     function (data)
                                     {
-                                        $("#priceResell' . $key . '").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
+                                        $("#priceResell' . key($_SESSION['receipt']['items']) . '").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
 
                                         $.get(
                                             "item/calcString.php",
                                             {
-                                                sum: encodeURIComponent(data + " - " + "(" +  $(\'#priceExclVat' . $key . '\').val().replace(",", ".") + " * " + vat  + ")")
+                                                sum: encodeURIComponent(data + " - " + "(" +  $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(",", ".") + " * " + vat  + ")")
                                             },
                                             function (dataTwo)
                                             {
-                                                $("#priceMarginOnly' . $key . '").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
+                                                $("#priceMarginOnly' . key($_SESSION['receipt']['items']) . '").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
                                             }
                                         );
                                     }
@@ -379,25 +380,25 @@ else if (isset($_GET['new']))
                                 //END!!!!!!!
                                 var shouldReload;
 
-                                $("#update' .  $key . '").click(function() {
+                                $("#update' .  key($_SESSION['receipt']['items']) . '").click(function() {
                                     shouldReload = true;
                                 });
 
-                                $("#priceChange' .  $key . '").on(\'hidden.bs.modal\', function () {
+                                $("#priceChange' .  key($_SESSION['receipt']['items']) . '").on(\'hidden.bs.modal\', function () {
                                     if (shouldReload)
                                     {
                                         shouldReload = false;
 
-                                        if ($("#absolutePrice' . $key . '").is(\':checked\'))
+                                        if ($("#absolutePrice' . key($_SESSION['receipt']['items']) . '").is(\':checked\'))
                                         {
                                             $.get(
                                                 "receipt/updateModifier.php",
                                                 {
                                                     //Update values here damn it!
-                                                    modifier: " + " + ($("#absolutePriceVal' . $key . '").val().replace(",", ".") - ($("#absolutePriceExclVat' . $key . '").val().replace(",", ".") * vat)).toFixed(2),
-                                                    global: $("#global' . $key . '").is(\':checked\'),
-                                                    nativeId: "' . $key . '",
-                                                    priceExclVat: $("#absolutePriceExclVat' . $key . '").val().replace(",", ".")
+                                                    modifier: " + " + ($("#absolutePriceVal' . key($_SESSION['receipt']['items']) . '").val().replace(",", ".") - ($("#absolutePriceExclVat' . key($_SESSION['receipt']['items']) . '").val().replace(",", ".") * vat)).toFixed(2),
+                                                    global: $("#global' . key($_SESSION['receipt']['items']) . '").is(\':checked\'),
+                                                    nativeId: "' . key($_SESSION['receipt']['items']) . '",
+                                                    priceExclVat: $("#absolutePriceExclVat' . key($_SESSION['receipt']['items']) . '").val().replace(",", ".")
                                                 },
                                                 function (data)
                                                 {
@@ -413,10 +414,10 @@ else if (isset($_GET['new']))
                                             $.get(
                                                 "receipt/updateModifier.php",
                                                 {
-                                                    modifier: $("#priceModifier' . $key . '").val(),
-                                                    global: $("#global' . $key . '").is(\':checked\'),
-                                                    nativeId: "' . $key . '",
-                                                    priceExclVat: $("#priceExclVat' . $key . '").val().replace(",", ".")
+                                                    modifier: $("#priceModifier' . key($_SESSION['receipt']['items']) . '").val(),
+                                                    global: $("#global' . key($_SESSION['receipt']['items']) . '").is(\':checked\'),
+                                                    nativeId: "' . key($_SESSION['receipt']['items']) . '",
+                                                    priceExclVat: $("#priceExclVat' . key($_SESSION['receipt']['items']) . '").val().replace(",", ".")
                                                 },
                                                 function (data)
                                                 {
@@ -430,22 +431,22 @@ else if (isset($_GET['new']))
                                     }
                                 });
 
-                                $("#editAmount' . $key . '").click(function() {
+                                $("#editAmount' . key($_SESSION['receipt']['items']) . '").click(function() {
                                     var $this = $(this);
                                     var text = $this.text();
 
                                     if(text == "Aanpassen")
                                     {
-                                        if ($("#editable' . $key . '").val() != "0")
+                                        if ($("#editable' . key($_SESSION['receipt']['items']) . '").val() != "0")
                                         {
-                                            $("#editable' . $key . '").css("display", "none");
-                                            $this.text($("#editable' . $key . '").val());
+                                            $("#editable' . key($_SESSION['receipt']['items']) . '").css("display", "none");
+                                            $this.text($("#editable' . key($_SESSION['receipt']['items']) . '").val());
 
                                             $.get(
                                                 "receipt/updateAmount.php",
                                                 {
-                                                    amount: $("#editable' . $key . '").val(),
-                                                    nativeId: "' . $key . '"
+                                                    amount: $("#editable' . key($_SESSION['receipt']['items']) . '").val(),
+                                                    nativeId: "' . key($_SESSION['receipt']['items']) . '"
                                                 },
                                                 function (data)
                                                 {
@@ -456,9 +457,9 @@ else if (isset($_GET['new']))
                                                 }
                                             );
 
-                                            var priceOne = ' . Misc::calculate($_SESSION['receipt']['items'][$key]['priceAPiece']['priceExclVat'] . ' ' . $_SESSION['receipt']['items'][$key]['priceAPiece']['priceModifier']) . ';
-                                            var total = priceOne * parseInt($("#editable' . $key . '").val());
-                                            $("#editPrice' . $key . '").val(total);
+                                            var priceOne = ' . Misc::calculate($_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['priceAPiece']['priceExclVat'] . ' ' . $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['priceAPiece']['priceModifier']) . ';
+                                            var total = priceOne * parseInt($("#editable' . key($_SESSION['receipt']['items']) . '").val());
+                                            $("#editPrice' . key($_SESSION['receipt']['items']) . '").val(total);
                                         }
                                         else
                                         {
@@ -466,11 +467,11 @@ else if (isset($_GET['new']))
                                                 "receipt/updateAmount.php",
                                                 {
                                                     amount: 1,
-                                                    nativeId: "' . $key . '"
+                                                    nativeId: "' . key($_SESSION['receipt']['items']) . '"
                                                 },
                                                 function (data)
                                                 {
-                                                    $("#trash' .  $key . '").click();
+                                                    $("#trash' .  key($_SESSION['receipt']['items']) . '").click();
                                                 }
                                             );
                                         }
@@ -478,53 +479,53 @@ else if (isset($_GET['new']))
                                     else
                                     {
                                          $this.text("Aanpassen");
-                                         $("#editable' . $key . '").toggle();
+                                         $("#editable' . key($_SESSION['receipt']['items']) . '").toggle();
                                     }
                                 });
 
-                                $(\'#priceModifier' . $key . '\').on(\'input\', function ()
+                                $(\'#priceModifier' . key($_SESSION['receipt']['items']) . '\').on(\'input\', function ()
             				    {
                                     var vat = "' . $_CFG['VAT'] . '";
 
             				        $.get(
                                         "item/calcString.php",
                                         {
-                                            sum: encodeURIComponent("(" +  $(\'#priceExclVat' . $key . '\').val().replace(",", ".") + " * " + vat  + ") " + $("#priceModifier' . $key . '").val())
+                                            sum: encodeURIComponent("(" +  $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(",", ".") + " * " + vat  + ") " + $("#priceModifier' . key($_SESSION['receipt']['items']) . '").val())
                                         },
                                         function (data)
                                         {
-                                            $("#priceResell' . $key . '").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
+                                            $("#priceResell' . key($_SESSION['receipt']['items']) . '").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
 
                                             $.get(
                                                 "item/calcString.php",
                                                 {
-                                                    sum: encodeURIComponent(data + " - " + "(" +  $(\'#priceExclVat' . $key . '\').val().replace(",", ".") + " * " + vat  + ")")
+                                                    sum: encodeURIComponent(data + " - " + "(" +  $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(",", ".") + " * " + vat  + ")")
                                                 },
                                                 function (dataTwo)
                                                 {
-                                                    $("#priceMarginOnly' . $key . '").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
+                                                    $("#priceMarginOnly' . key($_SESSION['receipt']['items']) . '").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
                                                 }
                                             );
                                         }
                                     );
             				    });
 
-            				    $(\'#priceExclVat' . $key . '\').on(\'input\', function ()
+            				    $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').on(\'input\', function ()
             				    {
                                     var vat = "' . $_CFG['VAT'] . '";
 
                                     //Set price excl vat label
-                                    $("#priceExclVatLabel' . $key . '").html("Inkoop<br />&euro;&nbsp;" + $(\'#priceExclVat' . $key . '\').val().replace(".", ","));
+                                    $("#priceExclVatLabel' . key($_SESSION['receipt']['items']) . '").html("Inkoop<br />&euro;&nbsp;" + $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(".", ","));
 
                                     //Set vat price
                 					$.get(
                 						"item/calcString.php",
                 						{
-                							sum: encodeURIComponent($(\'#priceExclVat' . $key . '\').val().replace(",", ".") + " * " + vat)
+                							sum: encodeURIComponent($(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(",", ".") + " * " + vat)
                 						},
                 						function (data)
                 						{
-                							$(\'#priceVatOnly' . $key . '\').html("Btw<br />&nbsp;&euro;&nbsp;" + parseFloat(data.replace(",", ".") - $(\'#priceExclVat' . $key . '\').val().replace(",", ".")).toFixed(2).replace(".", ","));
+                							$(\'#priceVatOnly' . key($_SESSION['receipt']['items']) . '\').html("Btw<br />&nbsp;&euro;&nbsp;" + parseFloat(data.replace(",", ".") - $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(",", ".")).toFixed(2).replace(".", ","));
                 						}
                 					);
 
@@ -532,43 +533,43 @@ else if (isset($_GET['new']))
                                     $.get(
                                         "item/calcString.php",
                                         {
-                                            sum: encodeURIComponent("(" +  $(\'#priceExclVat' . $key . '\').val().replace(",", ".") + " * " + vat  + ") " + $("#priceModifier' . $key . '").val())
+                                            sum: encodeURIComponent("(" +  $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(",", ".") + " * " + vat  + ") " + $("#priceModifier' . key($_SESSION['receipt']['items']) . '").val())
                                         },
                                         function (data)
                                         {
-                                            $("#priceResell' . $key . '").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
+                                            $("#priceResell' . key($_SESSION['receipt']['items']) . '").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
 
                                             $.get(
                                                 "item/calcString.php",
                                                 {
-                                                    sum: encodeURIComponent(data + " - " + "(" +  $(\'#priceExclVat' . $key . '\').val().replace(",", ".") + " * " + vat  + ")")
+                                                    sum: encodeURIComponent(data + " - " + "(" +  $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(",", ".") + " * " + vat  + ")")
                                                 },
                                                 function (dataTwo)
                                                 {
-                                                    $("#priceMarginOnly' . $key . '").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
+                                                    $("#priceMarginOnly' . key($_SESSION['receipt']['items']) . '").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
                                                 }
                                             );
                                         }
                                     );
             				    });
 
-                                $("#' . $key . '").on("click", function() {
-                                    $(\'#priceChange' . $key . '\').modal(\'show\');
+                                $("#' . key($_SESSION['receipt']['items']) . '").on("click", function() {
+                                    $(\'#priceChange' . key($_SESSION['receipt']['items']) . '\').modal(\'show\');
                                 });
 
-                                $("#trash' . $key . '").on("click", function() {
+                                $("#trash' . key($_SESSION['receipt']['items']) . '").on("click", function() {
                                   $.get(
                                       "receipt/removeItem.php",
                                       {
-                                          itemId: \'' . $key . '\',
+                                          itemId: \'' . key($_SESSION['receipt']['items']) . '\',
                                           itemCount: \'1\'
                                       },
                                       function (data)
                                       {
                                         $.notify({
                                             icon: \'glyphicon glyphicon-trash\',
-                                            title: \'' . urldecode(Items::getField("itemName", $key)) . '\',
-                                            message: \'<br />Verwijderd van bon <a style="color: white;" href="#" id="undo' . $key . '">(Ongedaan maken)</a>\'
+                                            title: \'' . urldecode(Items::getField("itemName", key($_SESSION['receipt']['items']))) . '\',
+                                            message: \'<br />Verwijderd van bon <a style="color: white;" href="#" id="undo' . key($_SESSION['receipt']['items']) . '">(Ongedaan maken)</a>\'
                                         }, {
                                             // settings
                                             type: \'danger\',
@@ -585,20 +586,20 @@ else if (isset($_GET['new']))
         							        $("#pageLoaderIndicator").fadeOut();
         							    });
 
-                                        $("#undo' . $key . '").on("click", function() {
-                                            $("#undo' . $key . '").css("display", "none");
+                                        $("#undo' . key($_SESSION['receipt']['items']) . '").on("click", function() {
+                                            $("#undo' . key($_SESSION['receipt']['items']) . '").css("display", "none");
 
                                             $.get(
                                               "receipt/addItem.php",
                                               {
-                                                  itemId: \'' . $key . '\',
+                                                  itemId: \'' . key($_SESSION['receipt']['items']) . '\',
                                                   itemCount: \'1\'
                                               },
                                               function (data)
                                               {
                                                 $.notify({
                                                     icon: \'glyphicon glyphicon-trash\',
-                                                    title: \'' . urldecode(Items::getField("itemName", $key)) . '\',
+                                                    title: \'' . urldecode(Items::getField("itemName", key($_SESSION['receipt']['items']))) . '\',
                                                     message: \'<br />Toegevoegt aan bon.\'
                                                 }, {
                                                     // settings
@@ -629,6 +630,7 @@ else if (isset($_GET['new']))
 
                             });
                             </script>';
+                            next($_SESSION['receipt']['items']);
                         }
                     ?>
                 </tbody>
@@ -703,9 +705,11 @@ else if (isset($_GET['new']))
     					</div>
     				</div>
                 	<script type="text/javascript">
+                    $(function() {
+                        $('#example_email').multiple_emails( { position: "top" });
+                    });
                         $(document).ready(function() {
-                            $("#emailToCustomer").bootstrapSwitch();
-                            $('#emailToCustomer').on('switchChange.bootstrapSwitch', function (event, state) {
+                            $('#emailToCustomer').change(function() {
                                 if($("#emailToCustomer").is(":checked"))
                                 {
                                     $("#emailList").children().prop('disabled',false);
@@ -720,7 +724,6 @@ else if (isset($_GET['new']))
                                 }
                             });
 
-                			$('#example_email').multiple_emails( { position: "top" });
                 			$('#example_email').change( function(){
                 				$('#current_emails').text($(this).val());
                 			});
@@ -728,12 +731,7 @@ else if (isset($_GET['new']))
                 	</script>
                     <br />
                     <?php } ?>
-                    <input id="letterPaperInput" type="checkbox" name="letterPaperInput"> Print briefpapier op bon</input>
-                    <script type="text/javascript">
-                        $(document).ready(function() {
-                            $("#letterPaperInput").bootstrapSwitch();
-                        });
-                    </script>
+                    <div style="float: left;"><input id="letterPaperInput" type="checkbox" name="letterPaperInput"> Briefpapier</input></div>
                     <button type="button" class="btn btn-success" id="printReceipt" data-dismiss="modal">Bon printen</button>
                     <button type="button" class="btn btn-warning" id="printNoReceipt" data-dismiss="modal">Geen bon printen</button>
                 </div>
@@ -742,11 +740,14 @@ else if (isset($_GET['new']))
     </div>
     <?php
         $total = 0;
-        foreach ($_SESSION['receipt']['items'] as $key => $val)
+        if (isset($_SESSION['receipt']['items']))
         {
-            $price = Misc::calculate($_SESSION['receipt']['items'][$key]['priceAPiece']['priceExclVat'] . ' ' . $_SESSION['receipt']['items'][$key]['priceAPiece']['priceModifier']);
-            $price *= $val['count'];
-            $total += $price;
+            foreach ($_SESSION['receipt']['items'] as $key => $val)
+            {
+                $price = Misc::calculate($_SESSION['receipt']['items'][$key]['priceAPiece']['priceExclVat'] . ' ' . $_SESSION['receipt']['items'][$key]['priceAPiece']['priceModifier']);
+                $price *= $val['count'];
+                $total += $price;
+            }
         }
     ?>
     <script type="text/javascript">
@@ -916,10 +917,9 @@ else if (isset($_GET['new']))
                 }
 
                 if (this.value == "BANK")
-                    $("#emailToCustomer").bootstrapSwitch('state', true);
+                    $("#emailToCustomer").prop('checked', true);
                 else
-                    $("#emailToCustomer").bootstrapSwitch('state', false);
-
+                    $("#emailToCustomer").prop('checked', false);
                 $('#statusText').html('');
 
                 checkTotalValue();
@@ -1302,7 +1302,7 @@ else
             </tbody>
         </table>
         <?php
-    if ($i >= 25)
+    if (0 >= 25)
     {
         ?>
         <button type="button" class="btn btn-info center-block" id="loadMore">Laad Meer</button>

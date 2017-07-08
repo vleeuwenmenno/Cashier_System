@@ -4,7 +4,6 @@ include_once("../includes.php");
 if ($_GET['initials'] != "" && $_GET['famName'] != ""
 						   && $_GET['street'] != ""
 						   && $_GET['city'] != ""
-						   && $_GET['pHome'] != ""
                            && $_GET['id'] != "")
 {
 

@@ -41,7 +41,6 @@ if (isset($_GET['sTerm']))
                     echo '        <td>' . $row['receiptId'] . '</td>';
                     echo '        <td>' . Misc::sqlGet("paidDt", "receipt", "receiptId", $row['receiptId'])['paidDt'] . '</td>';
                     echo '        <td>' . $row['receiptId'] . '</td>';
-                    echo Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId']);
                     echo '        <td>&euro;&nbsp;' . number_format(round(Calculate::getReceiptTotal(Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId'])['items'])['total'], 2), 2, ",", ".") . '</td>';
                     echo '<td>';
                     if ($row['paymentMethod'] == "CASH") { echo "Kontant"; } else if ($row['paymentMethod'] == "PIN") { echo 'Pin'; } else if ($row['paymentMethod'] == "BANK") { echo 'Bankoverdracht'; } else if ($row['paymentMethod'] == "PC") { echo 'Pin en Kontant'; }
@@ -73,7 +72,6 @@ if (isset($_GET['sTerm']))
                         echo '        <td>' . $row['receiptId'] . '</td>';
                         echo '        <td>' . Misc::sqlGet("createDt", "receipt", "receiptId", $row['receiptId'])['createDt'] . '</td>';
                         echo '        <td>' . $row['receiptId'] . '</td>';
-                        echo Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId']);
                         echo '        <td>&euro;&nbsp;' . number_format(round(Calculate::getReceiptTotal(Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId'])['items'])['total'], 2), 2, ",", ".") . '</td>';
                         echo '<td>N.V.T</td>';
                         echo '<td>

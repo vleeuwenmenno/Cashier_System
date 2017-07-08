@@ -35,7 +35,7 @@ namespace CashRegister_PrintHelperCLI
 
                 try
                 {
-                    HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url); //http%3A%2F%2F10.0.0.164%2FCashRegister%2Fsrc%2Fpdfs%2F1182794729.pdf
+                    HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url); //http%3A%2F%2F10.0.0.164%2FCashRegister%2Fsrc%2Ftemp%2F1182794729.pdf
                     request.Method = "HEAD";
 
                     request.GetResponse();

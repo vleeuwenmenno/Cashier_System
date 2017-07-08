@@ -140,17 +140,46 @@ namespace installer
                 log += installPath + "\\ui.exe" + Environment.NewLine;
                 File.WriteAllBytes(installPath + "\\ui.exe", Properties.Resources.ui);
 
-                log += installPath + "\\NDde.dll" + Environment.NewLine;
-                File.WriteAllBytes(installPath + "\\NDde.dll", Properties.Resources.NDde);
+                //log += installPath + "\\NDde.dll" + Environment.NewLine;
+                //File.WriteAllBytes(installPath + "\\NDde.dll", Properties.Resources.NDde);
 
                 log += installPath + "\\Newtonsoft.Json.dll" + Environment.NewLine;
                 File.WriteAllBytes(installPath + "\\Newtonsoft.Json.dll", Properties.Resources.Newtonsoft_Json);
 
-                log += installPath + "\\Spire.License.dll" + Environment.NewLine;
-                File.WriteAllBytes(installPath + "\\Spire.License.dll", Properties.Resources.Spire_License);
+                //NEW
+                log += installPath + "\\libeay32.dll" + Environment.NewLine;
+                File.WriteAllBytes(installPath + "\\libeay32.dll", Properties.Resources.libeay32);
 
-                log += installPath + "\\Spire.Pdf.dll" + Environment.NewLine;
-                File.WriteAllBytes(installPath + "\\Spire.Pdf.dll", Properties.Resources.Spire_Pdf);
+                log += installPath + "\\libgcc_s_dw2-1.dll" + Environment.NewLine;
+                File.WriteAllBytes(installPath + "\\libgcc_s_dw2-1.dll", Properties.Resources.libgcc_s_dw2_1);
+
+                log += installPath + "\\libstdc++-6.dll" + Environment.NewLine;
+                File.WriteAllBytes(installPath + "\\libstdc++-6.dll", Properties.Resources.libstdc___6);
+
+                log += installPath + "\\libwinpthread-1.dll" + Environment.NewLine;
+                File.WriteAllBytes(installPath + "\\libwinpthread-1.dll", Properties.Resources.libwinpthread_1);
+
+                log += installPath + "\\PrintHtml.exe" + Environment.NewLine;
+                File.WriteAllBytes(installPath + "\\PrintHtml.exe", Properties.Resources.PrintHtml);
+
+                log += installPath + "\\QtCore4.dll" + Environment.NewLine;
+                File.WriteAllBytes(installPath + "\\QtCore4.dll", Properties.Resources.QtCore4);
+
+                log += installPath + "\\QtGui4.dll" + Environment.NewLine;
+                File.WriteAllBytes(installPath + "\\QtGui4.dll", Properties.Resources.QtGui4);
+
+                log += installPath + "\\QtNetwork4.dll" + Environment.NewLine;
+                File.WriteAllBytes(installPath + "\\QtNetwork4.dll", Properties.Resources.QtNetwork4);
+
+                log += installPath + "\\QtWebKit4.dll" + Environment.NewLine;
+                File.WriteAllBytes(installPath + "\\QtWebKit4.dll", Properties.Resources.QtWebKit4);
+
+                log += installPath + "\\ssleay32.dll" + Environment.NewLine;
+                File.WriteAllBytes(installPath + "\\ssleay32.dll", Properties.Resources.ssleay32);
+
+                log += installPath + "\\ca-bundle.crt" + Environment.NewLine;
+                File.WriteAllBytes(installPath + "\\ca-bundle.crt", Properties.Resources.ca_bundle);
+                //END
 
                 log += installPath + "\\uninstall.bat" + Environment.NewLine;
                 File.WriteAllBytes(installPath + "\\uninstall.exe", Properties.Resources.uninstall);

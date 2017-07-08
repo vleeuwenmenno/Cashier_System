@@ -335,9 +335,12 @@ class Misc
 		return $final_stack;
 	}
 
-	public static function readnumber($string, $i) {
+	public static function readnumber($string, $i) 
+	{
 		$number = '';
-		while (Misc::is_number($string{$i})) {
+
+		while (Misc::is_number(substr($string, $i, 1)))
+		{
 			$number .= $string{$i};
 			$i++;
 		}
@@ -349,7 +352,8 @@ class Misc
 		return in_array($char, $operators);
 	}
 
-	public static function is_number($char) {
+	public static function is_number($char) 
+	{
 		return (($char == '.') || ($char >= '0' && $char <= '9'));
 	}
 }

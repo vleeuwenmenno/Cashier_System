@@ -121,22 +121,46 @@
   <data name="cli" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\cli.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="NDde" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\NDde.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="Newtonsoft_Json" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Newtonsoft.Json.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="Spire_License" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Spire.License.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="Spire_Pdf" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Spire.Pdf.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="ui" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ui.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="uninstall" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\uninstall.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="libeay32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\libeay32.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="libgcc_s_dw2_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\libgcc_s_dw2-1.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="libstdc___6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\libstdc++-6.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="libwinpthread_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\libwinpthread-1.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="PrintHtml" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PrintHtml.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="QtCore4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\QtCore4.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="QtGui4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\QtGui4.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="QtNetwork4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\QtNetwork4.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="QtWebKit4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\QtWebKit4.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="ssleay32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ssleay32.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="ca_bundle" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ca-bundle.crt;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

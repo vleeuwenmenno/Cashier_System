@@ -225,6 +225,7 @@ namespace CashRegister_PrintHelper
             this.Name = "MainForm";
             this.Text = "Kassa print helper";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFormFormClosing);
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.trayIconMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
