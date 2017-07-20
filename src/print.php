@@ -297,11 +297,10 @@ else if (isset($_GET['receiptPrint']))
                     Betaalwijze: <?php if ($receipt['paymentMethod'] == "CASH") { echo "Kontant"; } else if ($receipt['paymentMethod'] == "PIN") { echo 'Pin'; } else if ($receipt['paymentMethod'] == "BANK") { echo 'Bankoverdracht'; } else if ($receipt['paymentMethod'] == "PC") { echo 'Pin en Kontant'; } ?><br />
                 </div>
 
-                <?php if (Misc::sqlGet("customerId", "receipt", "receiptId", $_GET['receipt'])['customerId'] > 0) { ?>
+                <?php if (Misc::sqlGet("customerId", "receipt", "receiptId", $_GET['receiptPrint'])['customerId'] > 0) { ?>
                 <div style="margin-left: 48px; margin-top: 32px; font-size: 12px;">
                     <?php
-                        $cust = Misc::sqlGet("*", "customers", "customerId", Misc::sqlGet("customerId", "receipt", "receiptId", $_GET['receipt'])['customerId']);
-
+                        $cust = Misc::sqlGet("*", "customers", "customerId", Misc::sqlGet("customerId", "receipt", "receiptId", $_GET['receiptPrint'])['customerId']);
                     ?>
                     <?php echo $cust['initials'] . ' ' . $cust['familyName']; ?><br />
                     <?php if ($cust['companyName'] != "") echo $cust['companyName'] . '<br />'; ?>
@@ -309,6 +308,8 @@ else if (isset($_GET['receiptPrint']))
                     <?php echo $cust['postalCode'] . ' ' . $cust['city']; ?><br />
                 </div>
                 <?php } ?>
+
+                <br /><center style="font-size: 12px;"><?php echo urldecode(Misc::sqlGet("receiptDesc", "receipt", "receiptId", $_GET['receiptPrint'])['receiptDesc']); ?></center>
 
                 <table class="table" style="
         position: relative;
@@ -443,6 +444,9 @@ else if (isset($_GET['receipt']))
                 <?php echo $cust['postalCode'] . ' ' . $cust['city']; ?><br />
             </div>
             <?php } ?>
+            
+            <br /><center style="font-size: 12px;"><?php echo urldecode(Misc::sqlGet("receiptDesc", "receipt", "receiptId", $_GET['receipt'])['receiptDesc']); ?></center>
+
 
             <table class="table" style="
     position: relative;

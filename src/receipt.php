@@ -85,6 +85,8 @@ else if (isset($_GET['new']))
                 }
                 ?>
             </div>
+
+            Omschrijving: <input type="text" class="form-control" id="receiptDescription"></input>
             <table class="table">
                 <thead>
                     <tr class="filters">
@@ -941,13 +943,13 @@ else if (isset($_GET['new']))
 
                             $("#pageLoaderIndicator").fadeIn();
                             $("#sideBarMenu").addClass("disabledbutton");
-                            $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&printLetterPaper=" + $("#letterPaperInput").is(':checked') + "&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=" + printAmount + "&paymentMethod=" + $( "#paymentMethod" ).val() + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&pin=" + pinVal + "&cash=" + cashVal, function () { });
+                            $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&printLetterPaper=" + $("#letterPaperInput").is(':checked') + "&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=" + printAmount + "&paymentMethod=" + $( "#paymentMethod" ).val() +"&receiptDesc=" + encodeURIComponent($('#receiptDescription').val()) + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&pin=" + pinVal + "&cash=" + cashVal, function () { });
                        }
                        else
                        {
                            $("#pageLoaderIndicator").fadeIn();
                            $("#sideBarMenu").addClass("disabledbutton");
-                           $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&printLetterPaper=" + $("#letterPaperInput").is(':checked') + "&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=" + printAmount + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&paymentMethod=" + $( "#paymentMethod" ).val(), function () { });
+                           $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&printLetterPaper=" + $("#letterPaperInput").is(':checked') + "&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=" + printAmount + "&receiptDesc=" + encodeURIComponent($('#receiptDescription').val()) + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&paymentMethod=" + $( "#paymentMethod" ).val(), function () { });
                        }
                     }
                     else

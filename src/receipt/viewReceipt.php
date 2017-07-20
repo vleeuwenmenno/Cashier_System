@@ -77,6 +77,8 @@
                 </div>
                 <?php } ?>
 
+                <br /><center style="font-size: 12px;"><?php echo urldecode(Misc::sqlGet("receiptDesc", "receipt", "receiptId", $_GET['receipt'])['receiptDesc']); ?></center>
+
                 <table class="table" style="
         position: relative;
         left: 48px;
