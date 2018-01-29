@@ -53,7 +53,8 @@ else if (isset($_GET['new']))
             die('Unable to connect to database [' . $db->connect_error . ']');
         }
 
-        $sql = "INSERT INTO receipt (receiptId, creator, items, createDt, parentSession) VALUES ((UNIX_TIMESTAMP() - 315360000) " . ", '" . $_SESSION['login_ok']['userId'] . "', '', '" .  date("H:i:s d-m-Y") . "', '" . Misc::sqlGet("currentSession", "cash_registers", "crStaticIP", $thisIp)['currentSession'] . "')";
+        //Create the recept (ALTER TABLE receipt AUTO_INCREMENT = 20170000)
+        $sql = "INSERT INTO receipt (creator, items, createDt, parentSession) VALUES ('" . $_SESSION['login_ok']['userId'] . "', '', '" .  date("H:i:s d-m-Y") . "', '" . Misc::sqlGet("currentSession", "cash_registers", "crStaticIP", $thisIp)['currentSession'] . "')";
 
         if(!$result = $db->query($sql))
         {
@@ -66,7 +67,7 @@ else if (isset($_GET['new']))
     }
 ?>
 <div id="cartForm">
-        <span id="receiptNo"><h2>Bon #<?php echo str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT); ?></h2></span>
+        <span id="receiptNo"><h2>Bon #<?php echo $_SESSION['receipt']['id']; ?></h2></span>
 
         <div class="panel panel filterable">
             <div class="panel-heading">
@@ -116,7 +117,7 @@ else if (isset($_GET['new']))
                 <tbody id="listContents">
                     <?php
                         if (!empty($_SESSION['receipt']['items']))
-                        while ($val = current($_SESSION['receipt']['items'])) 
+                        while ($val = current($_SESSION['receipt']['items']))
                         {
                             $total = Misc::calculate(round($_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . " " . $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['priceAPiece']['priceModifier']);
                             $purchase = $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['priceAPiece']['priceExclVat'];
@@ -305,7 +306,7 @@ else if (isset($_GET['new']))
                                 });
 
                                 $("#absolutePrice' . key($_SESSION['receipt']['items']) . '").change(function() {
-                                    if(this.checked) 
+                                    if(this.checked)
                                     {
                                         $("#nonAbsoluteDiv' . key($_SESSION['receipt']['items']) . '").hide();
                                         $("#absolutePriceDiv' . key($_SESSION['receipt']['items']) . '").show();
