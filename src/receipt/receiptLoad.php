@@ -46,9 +46,7 @@ if (isset($_GET['sTerm']))
                     if ($row['paymentMethod'] == "CASH") { echo "Kontant"; } else if ($row['paymentMethod'] == "PIN") { echo 'Pin'; } else if ($row['paymentMethod'] == "BANK") { echo 'Bankoverdracht'; } else if ($row['paymentMethod'] == "PC") { echo 'Pin en Kontant'; }
                     echo '</td>';
                     echo '<td>
-                            <button id="viewReceipt' . $i . '" type="button" class="btn btn-info"><i class="fa fa-folder-open-o" aria-hidden="true"></i></button>
-                            &nbsp;
-                            <button id="loadReceipt' . $i . '" type="button" class="btn btn-primary" disabled readonly><i class="fa fa-download" aria-hidden="true"></i></button>';
+                            <button id="viewReceipt' . $i . '" type="button" class="btn btn-info"><i class="fa fa-folder-open-o" aria-hidden="true"></i></button>';
                     echo '</td>';
                     echo '    </tr>';
                     echo '
@@ -87,6 +85,13 @@ if (isset($_GET['sTerm']))
                                 $("#viewReceipt' . $i . '").click(function() {
                                     $("#pageLoaderIndicator").fadeIn();
                                     $("#PageContent").load("receipt/viewReceipt.php?receipt=' . $row['receiptId'] . '", function () {
+                                        $("#pageLoaderIndicator").fadeOut();
+                                    });
+                                });
+                                
+                                $("#loadReceipt' . $i . '").click(function() {
+                                    $("#pageLoaderIndicator").fadeIn();
+                                    $("#PageContent").load("receipt/loadReceipt.php?receipt=' . $row['receiptId'] . '", function () {
                                         $("#pageLoaderIndicator").fadeOut();
                                     });
                                 });

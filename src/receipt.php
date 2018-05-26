@@ -647,6 +647,7 @@ else if (isset($_GET['new']))
             </table>
         </div>
     <button type="button" id="closeReceipt" class="btn btn-default">Bon Sluiten</button>
+    <button type="button" id="destroyReceipt" class="btn btn-warning">Bon Verwijderen</button>
     <button type="button" id="saveReceipt" class="btn btn-primary">Bon Opslaan</button>
     <?php if (!isset($_SESSION['receipt']['customer'])) { ?><button type="button" id="selectCustomer" class="btn btn-info">Selecteer klant</button> <?php } ?>
     <?php if (isset($_SESSION['receipt']['customer'])) { ?><button type="button" id="deselectCustomer" class="btn btn-danger">Verwijder klant van bon</button> <?php } ?>
@@ -1085,6 +1086,49 @@ else if (isset($_GET['new']))
                 $("#PageContent").load("customer.php", function () {
                     $("#pageLoaderIndicator").fadeOut();
                 });
+            });
+            
+            $('#destroyReceipt').click(function () {
+                $("#newReceipt").html("<i class=\"fa fa-file-text fa-2x\" aria-hidden=\"true\"></i>&nbsp;&nbsp; Nieuwe Bon");
+
+                $("#pageLoaderIndicator").fadeIn();
+                $("#PageContent").load("receipt.php", function () {
+                    $("#pageLoaderIndicator").fadeOut();
+                });
+
+                $.get(
+                    "receipt/empty.php",
+                    {
+                        receiptId: '<?php echo $_SESSION['receipt']['id']; ?>',
+                        destroy: 'true'
+                    },
+                    function (data)
+                    {
+                        $.notify({
+                            icon: 'glyphicon glyphicon-trash',
+                            title: 'Bon is verwijderd',
+                            message: '<a href="#" id="undoCloseReceipt" style="color: white;">(Ongedaan maken)</a>'
+                        }, {
+                            // settings
+                            type: 'warning',
+                            delay: 5000,
+                            timer: 10,
+                            placement: {
+                                from: "bottom",
+                                align: "right"
+                            }
+                        });
+
+                        $('#undoCloseReceipt').click(function () {
+                            $("#undoCloseReceipt").css("display", "none");
+
+                            $("#pageLoaderIndicator").fadeIn();
+                            $("#PageContent").load("receipt.php?recover", function () {
+                                $("#pageLoaderIndicator").fadeOut();
+                            });
+                        });
+                    }
+                );
             });
 
             $('#closeReceipt').click(function () {
