@@ -198,7 +198,7 @@ if (isset($_GET['id']))
                                             },
 							                function(data)
 							                {
-							                    if (data.match("^OK "))
+							                    if (data.indexOf('\nOK ') == 0)
 							                    {
 							                        $("#deleteConfirm").modal('hide');
 
@@ -206,6 +206,24 @@ if (isset($_GET['id']))
 							                        $("#PageContent").load("customer.php", function () {
 							                            $("#pageLoaderIndicator").fadeOut();
 							                        });
+
+													$(".in.fade.modal-backdrop").remove();
+													$("body").css("overflow", "auto");
+
+													$.notify({
+														icon: 'glyphicon glyphicon-trash',
+														title: '',
+														message: 'Klant verwijderd uit het systeem.'
+													}, {
+														// settings
+														type: 'info',
+														delay: 2000,
+														timer: 10,
+														placement: {
+															from: "bottom",
+															align: "right"
+														}
+													});
 							                    }
 							                    else
 							                    {

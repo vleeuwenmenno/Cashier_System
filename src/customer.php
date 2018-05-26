@@ -68,7 +68,7 @@ if (isset($_GET['new']))
                             },
 							function(data)
 							{
-								if (data.match("^OK "))
+								if (data.indexOf('\nOK ') == 0)
 								{
 									var arr = data.split(' ');
 									$("#customerId").val(arr[1]);

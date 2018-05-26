@@ -126,8 +126,15 @@ else if (isset($_GET['new']))
                             echo '<tr>';
                             echo '    <th><button id="trash' .  key($_SESSION['receipt']['items']) . '" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" style="font-size: 12px;"></span></button></th>';
                             echo '    <th><input class="form-control" style="width: 156px; display: none;" id="editable' . key($_SESSION['receipt']['items']) . '" value="' . $val['count'] . '" type="text" name="type"/><a style="float: left;" href="javascript:void(0);" id="editAmount' . key($_SESSION['receipt']['items']) . '">' . $val['count'] . '</a></th>';
-                            echo '    <th>
-                                          <a href="#" style="color: black;" id="itemDesc' . key($_SESSION['receipt']['items']) . '">' . $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['itemDesc'] . '</a>
+                            
+                            echo '    <th>';
+
+                            if ($_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['itemDesc'] == "")
+                                echo '<a href="#" style="color: black;" id="itemDesc' . key($_SESSION['receipt']['items']) . '">Tijdelijk Artikel (' . key($_SESSION['receipt']['items']) . ')</a>';
+                            else
+                                echo '<a href="#" style="color: black;" id="itemDesc' . key($_SESSION['receipt']['items']) . '">' . $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['itemDesc'] . '</a>';
+                            
+                            echo '    
                                           <input class="form-control" type="input" id="newItemDesc' . key($_SESSION['receipt']['items']) . '" style="float: left; display: none; width: 50%;" value="' . $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['itemDesc'] . '">
                                           <input type="button" class="btn btn-primary" style="float: left; display: none; width: 15%;" id="changeCDBtn' . key($_SESSION['receipt']['items']) . '" value="Wijzigen" />
                                           <input type="button" class="btn btn-default" style="display: none; float: left; width: 15%;" id="cancelCDBtn' . key($_SESSION['receipt']['items']) . '" value="Annuleren" />
@@ -651,7 +658,7 @@ else if (isset($_GET['new']))
             <option value="" selected="selected">Selecteer betaal methode</option>
             <option value="CASH">Kontant</option>
             <option value="PIN">Pin</option>
-            <option value="PC">Pin & Kontant</option>
+            <!--<option value="PC">Pin & Kontant</option>-->
             <option value="BANK">Op rekening</option>
         </select>
     </div>
@@ -699,39 +706,91 @@ else if (isset($_GET['new']))
 
                 <div class="modal-footer">
                     <?php if (isset($_SESSION['receipt']['customer'])) { ?>
-                    <span style="top: -8px; position: relative;">
-                        Bon emailen naar klant <input type="checkbox" name="emailToCustomer" id="emailToCustomer" 	data-size="small" data-on-text="Ja" data-off-text="Nee" checked></input><br />
-                    </span>
-                    <div class="row" id="emailList">
-    					<div class="column">
-    						<input type='text' id='example_email' name='example_emailSUI' class='form-control' value='["<?php echo Misc::sqlGet("email", "customers", "customerId", $_SESSION['receipt']['customer'])['email']; ?>"]'>
-    					</div>
-    				</div>
-                	<script type="text/javascript">
-                    $(function() {
-                        $('#example_email').multiple_emails( { position: "top" });
-                    });
-                        $(document).ready(function() {
-                            $('#emailToCustomer').change(function() {
-                                if($("#emailToCustomer").is(":checked"))
-                                {
-                                    $("#emailList").children().prop('disabled',false);
-                                    $("#emailList").fadeTo(500, 1);
-                                    $("#emailList").css("pointer-events", "");
-                                }
-                                else
-                                {
-                                    $("#emailList").children().prop('disabled', true);
-                                    $("#emailList").fadeTo(500, 0.2);
-                                    $("#emailList").css("pointer-events", "none");
-                                }
-                            });
+                    <div id="mailingSegment">
+                        <span style="top: -8px; position: relative;">
+                            Bon emailen naar klant <input type="checkbox" name="emailToCustomer" id="emailToCustomer" 	data-size="small" data-on-text="Ja" data-off-text="Nee" checked></input><br />
+                        </span>
+                        <div class="row" id="emailList">
+                            <div class="column">
+                                <?php 
+                                    if (Misc::sqlGet("email", "customers", "customerId", $_SESSION['receipt']['customer'])['email'] == "")
+                                    {
+                                        ?>
+                                            <input type='text' id='example_email' name='example_emailSUI' class='form-control' value='["<?php echo "facturen@comforttoday.nl"; ?>"]'>
+                                        <?php
+                                    }
+                                    else
+                                    {
+                                        ?>
+                                            <input type='text' id='example_email' name='example_emailSUI' class='form-control' value='["<?php echo Misc::sqlGet("email", "customers", "customerId", $_SESSION['receipt']['customer'])['email']; ?>"]'>
+                                        <?php
+                                    }
+                                ?>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                        $(function() {
+                            $('#example_email').multiple_emails( { position: "top" });
+                        });
+                            $(document).ready(function() {
+                                $('#emailToCustomer').change(function() {
+                                    if($("#emailToCustomer").is(":checked"))
+                                    {
+                                        $("#emailList").children().prop('disabled',false);
+                                        $("#emailList").fadeTo(500, 1);
+                                        $("#emailList").css("pointer-events", "");
+                                    }
+                                    else
+                                    {
+                                        $("#emailList").children().prop('disabled', true);
+                                        $("#emailList").fadeTo(500, 0.2);
+                                        $("#emailList").css("pointer-events", "none");
+                                    }
+                                });
 
-                			$('#example_email').change( function(){
-                				$('#current_emails').text($(this).val());
-                			});
-                		});
-                	</script>
+                                $('#example_email').change( function(){
+                                    $('#current_emails').text($(this).val());
+                                });
+                            });
+                        </script>
+                    </div>
+                    <br />
+                    <?php } else if (!isset($_SESSION['receipt']['customer'])) { ?>
+                    <div id="mailingSegment">
+                        <span style="top: -8px; position: relative;">
+                            Bon emailen naar administratie <input type="checkbox" name="emailToCustomer" id="emailToCustomer" 	data-size="small" data-on-text="Ja" data-off-text="Nee"></input><br />
+                        </span>
+                        <div class="row" id="emailList">
+                            <div class="column">
+                                <input type='text' id='example_email' name='example_emailSUI' class='form-control' value='["<?php echo "facturen@comforttoday.nl"; ?>"]'>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                        $(function() {
+                            $('#example_email').multiple_emails( { position: "top" });
+                        });
+                            $(document).ready(function() {
+                                $('#emailToCustomer').change(function() {
+                                    if($("#emailToCustomer").is(":checked"))
+                                    {
+                                        $("#emailList").children().prop('disabled',false);
+                                        $("#emailList").fadeTo(500, 1);
+                                        $("#emailList").css("pointer-events", "");
+                                    }
+                                    else
+                                    {
+                                        $("#emailList").children().prop('disabled', true);
+                                        $("#emailList").fadeTo(500, 0.2);
+                                        $("#emailList").css("pointer-events", "none");
+                                    }
+                                });
+
+                                $('#example_email').change( function(){
+                                    $('#current_emails').text($(this).val());
+                                });
+                            });
+                        </script>
+                    </div>
                     <br />
                     <?php } ?>
                     <div style="float: left;"><input id="letterPaperInput" type="checkbox" name="letterPaperInput"> Briefpapier</input></div>
@@ -754,6 +813,22 @@ else if (isset($_GET['new']))
         }
     ?>
     <script type="text/javascript">
+        <?php if (!isset($_SESSION['receipt']['customer'])) { ?>
+            $("#payBtn").click(function() {
+                if ($('#paymentMethod').val() == "BANK")
+                {
+                    $("#emailToCustomer").prop('checked', true);
+                    $("#mailingSegment").show();
+                    $("example_email").prop("disabled", "");
+                }
+                else
+                {
+                    $("#mailingSegment").hide();
+                    $("#emailToCustomer").prop('checked', false);
+                }
+            });
+        <?php } ?>
+
         function showDebug()
         {
             $("#debugPanel").css("display", "");

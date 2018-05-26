@@ -55,7 +55,7 @@ else if (isset($_GET['openReport']))
             echo '<br /><br />Medewerker: ' . $_SESSION['login_ok']['nickName'];
             echo '<br />Kas-in: &euro; ' . $row['cashIn'];
         echo '</div>';
-        
+
         $content = Misc::url_get_contents('http://' . $_SERVER['HTTP_HOST'] . '/CashRegister/src/print.php?openReportPrint');
         file_put_contents(getcwd() . "/temp/" . $row['cashSessionId'] . "-open.html", $content);
 
@@ -245,7 +245,7 @@ else if (isset($_GET['receiptPrint']))
     <head>
         <!-- Bootstrap and all it's dependencies -->
         <?php
-		
+
         if ($_CFG['THEME'] == "")
             $_CFG['THEME'] = 'Default';
         ?>
@@ -315,7 +315,7 @@ else if (isset($_GET['receiptPrint']))
         position: relative;
         left: 48px;
         margin-top: 32px;
-        font-size: 10px; 
+        font-size: 10px;
         width: 100%;">
                     <tr>
                         <th style="width: 60%;">Omschrijving</th>
@@ -444,7 +444,7 @@ else if (isset($_GET['receipt']))
                 <?php echo $cust['postalCode'] . ' ' . $cust['city']; ?><br />
             </div>
             <?php } ?>
-            
+
             <br /><center style="font-size: 12px;"><?php echo urldecode(Misc::sqlGet("receiptDesc", "receipt", "receiptId", $_GET['receipt'])['receiptDesc']); ?></center>
 
 
@@ -452,7 +452,7 @@ else if (isset($_GET['receipt']))
     position: relative;
     left: 48px;
     margin-top: 32px;
-    font-size: 10px; 
+    font-size: 10px;
     width: 100%;">
                 <tr>
                     <th style="width: 60%;">Omschrijving</th>
@@ -523,7 +523,7 @@ else if (isset($_GET['receipt']))
             echo '  <button id="emailAgain" type="button" class="btn btn-default">Emailen</button>';
 
         echo '<script>
-            $(document).ready(function() {               
+            $(document).ready(function() {
                 $("#emailAgain").css("display", "none");
                 $("#letterPaperInput").css("display", "none");';
 
@@ -541,7 +541,7 @@ else if (isset($_GET['receipt']))
                 $("#emailAgain").css("display", "inline");
                 $("#letterPaper").css("display", "inline");
                 $("#printAgain").css("display", "inline");
-                $("#letterPaperInput").css("display", "block"); 
+                $("#letterPaperInput").css("display", "block");
                 <?php
         }
 
@@ -623,13 +623,13 @@ else if (isset($_GET['receipt']))
                 $mail->SMTPSecure = 'STARTTLS';
                 $mail->Port = 587;
 
-                $mail->setFrom('info@comtoday.nl', 'ComToday Heemskerk');
+                $mail->setFrom('info@comtoday.nl', 'Com Today Castricum');
 
                 $object = json_decode(urldecode($_GET['mailList']), TRUE);
                 $mail->addAddress($object[0], $cust['initials'] . ' ' . $cust['familyName']);
 
                 if (!isset($_GET['nobcc']))
-                $mail->addBCC('facturen@comforttoday.nl');
+                    $mail->addBCC('facturen@comforttoday.nl');
 
                 for($i = 0; $i < count($object); $i++)
                 {
@@ -643,16 +643,16 @@ else if (isset($_GET['receipt']))
                 $mail->Subject = 'Uw factuur';
                 $mail->Body    = 'Geachte klant,<br /><br />
 
-                                    Bedankt voor uw aankoop bij ComToday.<br />
+                                    Bedankt voor uw aankoop bij Com Today.<br />
                                     De bijlage bevat uw factuur.<br /><br />
 
                                     Wij wensen u veel plezier met uw aankoop<br /><br />
 
                                     Met vriendelijke groeten,<br /><br />
 
-                                    <b>ComToday </b><br />
-                                    Maerelaan 26 <br />
-                                    1962 KC Heemskerk <br />
+                                    <b>Com Today </b><br />
+                                    Castricummer Werf 45 <br />
+                                    1901 RV, Castricum <br />
                                     0251 200627 <br />
                                     info@comtoday.nl<br />';
 
