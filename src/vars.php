@@ -4,7 +4,7 @@
         'COMPANY_NAME' => 'ComToday',
         'VAT' => 1.21,
         'THEME' => 'Yeti',
-        'HOST_NAME' => '192.168.1.64',
+        'HOST_NAME' => '127.0.0.1',
         'IMG_PATH' => '/CashRegister/src/images'
     );
 

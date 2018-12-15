@@ -155,7 +155,7 @@ else if (isset($_GET['close']))
                             die('Unable to connect to database [' . $db->connect_error . ']');
                         }
 
-                        $sql = "SELECT * FROM cash_registers WHERE crStaticIP='$thisIp';";
+                        $sql = "SELECT * FROM cash_registers WHERE crStaticIP='$thisIp' OR crStaticIP='*';";
 
                         if(!$result = $db->query($sql))
                         {
@@ -174,11 +174,11 @@ else if (isset($_GET['close']))
                             $ok = true;
                         }
 
-                        if (!$ok)
+                        /*if (!$ok)
                         {
                             echo 'U bevindt zich niet op een kassa systeem! (' . $thisIp . ')';
                             return;
-                        }
+                        }*/
 
                         if (Misc::crIsActive())
                         {
@@ -347,7 +347,7 @@ else if (isset($_GET['cashOut']) && isset($_GET['pinOut']) && isset($_GET['bankO
                                 die('Unable to connect to database [' . $db->connect_error . ']');
                             }
 
-                            $sql = "SELECT * FROM cash_registers WHERE crStaticIP='$thisIp';";
+                            $sql = "SELECT * FROM cash_registers WHERE crStaticIP='*' OR crStaticIP='$thisIp';";
 
                             if(!$result = $db->query($sql))
                             {
@@ -357,11 +357,11 @@ else if (isset($_GET['cashOut']) && isset($_GET['pinOut']) && isset($_GET['bankO
                             while($row = $result->fetch_assoc())
                             { $ok = true; }
 
-                            if (!$ok)
+                            /*if (!$ok)
                             {
                                 echo 'U bevindt zich niet op een kassa systeem! (' . $thisIp . ')';
                                 return;
-                            }
+                            }*/
 
                             if (Misc::crIsActive())
                             {
@@ -482,11 +482,12 @@ else
                                 $ok = true;
                             }
 
-                            if (!$ok)
+
+                            /*if (!$ok)
                             {
                                 echo 'U bevindt zich niet op een kassa systeem! (' . $thisIp . ')';
                                 return;
-                            }
+                            }*/
 
                             if (Misc::crIsActive())
                             {

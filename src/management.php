@@ -10,9 +10,6 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
         		<a  href="#1" data-toggle="tab">Gebruikers Beheer</a>
 			</li>
 			<li>
-				<a href="#2" data-toggle="tab">Balans Beheer</a>
-			</li>
-			<li>
 				<a href="#3" data-toggle="tab">Database Beheer</a>
 			</li>
 		</ul>
@@ -608,18 +605,6 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 						</div>
 					</div>
 				</div>
-				<div class="tab-pane" id="2">
-					<div id="balanceManagement">
-						<h2>Balans Beheer</h2>
-					    <br />
-                        //TODO: Dit werkt momenteel nog helemaal niet, FIX IT!
-					    <div class="form-group">
-							Balans rapport printen:<br />
-							<input type="button" class="btn btn-default" id="printReport" value="Print minimaal" />
-							<input type="button" class="btn btn-primary" id="printFullReport" value="Print volledig rapport" />
-						</div>
-					</div>
-				</div>
 				<div class="tab-pane" id="3">
 					<div id="managementForm">
 					    <h2>Database Beheer</h2>
@@ -702,7 +687,7 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 							</div>
 							<div class="panel panel-default">
 								<div class="panel-heading">
-								<button type="button" class="btn btn-default btn-xs spoiler-trigger" data-toggle="collapse">Artikelen Updaten</button>
+								<button type="button" class="btn btn-default btn-xs spoiler-trigger" data-toggle="collapse" disabled>Artikelen Updaten</button>
 								</div>
 								<div class="panel-collapse collapse out">
 									<div class="panel-body">
