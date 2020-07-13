@@ -9,6 +9,7 @@ abstract class PaymentMethod
     const Cash = 2;
     const BankTransfer = 3;
     const All = 4;
+    const iDeal = 5;
 }
 
 class Calculate
@@ -122,6 +123,32 @@ class Calculate
 
             return $final;
         }
+        else if ($identifier == PaymentMethod::iDeal)
+        {
+            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='iDeal' AND paymentMethod IS NOT NULL AND parentSession='$sessionID'";
+            $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
+
+            if($db->connect_errno > 0)
+            {
+                die('Unable to connect to database [' . $db->connect_error . ']');
+            }
+
+            if(!$result = $db->query($sql))
+            {
+                die('Er was een fout tijdens het ophalen van bruto-omzet (PaymentMethod::iDeal) (' . $db->error . ')');
+            }
+
+            $final = 0.00;
+            while($row = $result->fetch_assoc())
+            {
+                $receipt = Calculate::getReceiptTotal($row['items']);
+
+                if ($receipt['total'] > 0)
+                    $final += round($receipt['total'],2 );
+            }
+
+            return $final;
+        }
     }
 
     public static function getNetTurnover($identifier, $sessionID)
@@ -211,6 +238,29 @@ class Calculate
             if(!$result = $db->query($sql))
             {
                 die('Er was een fout tijdens het ophalen van bruto-omzet (PaymentMethod::All) (' . $db->error . ')');
+            }
+
+            $final = 0.00;
+            while($row = $result->fetch_assoc())
+            {
+                $receipt = Calculate::getReceiptTotal($row['items']);
+                $final += round($receipt['total'],2 );
+            }
+            return $final;
+        }
+        else if ($identifier == PaymentMethod::iDeal)
+        {
+            $sql = "SELECT receiptId,items FROM receipt WHERE paidDt IS NOT NULL AND paymentMethod='iDeal' AND paymentMethod IS NOT NULL AND parentSession='$sessionID'";
+            $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
+
+            if($db->connect_errno > 0)
+            {
+                die('Unable to connect to database [' . $db->connect_error . ']');
+            }
+
+            if(!$result = $db->query($sql))
+            {
+                die('Er was een fout tijdens het ophalen van bruto-omzet (PaymentMethod::iDeal) (' . $db->error . ')');
             }
 
             $final = 0.00;
@@ -334,6 +384,37 @@ class Calculate
             if(!$result = $db->query($sql))
             {
                 die('Er was een fout tijdens het ophalen van bruto-omzet (PaymentMethod::All) (' . $db->error . ')');
+            }
+
+            $final = 0.00;
+            while($row = $result->fetch_assoc())
+            {
+                //Marge is totale prijs min belasting min inkoop prijs
+                $receipt = Misc::sqlGet("items", "receipt", "receiptId", $row["receiptId"]);
+                $json = json_decode(urldecode($receipt['items']), TRUE);
+
+                foreach ($json as $key => $val)
+                {
+                    $itemPrice = Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . " " . $val['priceAPiece']['priceModifier']);
+                    $itemMargin = $itemPrice - (round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) - $val['priceAPiece']['priceExclVat']) - $val['priceAPiece']['priceExclVat'];
+                    $final += round($itemMargin * $val['count'], 2);
+                }
+            }
+            return $final;
+        }
+        else if ($identifier == PaymentMethod::iDeal)
+        {
+            $sql = "SELECT receiptId FROM  receipt WHERE paidDt IS NOT NULL AND paymentMethod='iDeal' AND paymentMethod IS NOT NULL AND parentSession='$sessionID'";
+            $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
+
+            if($db->connect_errno > 0)
+            {
+                die('Unable to connect to database [' . $db->connect_error . ']');
+            }
+
+            if(!$result = $db->query($sql))
+            {
+                die('Er was een fout tijdens het ophalen van bruto-omzet (PaymentMethod::iDeal) (' . $db->error . ')');
             }
 
             $final = 0.00;

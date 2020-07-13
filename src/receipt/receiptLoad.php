@@ -43,7 +43,7 @@ if (isset($_GET['sTerm']))
                     echo '        <td>' . $row['receiptId'] . '</td>';
                     echo '        <td>&euro;&nbsp;' . number_format(round(Calculate::getReceiptTotal(Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId'])['items'])['total'], 2), 2, ",", ".") . '</td>';
                     echo '<td>';
-                    if ($row['paymentMethod'] == "CASH") { echo "Kontant"; } else if ($row['paymentMethod'] == "PIN") { echo 'Pin'; } else if ($row['paymentMethod'] == "BANK") { echo 'Bankoverdracht'; } else if ($row['paymentMethod'] == "PC") { echo 'Pin en Kontant'; }
+                    if ($row['paymentMethod'] == "CASH") { echo "Kontant"; } else if ($row['paymentMethod'] == "PIN") { echo 'Pin'; } else if ($row['paymentMethod'] == "BANK") { echo 'Bankoverdracht'; } else if ($row['paymentMethod'] == "iDeal") { echo 'iDeal'; } else if ($row['paymentMethod'] == "PC") { echo 'Pin en Kontant'; }
                     echo '</td>';
                     echo '<td>
                             <button id="viewReceipt' . $i . '" type="button" class="btn btn-info"><i class="fa fa-folder-open-o" aria-hidden="true"></i></button>';

@@ -87,7 +87,7 @@ else if (isset($_GET['new']))
                 ?>
             </div>
 
-            Omschrijving: <input type="text" class="form-control" id="receiptDescription"></input>
+            Bon omschrijving: <input type="text" class="form-control" id="receiptDescription"></input>
             <table class="table">
                 <thead>
                     <tr class="filters">
@@ -646,22 +646,32 @@ else if (isset($_GET['new']))
                 </tbody>
             </table>
         </div>
-    <button type="button" id="closeReceipt" class="btn btn-default">Bon Sluiten</button>
-    <button type="button" id="destroyReceipt" class="btn btn-warning">Bon Verwijderen</button>
-    <button type="button" id="saveReceipt" class="btn btn-primary">Bon Opslaan</button>
-    <?php if (!isset($_SESSION['receipt']['customer'])) { ?><button type="button" id="selectCustomer" class="btn btn-info">Selecteer klant</button> <?php } ?>
-    <?php if (isset($_SESSION['receipt']['customer'])) { ?><button type="button" id="deselectCustomer" class="btn btn-danger">Verwijder klant van bon</button> <?php } ?>
-    <button type="button" id="payBtn" class="btn btn-primary pull-right" data-toggle="modal" data-target="#printAmount">Betalen</button>
+    <div class="row">
+        <button type="button" id="payBtn" class="btn btn-success" data-toggle="modal" data-target="#printAmount" style="float: left; margin-left: 8px; margin-right: 8px;">Betalen</button>
+        
+        <div class="dropdown" style="float: left; margin-left: 8px; margin-right: 8px;">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Bon opties
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li><button type="button" id="closeReceipt" class="btn btn-default" style="width: 100%;">Bon Sluiten</button></li>
+                <li><button type="button" id="destroyReceipt" class="btn btn-warning" style="width: 100%;">Bon Verwijderen</button></li>
+                <li><button type="button" id="saveReceipt" class="btn btn-primary" style="width: 100%;">Bon Opslaan</button></li>
+            </ul>
+        </div>
 
-
-    <div class="form-group pull-right" style="width: 320px; padding-right: 32px;">
-        <select class="combobox form-control" id="paymentMethod">
-            <option value="" selected="selected">Selecteer betaal methode</option>
-            <option value="CASH">Kontant</option>
-            <option value="PIN">Pin</option>
-            <!--<option value="PC">Pin & Kontant</option>-->
-            <option value="BANK">Op rekening</option>
-        </select>
+        <?php if (!isset($_SESSION['receipt']['customer'])) { ?><button type="button" id="selectCustomer" class="btn btn-info" style="float: left; margin-left: 8px; margin-right: 8px;">Selecteer klant</button> <?php } ?>
+        <?php if (isset($_SESSION['receipt']['customer'])) { ?><button type="button" id="deselectCustomer" class="btn btn-danger" style="float: left; margin-left: 8px; margin-right: 8px;">Verwijder klant van bon</button> <?php } ?>
+        
+        <div class="form-group" style="margin-left: 8px; margin-right: 8px;">
+            <select class="combobox form-control" id="paymentMethod">
+                <option value="" selected="selected">Selecteer betaal methode</option>
+                <option value="CASH">Kontant</option>
+                <option value="PIN">Pin</option>
+                <!--<option value="PC">Pin & Kontant</option>-->
+                <option value="BANK">Op rekening</option>
+                <option value="iDeal">iDeal</option>
+            </select>
+        </div>
     </div>
 
     <div class="pull-right" id="statusText"></div>
@@ -678,7 +688,7 @@ else if (isset($_GET['new']))
         <input class="form-control" id="cashVal">
     </div>
 
-    <h2 style="float: right; position: relative; left: -32px;">Totaal: &euro;<?php echo number_format(round(Calculate::getReceiptTotal($_SESSION['receipt']['id'], true)['total'], 2), 2, ",", "."); ?></h2>
+    <h2 class="pull-right" style="margin: 0 !important; padding: 0 !important;">Totaal: &euro;<?php echo number_format(round(Calculate::getReceiptTotal($_SESSION['receipt']['id'], true)['total'], 2), 2, ",", "."); ?></h2>
     <div class="panel panel-default" id="debugPanel" style="display: none;">
         <div class="panel-heading">
             <button type="button" class="btn btn-default btn-xs spoiler-trigger" data-toggle="collapse">Debug Info</button>
@@ -794,7 +804,7 @@ else if (isset($_GET['new']))
                     </div>
                     <br />
                     <?php } ?>
-                    <div style="float: left;"><input id="letterPaperInput" type="checkbox" name="letterPaperInput"> Briefpapier</input></div>
+                    <div style="float: left;"><input id="letterPaperInput" type="checkbox" name="letterPaperInput"> Print briefpapier</input></div>
                     <button type="button" class="btn btn-success" id="printReceipt" data-dismiss="modal">Bon printen</button>
                     <button type="button" class="btn btn-warning" id="printNoReceipt" data-dismiss="modal">Geen bon printen</button>
                 </div>
@@ -851,6 +861,11 @@ else if (isset($_GET['new']))
                     $('#pinVal').val("0,00");
                 }
                 else if ($('#paymentMethod').val() != "BANK")
+                {
+                    $('#pinVal').val(0);
+                    $('#cashVal').val(0);
+                }
+                else if ($('#paymentMethod').val() != "iDeal")
                 {
                     $('#pinVal').val(0);
                     $('#cashVal').val(0);
@@ -997,6 +1012,8 @@ else if (isset($_GET['new']))
 
                 if (this.value == "BANK")
                     $("#emailToCustomer").prop('checked', true);
+                else if (this.value == "iDeal")
+                    $("#emailToCustomer").prop('checked', true);
                 else
                     $("#emailToCustomer").prop('checked', false);
                 $('#statusText').html('');
@@ -1089,7 +1106,7 @@ else if (isset($_GET['new']))
             });
             
             $('#destroyReceipt').click(function () {
-                $("#newReceipt").html("<i class=\"fa fa-file-text fa-2x\" aria-hidden=\"true\"></i>&nbsp;&nbsp; Nieuwe Bon");
+                $("#newReceipt").html("<i class=\"fa fa-file-text\" aria-hidden=\"true\"></i>&nbsp;&nbsp; Nieuwe Bon");
 
                 $("#pageLoaderIndicator").fadeIn();
                 $("#PageContent").load("receipt.php", function () {
@@ -1132,7 +1149,7 @@ else if (isset($_GET['new']))
             });
 
             $('#closeReceipt').click(function () {
-                $("#newReceipt").html("<i class=\"fa fa-file-text fa-2x\" aria-hidden=\"true\"></i>&nbsp;&nbsp; Nieuwe Bon");
+                $("#newReceipt").html("<i class=\"fa fa-file-text\" aria-hidden=\"true\"></i>&nbsp;&nbsp; Nieuwe Bon");
 
                 $("#pageLoaderIndicator").fadeIn();
                 $("#PageContent").load("receipt.php", function () {
