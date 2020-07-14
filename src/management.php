@@ -48,7 +48,7 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 
 					            <tbody id="userListContents">
 									<?php
-									$sql = "SELECT userId, nickName, username, userTheme, managementUser FROM `users` WHERE 1;";
+									$sql = "SELECT userId, nickName, username, managementUser FROM `users` WHERE 1;";
 
 									$db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
@@ -190,67 +190,8 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
     				                        <div style="float: left;">
                                                 Is Beheerder: <input id="isAdmin<?php echo $i; ?>" type="checkbox" <?php if ($row['managementUser'] == 1) echo 'checked'; ?>>
     											<br />
-    											Thema:
-    											<select id="userThemeCombo<?php echo $i; ?>" class="combobox">
-    												<?php
-    												$folders = scandir("themes");
-
-    												foreach ($folders as $key => $val)
-    												{
-    													if ($val != "." && $val != ".." && $val != "fonts")
-    													{
-    														$s = "";
-
-    														if ($val == $row['userTheme'])
-    															$s = "selected";
-
-    														if ($val == "Default")
-    														{
-    															echo '<option value="' . $val . '"'. $s . '>Bootstrap</option>';
-    														}
-    														else
-                                                                echo '<option value="' . $val . '"' . $s . '>' . $val . '</option>';
-    													}
-    												}
-    												?>
-    											</select>
 												<script>
 													$(document).ready(function() {
-														$("#userThemeCombo<?php echo $i; ?>").change(function() {
-															$.get(
-																"management/updateUser.php",
-																{
-																	userId: "<?php echo $row['userId']; ?>",
-																	userTheme: $('#userThemeCombo<?php echo $i; ?>').val()
-																},
-																function (data)
-																{
-																	if (data.replace(/(\r\n|\n|\r)/gm,"") == "OK")
-																	{
-																		$("#pageLoaderIndicator").fadeIn();
-																		$("#PageContent").load("management.php", function () {
-																			$("#pageLoaderIndicator").fadeOut();
-																		});
-																	}
-																	else
-																	{
-																		$.notify({
-																			icon: 'glyphicon glyphicon-warning-sign',
-																			title: 'Fout',
-																			message: '<br / >' + data
-																		},{
-																			// settings
-																			type: 'danger',
-																			placement: {
-																				from: "bottom",
-																				align: "right"
-																			}
-																		});
-																	}
-																}
-															);
-														});
-
 														$("#isAdmin<?php echo $i; ?>").change(function() {
 															$.get(
 																"management/updateUser.php",
@@ -472,27 +413,6 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 										<td>
 											Is Beheerder: <input id="isAdmin" type="checkbox">
 											<br />
-											Thema:
-											<select id="userThemeCombo" class="combobox">
-												<?php
-												$folders = scandir("themes");
-
-												foreach ($folders as $key => $val)
-												{
-													if ($val != "." && $val != ".." && $val != "fonts")
-													{
-														if ($val == "Default")
-														{
-															echo '<option value="' . $val . '">Bootstrap</option>';
-														}
-                                                        else if ($val == "Yeti")
-                                                            echo '<option value="' . $val . '"' . $s . ' selected>' . $val . '</option>';
-														else
-															echo '<option value="' . $val . '">' . $val . '</option>';
-													}
-												}
-												?>
-											</select>
 										</td>
 										<script>
 											$(document).ready(function() {
@@ -548,8 +468,7 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
                                                     nickname: $("#displayNameText").val(),
                                                     username: $("#userNameText").val(),
                                                     pass: $("#passwordText").val(),
-                                                    managementUser: $("#isAdmin").is(":checked"),
-                                                    userTheme: $('#userThemeCombo option:selected').val()
+                                                    managementUser: $("#isAdmin").is(":checked")
                                                 },
                                                 function (data)
                                                 {

@@ -64,6 +64,13 @@ else if (isset($_GET['new']))
         $_SESSION['receipt']['status'] = 'open';
         $_SESSION['receipt']['saved'] = false;
         $_SESSION['receipt']['id'] = mysqli_insert_id($db);
+        ?>
+        <script>
+            $(document).ready(function() {
+                $("#newReceipt").show();
+            });
+        </script>
+        <?php
     }
 ?>
 <div id="cartForm">
@@ -165,7 +172,7 @@ else if (isset($_GET['new']))
                                                         },
                                                         function (data)
                                                         {
-                                                            if (data == "\nOK")
+                                                            if (data.replace(/(\r\n|\n|\r)/gm,"") == "OK")
                                                             {
                                                                 $("#itemDesc' . key($_SESSION['receipt']['items']) . '").html($("#newItemDesc' . key($_SESSION['receipt']['items']) . '").val());
 
@@ -215,18 +222,18 @@ else if (isset($_GET['new']))
                                       </th>';
                             echo '    <th><span class="priceClickable" id="' . key($_SESSION['receipt']['items']) . '" data-placement="bottom" data-trigger="hover">';
                             echo '        <a href="javascript:void(0);" id="editPrice' . key($_SESSION['receipt']['items']) . '">';
-                            echo '            &euro;&nbsp;' . number_format(round(round($total, 2) * $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['count'], 2), 2, ",", ".") . '</a>';
+                            echo '            '.$_CFG['CURRENCY'].'&nbsp;' . number_format(round(round($total, 2) * $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['count'], 2), 2, ",", ".") . '</a>';
                             echo '        </span>';
                             echo '        <div id="popover-title' . key($_SESSION['receipt']['items']) . '" class="hidden">';
                             echo '            <b>Prijs berekening</b>';
                             echo '        </div>';
                             echo '        <div id="popover-content' . key($_SESSION['receipt']['items']) . '" class="hidden">';
                             echo '            <div>';
-                            echo '            Inkoop: &euro;&nbsp;' . number_format(round($purchase, 2), 2, ",", ".") . '<br/>
-                                              Btw. : &nbsp;&nbsp;&nbsp;&euro;&nbsp;' . number_format(round($vatOnly, 2), 2, ",", ".") . '<br />
-                                              Marge: &euro;&nbsp;' . number_format(round($total - (round($purchase, 2) + round($vatOnly, 2)), 2), 2, ",", ".") . '<br />
-                                              P.S: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&euro;&nbsp; ' . number_format(round($total, 2), 2, ",", ".") . '<br />
-                                              Totaal:&nbsp; &euro;&nbsp;' . number_format(round(round($total, 2) * $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['count'], 2), 2, ",", ".") . '<br />';
+                            echo '            Inkoop: '.$_CFG['CURRENCY'].'&nbsp;' . number_format(round($purchase, 2), 2, ",", ".") . '<br/>
+                                              Btw. : &nbsp;&nbsp;&nbsp;'.$_CFG['CURRENCY'].'&nbsp;' . number_format(round($vatOnly, 2), 2, ",", ".") . '<br />
+                                              Marge: '.$_CFG['CURRENCY'].'&nbsp;' . number_format(round($total - (round($purchase, 2) + round($vatOnly, 2)), 2), 2, ",", ".") . '<br />
+                                              P.S: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$_CFG['CURRENCY'].'&nbsp; ' . number_format(round($total, 2), 2, ",", ".") . '<br />
+                                              Totaal:&nbsp; '.$_CFG['CURRENCY'].'&nbsp;' . number_format(round(round($total, 2) * $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['count'], 2), 2, ",", ".") . '<br />';
                             echo '            </div>';
                             echo '        </div>';
                             echo '    </th>';
@@ -263,19 +270,19 @@ else if (isset($_GET['new']))
                                                 <div class="input-group">
                                                     <span class="input-group-addon" id="priceExclVatLabel' .  key($_SESSION['receipt']['items']) . '" style="min-width: 96px; border-bottom-left-radius: 0px !important;">
                                                         Inkoop<br />
-                                                        &euro;&nbsp;
+                                                        '.$_CFG['CURRENCY'].'&nbsp;
                                                     </span>
                                                     <span class="input-group-addon" id="priceVatOnly' .  key($_SESSION['receipt']['items']) . '" style="border-bottom-right-radius: 0px !important;">
                                                         Btw<br />
-                                                        &nbsp;&euro;&nbsp;
+                                                        &nbsp;'.$_CFG['CURRENCY'].'&nbsp;
                                                     </span>
                                                     <span class="input-group-addon" id="priceMarginOnly' .  key($_SESSION['receipt']['items']) . '" style="border-bottom-right-radius: 0px !important;">
                                                         Marge<br />
-                                                        &nbsp;&euro;&nbsp;
+                                                        &nbsp;'.$_CFG['CURRENCY'].'&nbsp;
                                                     </span>
                                                     <span class="input-group-addon" id="priceResell' .  key($_SESSION['receipt']['items']) . '" style="border-bottom-right-radius: 0px !important;">
                                                         Verkoop<br />
-                                                        &nbsp;&euro;&nbsp;
+                                                        &nbsp;'.$_CFG['CURRENCY'].'&nbsp;
                                                     </span>
                                                 </div>
                                                 <div class="input-group">
@@ -339,7 +346,7 @@ else if (isset($_GET['new']))
                                 var vat = "' . $_CFG['VAT'] . '";
 
                                 //Set price excl vat label
-                                $("#priceExclVatLabel' . key($_SESSION['receipt']['items']) . '").html("Inkoop<br />&euro;&nbsp;" + $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(".", ","));
+                                $("#priceExclVatLabel' . key($_SESSION['receipt']['items']) . '").html("Inkoop<br />'.$_CFG['CURRENCY'].'&nbsp;" + $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(".", ","));
 
                                 //Set vat price
                                 $.get(
@@ -349,7 +356,7 @@ else if (isset($_GET['new']))
                                     },
                                     function (data)
                                     {
-                                        $(\'#priceVatOnly' . key($_SESSION['receipt']['items']) . '\').html("Btw<br />&nbsp;&euro;&nbsp;" + parseFloat(data.replace(",", ".") - $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(",", ".")).toFixed(2).replace(".", ","));
+                                        $(\'#priceVatOnly' . key($_SESSION['receipt']['items']) . '\').html("Btw<br />&nbsp;'.$_CFG['CURRENCY'].'&nbsp;" + parseFloat(data.replace(",", ".") - $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(",", ".")).toFixed(2).replace(".", ","));
                                     }
                                 );
 
@@ -373,7 +380,7 @@ else if (isset($_GET['new']))
                                     },
                                     function (data)
                                     {
-                                        $("#priceResell' . key($_SESSION['receipt']['items']) . '").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
+                                        $("#priceResell' . key($_SESSION['receipt']['items']) . '").html("Verkoop<br />&nbsp;'.$_CFG['CURRENCY'].'&nbsp;" + data);
 
                                         $.get(
                                             "item/calcString.php",
@@ -382,7 +389,7 @@ else if (isset($_GET['new']))
                                             },
                                             function (dataTwo)
                                             {
-                                                $("#priceMarginOnly' . key($_SESSION['receipt']['items']) . '").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
+                                                $("#priceMarginOnly' . key($_SESSION['receipt']['items']) . '").html("Marge<br />&nbsp;'.$_CFG['CURRENCY'].'&nbsp;" + dataTwo);
                                             }
                                         );
                                     }
@@ -504,7 +511,7 @@ else if (isset($_GET['new']))
                                         },
                                         function (data)
                                         {
-                                            $("#priceResell' . key($_SESSION['receipt']['items']) . '").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
+                                            $("#priceResell' . key($_SESSION['receipt']['items']) . '").html("Verkoop<br />&nbsp;'.$_CFG['CURRENCY'].'&nbsp;" + data);
 
                                             $.get(
                                                 "item/calcString.php",
@@ -513,7 +520,7 @@ else if (isset($_GET['new']))
                                                 },
                                                 function (dataTwo)
                                                 {
-                                                    $("#priceMarginOnly' . key($_SESSION['receipt']['items']) . '").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
+                                                    $("#priceMarginOnly' . key($_SESSION['receipt']['items']) . '").html("Marge<br />&nbsp;'.$_CFG['CURRENCY'].'&nbsp;" + dataTwo);
                                                 }
                                             );
                                         }
@@ -525,7 +532,7 @@ else if (isset($_GET['new']))
                                     var vat = "' . $_CFG['VAT'] . '";
 
                                     //Set price excl vat label
-                                    $("#priceExclVatLabel' . key($_SESSION['receipt']['items']) . '").html("Inkoop<br />&euro;&nbsp;" + $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(".", ","));
+                                    $("#priceExclVatLabel' . key($_SESSION['receipt']['items']) . '").html("Inkoop<br />'.$_CFG['CURRENCY'].'&nbsp;" + $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(".", ","));
 
                                     //Set vat price
                 					$.get(
@@ -535,7 +542,7 @@ else if (isset($_GET['new']))
                 						},
                 						function (data)
                 						{
-                							$(\'#priceVatOnly' . key($_SESSION['receipt']['items']) . '\').html("Btw<br />&nbsp;&euro;&nbsp;" + parseFloat(data.replace(",", ".") - $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(",", ".")).toFixed(2).replace(".", ","));
+                							$(\'#priceVatOnly' . key($_SESSION['receipt']['items']) . '\').html("Btw<br />&nbsp;'.$_CFG['CURRENCY'].'&nbsp;" + parseFloat(data.replace(",", ".") - $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(",", ".")).toFixed(2).replace(".", ","));
                 						}
                 					);
 
@@ -547,7 +554,7 @@ else if (isset($_GET['new']))
                                         },
                                         function (data)
                                         {
-                                            $("#priceResell' . key($_SESSION['receipt']['items']) . '").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
+                                            $("#priceResell' . key($_SESSION['receipt']['items']) . '").html("Verkoop<br />&nbsp;'.$_CFG['CURRENCY'].'&nbsp;" + data);
 
                                             $.get(
                                                 "item/calcString.php",
@@ -556,7 +563,7 @@ else if (isset($_GET['new']))
                                                 },
                                                 function (dataTwo)
                                                 {
-                                                    $("#priceMarginOnly' . key($_SESSION['receipt']['items']) . '").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
+                                                    $("#priceMarginOnly' . key($_SESSION['receipt']['items']) . '").html("Marge<br />&nbsp;'.$_CFG['CURRENCY'].'&nbsp;" + dataTwo);
                                                 }
                                             );
                                         }
@@ -688,7 +695,7 @@ else if (isset($_GET['new']))
         <input class="form-control" id="cashVal">
     </div>
 
-    <h2 class="pull-right" style="margin: 0 !important; padding: 0 !important;">Totaal: &euro;<?php echo number_format(round(Calculate::getReceiptTotal($_SESSION['receipt']['id'], true)['total'], 2), 2, ",", "."); ?></h2>
+    <h2 class="pull-right" style="margin: 0 !important; padding: 0 !important;">Totaal: <?=$_CFG['CURRENCY']?><?php echo number_format(round(Calculate::getReceiptTotal($_SESSION['receipt']['id'], true)['total'], 2), 2, ",", "."); ?></h2>
     <div class="panel panel-default" id="debugPanel" style="display: none;">
         <div class="panel-heading">
             <button type="button" class="btn btn-default btn-xs spoiler-trigger" data-toggle="collapse">Debug Info</button>
@@ -1107,6 +1114,7 @@ else if (isset($_GET['new']))
             
             $('#destroyReceipt').click(function () {
                 $("#newReceipt").html("<i class=\"fa fa-file-text\" aria-hidden=\"true\"></i>&nbsp;&nbsp; Nieuwe Bon");
+                $("#newReceipt").hide();
 
                 $("#pageLoaderIndicator").fadeIn();
                 $("#PageContent").load("receipt.php", function () {
@@ -1150,6 +1158,7 @@ else if (isset($_GET['new']))
 
             $('#closeReceipt').click(function () {
                 $("#newReceipt").html("<i class=\"fa fa-file-text\" aria-hidden=\"true\"></i>&nbsp;&nbsp; Nieuwe Bon");
+                $("#newReceipt").hide();
 
                 $("#pageLoaderIndicator").fadeIn();
                 $("#PageContent").load("receipt.php", function () {

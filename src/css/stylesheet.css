@@ -2,6 +2,16 @@ body {
 zoom: 110%;
 }
 
+.navbar-brand  {
+  background-color: #333333;
+}
+.navbar-toggle  {
+  background-color: #333333 !important; 
+}
+.navbar-header  {
+  background-color: #333333 !important; 
+}
+
 :focus {
   outline: none;
 }

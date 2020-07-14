@@ -8,26 +8,16 @@
 <html>
     <head>
         <!-- Bootstrap and all it's dependencies -->
-        <?php
-        if (!isset($_SESSION['login_ok']['userTheme']))
-        {
-            $_SESSION['login_ok']['userTheme'] = "Yeti";
-        }
-        
-        if ($_CFG['THEME'] == "")
-            $_CFG['THEME'] = 'Default';
-        ?>
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/bootstrap-switch.min.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/multiple-emails.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/bootstrap.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/stylesheet.css">
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/select2.min.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/bootstrap-combobox.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/font-awesome.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/multiple-emails.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap-switch.min.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/multiple-emails.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/stylesheet.css">
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/select2.min.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap-combobox.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/font-awesome.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/multiple-emails.css" />
 
-
-        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.min.js"></script>
         <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/multiple-emails.js"></script>
         <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap.min.js"></script>
         <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap-notify.min.js"></script>

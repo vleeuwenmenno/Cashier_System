@@ -268,7 +268,7 @@ else
             <table class="table">
                 <thead>
                     <tr class="filters">
-                        <th>
+                        <th style="display: none;">
                             <a href="#" class="mustFocus">
                                 <input type="text" class="form-control" placeholder="Id" disabled />
                             </a>

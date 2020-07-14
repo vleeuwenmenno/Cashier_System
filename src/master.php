@@ -7,22 +7,17 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.2">
 
-        <!-- Bootstrap and all it's dependencies -->
-        <?php
-        if ($_CFG['THEME'] == "")
-            $_CFG['THEME'] = 'Default';
-        ?>
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/bootstrap-switch.min.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/multiple-emails.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/bootstrap.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/stylesheet.css">
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/select2.min.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/bootstrap-combobox.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/font-awesome.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/themes/Yeti/multiple-emails.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap-switch.min.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/multiple-emails.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/stylesheet.css">
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/select2.min.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap-combobox.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/font-awesome.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/multiple-emails.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap-datepicker3.css" />
 
-
-        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.min.js"></script>
         <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/multiple-emails.js"></script>
         <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap.min.js"></script>
         <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap-notify.min.js"></script>
@@ -30,6 +25,8 @@
         <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.jeditable.js"></script>
         <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap-combobox.js"></script>
         <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.print.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap-datepicker.min.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap-datepicker.nl.min.js"></script>
     </head>
     <body>
         <nav class="navbar navbar-default">
@@ -49,20 +46,22 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <li><a href="#" id="cashregOverview">Kassa overzicht</a></li>
+                        <?php
+                        if ($_SESSION['receipt']['status'] == 'open')
+                        {
+                            echo '<li><a href="#" id="newReceipt"><span class="glyphicon glyphicon-file"></span> Bon #' . str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT) .'</a></li>';
+                        }
+                        else
+                        {
+                            echo '<li><a href="#" id="newReceipt" style="display: none;"><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;&nbsp; Nieuwe Bon</a></li>';
+                        }
+                        ?>
+                        <?php if (Misc::crIsActive()) { ?>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Bonnen <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="#" id="searchReceipt"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;Zoeken</a></li>
-                                <?php
-                                if ($_SESSION['receipt']['status'] == 'open')
-                                {
-                                    echo '<li><a href="#" id="newReceipt"><span class="glyphicon glyphicon-file"></span> Bon #' . str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT) .'</a></li>';
-                                }
-                                else
-                                {
-                                    echo '<li><a href="#" id="newReceipt"><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;&nbsp; Nieuwe Bon</a></li>';
-                                }
-                                ?>
+                                <li><a href="#" id="newReceiptBtn"><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;&nbsp; Nieuwe Bon</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -73,6 +72,7 @@
                                 <li><a href="#" id="itemEntryUpdate"><i class="fa fa-barcode" aria-hidden="true"></i>&nbsp;Artikel Inboeken</a></li>
                             </ul>
                         </li>
+                        <?php } ?>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Klanten <span class="caret"></span></a>
                             <ul class="dropdown-menu">
@@ -83,9 +83,9 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Contracten <span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a href="#" id="load_custm"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;Zoeken</a></li>
-                                <li><a href="#" id="load_ncustm"><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;Contracten overzicht</a></li>
-                                <li><a href="#" id="load_ncustm"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;Nieuw contract</a></li>
+                                <li><a href="#" id="searchContracts"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;Zoeken</a></li>
+                                <li><a href="#" id="showContractsOverview"><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;Contracten overzicht</a></li>
+                                <li><a href="#" id="createContract"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;Nieuw contract</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -101,6 +101,30 @@
             $(document).ready(function ()
             {
                 var isShown = false;
+                $("#searchContracts").on("click", function ()
+                {
+                    $("#pageLoaderIndicator").fadeIn();
+                    $("#PageContent").load("contract.php", function() {
+                        $("#pageLoaderIndicator").fadeOut();
+                    });
+                });
+
+                $("#showContractsOverview").on("click", function ()
+                {
+                    $("#pageLoaderIndicator").fadeIn();
+                    $("#PageContent").load("contract.php?overview", function() {
+                        $("#pageLoaderIndicator").fadeOut();
+                    });
+                });
+
+                $("#createContract").on("click", function ()
+                {
+                    $("#pageLoaderIndicator").fadeIn();
+                    $("#PageContent").load("contract.php?new", function() {
+                        $("#pageLoaderIndicator").fadeOut();
+                    });
+                });
+
                 $("#load_custm").on("click", function ()
                 {
                     $("#pageLoaderIndicator").fadeIn();
@@ -131,6 +155,14 @@
                 });
             
                 $("#newReceipt").on("click", function ()
+                {
+                    $("#pageLoaderIndicator").fadeIn();
+                    $("#PageContent").load("receipt.php?new", function () {
+                        $("#pageLoaderIndicator").fadeOut();
+                    });
+                });
+                
+                $("#newReceiptBtn").on("click", function ()
                 {
                     $("#pageLoaderIndicator").fadeIn();
                     $("#PageContent").load("receipt.php?new", function () {
@@ -237,9 +269,7 @@
         <div class="row">
             <div class="col-sm-1"></div>
             <div class="col-sm-10">
-                <div id="PageContent">
-
-                </div>
+                <div id="PageContent" style="padding-top: 12px;"></div>
 			</div>
             <div class="col-sm-1"></div>
         </div>

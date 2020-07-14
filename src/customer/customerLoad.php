@@ -45,8 +45,8 @@ if (isset($_GET['sTerm']))
                 if ($matchResult)
                 {
                     echo '    <tr>';
-                    echo '            <td><a href="#" id="customer' . $row['customerId'] . 'Btn">' . $row['customerId'] . '</a></td>';
-                    echo '            <td>' . $row['initials'] . '</td>';
+                    echo '            <td style="display: none;">' . $row['customerId'] . '</td>';
+                    echo '            <td><a href="#" id="customer' . $row['customerId'] . 'Btn">' . $row['initials'] . '</a></td>';
                     echo '            <td>' . $row['familyName'] . '</td>';
                     echo '            <td>' . $row['companyName'] . '</td>';
                     echo '            <td>' . $row['postalCode'] . '</td>';

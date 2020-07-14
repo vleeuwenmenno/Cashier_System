@@ -68,7 +68,7 @@ else if (isset($_GET['open']))
                         <div class="input-group">
                             <span class="input-group-addon">Kas-in</span>
                             <input type="text" class="form-control" id="cashInTxt" placeholder="<?php echo $cashOut; ?>" value="<?php echo $cashOut; ?>">
-                            <span class="input-group-addon">&euro;</span>
+                            <span class="input-group-addon"><?=$_CFG['CURRENCY']?></span>
                         </div>
                     </div>
                     <button type="button" id="openCr" class="btn btn-primary">Kassa openen</button>
@@ -196,13 +196,13 @@ else if (isset($_GET['close']))
                                 $cashSessionId = Misc::sqlGet("currentSession", "cash_registers", "crStaticIP", $thisIp)['currentSession'];
                                 ?>
                                 <b>Omzet:</b><br />
-                                <div><span style="margin-left: 2.5em; font-size: 12px;">Omzet pin:</span><i style="float: right;">&euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2), 2, ",", "."); ?></i></div><br />
-                                <div style="position: relative; top: -16px;"><span style="margin-left: 2.5em; font-size: 12px;">Omzet kontant:</span><i style="float: right;">&euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2), 2, ",", "."); ?></i></div><br />
-                                <div style="position: relative; top: -32px;"><span style="margin-left: 2.5em; font-size: 12px;">Omzet op rekening:</span><i style="float: right;">&euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2), 2, ",", "."); ?></i></div><br />
-                                <div style="position: relative; top: -47px;"><span style="margin-left: 2.5em; font-size: 12px;">Omzet iDeal:</span><i style="float: right;">&euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::iDeal, $cashSessionId), 2), 2, ",", "."); ?></i></div><br />
-                                <div style="position: relative; top: -48px;"><b style="margin-left: 2.5em; font-size: 12px;">Totaal omzet:</b><i style="float: right;">&euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2), 2, ",", "."); ?></i></div><br />
-                                <div style="position: relative; top: -32px;"><b>Marge:</b><span style="float: right;"> &euro;&nbsp;<?php echo number_format(round(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2), 2, ",", "."); ?></span></div><br />
-                                <div style="position: relative; top: -48px;"><b>Kas-in:</b><span style="float: right;"> &euro; <?php echo number_format(round($row['cashIn'], 2), 2, ",", "."); ?></span><br /></div>
+                                <div><span style="margin-left: 2.5em; font-size: 12px;">Omzet pin:</span><i style="float: right;"><?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2), 2, ",", "."); ?></i></div><br />
+                                <div style="position: relative; top: -16px;"><span style="margin-left: 2.5em; font-size: 12px;">Omzet kontant:</span><i style="float: right;"><?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2), 2, ",", "."); ?></i></div><br />
+                                <div style="position: relative; top: -32px;"><span style="margin-left: 2.5em; font-size: 12px;">Omzet op rekening:</span><i style="float: right;"><?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2), 2, ",", "."); ?></i></div><br />
+                                <div style="position: relative; top: -47px;"><span style="margin-left: 2.5em; font-size: 12px;">Omzet iDeal:</span><i style="float: right;"><?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::iDeal, $cashSessionId), 2), 2, ",", "."); ?></i></div><br />
+                                <div style="position: relative; top: -48px;"><b style="margin-left: 2.5em; font-size: 12px;">Totaal omzet:</b><i style="float: right;"><?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2), 2, ",", "."); ?></i></div><br />
+                                <div style="position: relative; top: -32px;"><b>Marge:</b><span style="float: right;"> <?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2), 2, ",", "."); ?></span></div><br />
+                                <div style="position: relative; top: -48px;"><b>Kas-in:</b><span style="float: right;"> <?=$_CFG['CURRENCY']?> <?php echo number_format(round($row['cashIn'], 2), 2, ",", "."); ?></span><br /></div>
                                 <div style="position: relative; top: -32px; padding-bottom: 32px;">
                                     <b>Kassa geopend op:</b> <?php echo $row['openDate']; ?><br />
                                     <b>Geopend door:</b> <?php echo Misc::sqlGet("nickName", "users", "userId", Misc::sqlGet("openedBy", "cashsession", "cashSessionId", $cashSessionId)['openedBy'])['nickName']; ?>
@@ -213,22 +213,22 @@ else if (isset($_GET['close']))
                                     ?>
                                     <div class="input-group">
                                         <span class="input-group-addon" style="max-width: 120px; width: 120px;">Totaal kasgeld</span>
-                                        <input type="text" class="form-control" id="cashOut" placeholder="&euro;&nbsp;<?php echo number_format(round($cashOut, 2), 2, ",", "."); ?>">
+                                        <input type="text" class="form-control" id="cashOut" placeholder="<?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round($cashOut, 2), 2, ",", "."); ?>">
                                     </div>
 
                                     <div class="input-group">
                                         <span class="input-group-addon" style="max-width: 120px; width: 120px;">Pinbon</span>
-                                        <input type="text" class="form-control" id="pinOut" placeholder="&euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2), 2, ",", "."); ?>">
+                                        <input type="text" class="form-control" id="pinOut" placeholder="<?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2), 2, ",", "."); ?>">
                                     </div>
 
                                     <div class="input-group">
                                         <span class="input-group-addon" style="max-width: 120px; width: 120px;">Op rekening</span>
-                                        <input type="text" class="form-control" id="bankOut" placeholder="&euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2), 2, ",", "."); ?>">
+                                        <input type="text" class="form-control" id="bankOut" placeholder="<?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2), 2, ",", "."); ?>">
                                     </div>
 
                                     <div class="input-group">
                                         <span class="input-group-addon" style="max-width: 120px; width: 120px;">iDeal</span>
-                                        <input type="text" class="form-control" id="iDealOut" placeholder="&euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::iDeal, $cashSessionId), 2), 2, ",", "."); ?>">
+                                        <input type="text" class="form-control" id="iDealOut" placeholder="<?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::iDeal, $cashSessionId), 2), 2, ",", "."); ?>">
                                     </div>
 
                                     <div class="checkbox">
@@ -403,29 +403,29 @@ else if (isset($_GET['cashOut']) && isset($_GET['pinOut']) && isset($_GET['bankO
                                     $cashSessionId = Misc::sqlGet("currentSession", "cash_registers", "crStaticIP", $thisIp)['currentSession'];
                                     $cashOut = round($row['cashIn'], 2) + round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2);
                                     ?>
-                                    <div><b>Totaal Inkomsten:</b><span style="float: right;"> &euro; <?php echo number_format($totalIn, 2, ",", "."); ?></span></div>
-                                    <div><b>Totaal Omzet:</b><span style="float: right;"> &euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2), 2, ",", "."); ?></span></div>
-                                    <div><b>Verschil:</b><span style="float: right;"> &euro; <?php echo number_format(round($totalIn - round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2), 2), 2, ",", ".");?></span></div>
+                                    <div><b>Totaal Inkomsten:</b><span style="float: right;"> <?=$_CFG['CURRENCY']?> <?php echo number_format($totalIn, 2, ",", "."); ?></span></div>
+                                    <div><b>Totaal Omzet:</b><span style="float: right;"> <?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2), 2, ",", "."); ?></span></div>
+                                    <div><b>Verschil:</b><span style="float: right;"> <?=$_CFG['CURRENCY']?> <?php echo number_format(round($totalIn - round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2), 2), 2, ",", ".");?></span></div>
                                     <br />
-                                    <div><span>Pinbon: </span><span style="float: right;">&euro;&nbsp;<?php echo number_format(str_replace("€ ", "", str_replace(",", ".", $_GET['pinOut'])), 2, ",", "."); ?></span></div>
-                                    <div><span>Omzet pin: </span><span style="float: right;"> &euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2), 2, ",", "."); ?></span></div>
-                                    <div><b>Verschil: </b><span style="float: right;"> &euro; <?php echo number_format(round(str_replace("€ ", "", str_replace(",", ".", $_GET['pinOut'])) - round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2), 2), 2, ",", ".");?></span></div>
+                                    <div><span>Pinbon: </span><span style="float: right;"><?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(str_replace("€ ", "", str_replace(",", ".", $_GET['pinOut'])), 2, ",", "."); ?></span></div>
+                                    <div><span>Omzet pin: </span><span style="float: right;"> <?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2), 2, ",", "."); ?></span></div>
+                                    <div><b>Verschil: </b><span style="float: right;"> <?=$_CFG['CURRENCY']?> <?php echo number_format(round(str_replace("€ ", "", str_replace(",", ".", $_GET['pinOut'])) - round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2), 2), 2, ",", ".");?></span></div>
                                     <br />
-                                    <div><span>Kontant kasgeld-in: </span><span style="float: right;"> &euro;&nbsp;<?php echo number_format(round(str_replace("€ ", "", str_replace(",", ".", $_GET['cashOut'])) -  $row['cashIn'], 2), 2, ",", "."); ?></span></div>
-                                    <div><span>Omzet kontant: </span><span style="float: right;"> &euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2), 2, ",", "."); ?></span></div>
-                                    <div><b>Verschil: </b><span style="float: right;"> &euro; <?php echo number_format(round(round(str_replace("€ ", "", str_replace(",", ".", $_GET['cashOut'])) -  $row['cashIn'], 2) - round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2), 2), 2, ",", ".");?></span></div>
+                                    <div><span>Kontant kasgeld-in: </span><span style="float: right;"> <?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(str_replace("€ ", "", str_replace(",", ".", $_GET['cashOut'])) -  $row['cashIn'], 2), 2, ",", "."); ?></span></div>
+                                    <div><span>Omzet kontant: </span><span style="float: right;"> <?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2), 2, ",", "."); ?></span></div>
+                                    <div><b>Verschil: </b><span style="float: right;"> <?=$_CFG['CURRENCY']?> <?php echo number_format(round(round(str_replace("€ ", "", str_replace(",", ".", $_GET['cashOut'])) -  $row['cashIn'], 2) - round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2), 2), 2, ",", ".");?></span></div>
                                     <br />
-                                    <div><span>Op rekening: </span><span style="float: right;">&euro;&nbsp;<?php echo number_format(str_replace("€ ", "", str_replace(",", ".", $_GET['bankOut'])), 2, ",", "."); ?></span></div>
-                                    <div><span>Omzet rekening: </span><span style="float: right;">&euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2), 2, ",", "."); ?></span></div>
-                                    <div><b>Verschil: </b><span style="float: right;">&euro; <?php echo number_format(round(str_replace("€ ", "", str_replace(",", ".", $_GET['bankOut'])) - round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2), 2), 2, ",", "."); ?></span></div>
+                                    <div><span>Op rekening: </span><span style="float: right;"><?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(str_replace("€ ", "", str_replace(",", ".", $_GET['bankOut'])), 2, ",", "."); ?></span></div>
+                                    <div><span>Omzet rekening: </span><span style="float: right;"><?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2), 2, ",", "."); ?></span></div>
+                                    <div><b>Verschil: </b><span style="float: right;"><?=$_CFG['CURRENCY']?> <?php echo number_format(round(str_replace("€ ", "", str_replace(",", ".", $_GET['bankOut'])) - round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2), 2), 2, ",", "."); ?></span></div>
                                     <br />
-                                    <div><span>iDeal: </span><span style="float: right;">&euro;&nbsp;<?php echo number_format(str_replace("€ ", "", str_replace(",", ".", $_GET['iDealOut'])), 2, ",", "."); ?></span></div>
-                                    <div><span>Omzet iDeal: </span><span style="float: right;">&euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::iDeal, $cashSessionId), 2), 2, ",", "."); ?></span></div>
-                                    <div><b>Verschil: </b><span style="float: right;">&euro; <?php echo number_format(round(str_replace("€ ", "", str_replace(",", ".", $_GET['iDealOut'])) - round(Calculate::getNetTurnover(PaymentMethod::iDeal, $cashSessionId), 2), 2), 2, ",", "."); ?></span></div>
+                                    <div><span>iDeal: </span><span style="float: right;"><?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(str_replace("€ ", "", str_replace(",", ".", $_GET['iDealOut'])), 2, ",", "."); ?></span></div>
+                                    <div><span>Omzet iDeal: </span><span style="float: right;"><?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::iDeal, $cashSessionId), 2), 2, ",", "."); ?></span></div>
+                                    <div><b>Verschil: </b><span style="float: right;"><?=$_CFG['CURRENCY']?> <?php echo number_format(round(str_replace("€ ", "", str_replace(",", ".", $_GET['iDealOut'])) - round(Calculate::getNetTurnover(PaymentMethod::iDeal, $cashSessionId), 2), 2), 2, ",", "."); ?></span></div>
                                     <br />
-                                    <div><b>Marge:</b><span style="float: right;"> &euro;&nbsp;<?php echo number_format(round(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2), 2, ",", "."); ?></span></div>
-                                    <div><b>Kasgeld-in: </b><span style="float: right;"> &euro;&nbsp;  <?php echo number_format(round($row['cashIn'], 2), 2, ",", "."); ?></span></div>
-                                    <div><b>Kasgeld-uit: </b><span style="float: right;"> &euro;&nbsp; <?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId) + Misc::sqlGet("cashIn", "cashsession", "cashSessionId", $cashSessionId)['cashIn'], 2), 2, ",", "."); ?></span></div>
+                                    <div><b>Marge:</b><span style="float: right;"> <?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2), 2, ",", "."); ?></span></div>
+                                    <div><b>Kasgeld-in: </b><span style="float: right;"> <?=$_CFG['CURRENCY']?>&nbsp;  <?php echo number_format(round($row['cashIn'], 2), 2, ",", "."); ?></span></div>
+                                    <div><b>Kasgeld-uit: </b><span style="float: right;"> <?=$_CFG['CURRENCY']?>&nbsp; <?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId) + Misc::sqlGet("cashIn", "cashsession", "cashSessionId", $cashSessionId)['cashIn'], 2), 2, ",", "."); ?></span></div>
 
                                     <div class="input-group" style="padding-top: 16px;">
                                         <span class="input-group-addon" style="max-width: 120px; width: 120px;">Afromen</span>
@@ -530,13 +530,13 @@ else
                                     $cashSessionId = Misc::sqlGet("currentSession", "cash_registers", "crStaticIP", $thisIp)['currentSession'];
                                     ?>
                                     <b>Omzet:</b><br />
-                                    <div><span style="margin-left: 2.5em; font-size: 12px;">Omzet pin:</span><i style="float: right;">&euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2), 2, ",", "."); ?></i></div><br />
-                                    <div style="position: relative; top: -16px;"><span style="margin-left: 2.5em; font-size: 12px;">Omzet kontant:</span><i style="float: right;">&euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2), 2, ",", "."); ?></i></div><br />
-                                    <div style="position: relative; top: -32px;"><span style="margin-left: 2.5em; font-size: 12px;">Omzet op rekening:</span><i style="float: right;">&euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2), 2, ",", "."); ?></i></div><br />
-                                    <div style="position: relative; top: -47px;"><span style="margin-left: 2.5em; font-size: 12px;">Omzet iDeal:</span><i style="float: right;">&euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::iDeal, $cashSessionId), 2), 2, ",", "."); ?></i></div><br />
-                                    <div style="position: relative; top: -48px;"><b style="margin-left: 2.5em; font-size: 12px;">Totaal omzet:</b><i style="float: right;">&euro;&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2), 2, ",", "."); ?></i></div><br />
-                                    <div style="position: relative; top: -32px;"><b>Marge:</b><span style="float: right;"> &euro;&nbsp;<?php echo number_format(round(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2), 2, ",", "."); ?></span></div><br />
-                                    <div style="position: relative; top: -48px;"><b>Kas-in:</b><span style="float: right;"> &euro; <?php echo number_format(round($row['cashIn'], 2), 2, ",", "."); ?></span><br /></div>
+                                    <div><span style="margin-left: 2.5em; font-size: 12px;">Omzet pin:</span><i style="float: right;"><?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2), 2, ",", "."); ?></i></div><br />
+                                    <div style="position: relative; top: -16px;"><span style="margin-left: 2.5em; font-size: 12px;">Omzet kontant:</span><i style="float: right;"><?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::Cash, $cashSessionId), 2), 2, ",", "."); ?></i></div><br />
+                                    <div style="position: relative; top: -32px;"><span style="margin-left: 2.5em; font-size: 12px;">Omzet op rekening:</span><i style="float: right;"><?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::BankTransfer, $cashSessionId), 2), 2, ",", "."); ?></i></div><br />
+                                    <div style="position: relative; top: -47px;"><span style="margin-left: 2.5em; font-size: 12px;">Omzet iDeal:</span><i style="float: right;"><?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::iDeal, $cashSessionId), 2), 2, ",", "."); ?></i></div><br />
+                                    <div style="position: relative; top: -48px;"><b style="margin-left: 2.5em; font-size: 12px;">Totaal omzet:</b><i style="float: right;"><?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2), 2, ",", "."); ?></i></div><br />
+                                    <div style="position: relative; top: -32px;"><b>Marge:</b><span style="float: right;"> <?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getMargin(PaymentMethod::All, $cashSessionId), 2), 2, ",", "."); ?></span></div><br />
+                                    <div style="position: relative; top: -48px;"><b>Kas-in:</b><span style="float: right;"> <?=$_CFG['CURRENCY']?> <?php echo number_format(round($row['cashIn'], 2), 2, ",", "."); ?></span><br /></div>
                                     <div style="position: relative; top: -32px;">
                                         <b>Kassa geopend op:</b> <?php echo $row['openDate']; ?><br />
                                         <b>Geopend door:</b> <?php echo Misc::sqlGet("nickName", "users", "userId", Misc::sqlGet("openedBy", "cashsession", "cashSessionId", $cashSessionId)['openedBy'])['nickName']; ?>

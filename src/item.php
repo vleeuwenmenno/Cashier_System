@@ -47,19 +47,19 @@ if (isset($_GET['new']))
     <div class="input-group">
         <span class="input-group-addon" id="priceExclVatLabel" style="min-width: 96px; border-bottom-left-radius: 0px !important;">
             Inkoop<br />
-            &euro;&nbsp;
+            <?=$_CFG['CURRENCY']?>&nbsp;
         </span>
         <span class="input-group-addon" id="priceVatOnly" style="border-bottom-right-radius: 0px !important;">
             Btw<br />
-            &nbsp;&euro;&nbsp;
+            &nbsp;<?=$_CFG['CURRENCY']?>&nbsp;
         </span>
         <span class="input-group-addon" id="priceMarginOnly" style="border-bottom-right-radius: 0px !important;">
             Marge<br />
-            &nbsp;&euro;&nbsp;
+            &nbsp;<?=$_CFG['CURRENCY']?>&nbsp;
         </span>
         <span class="input-group-addon" id="priceResell" style="border-bottom-right-radius: 0px !important;">
             Verkoop<br />
-            &nbsp;&euro;&nbsp;
+            &nbsp;<?=$_CFG['CURRENCY']?>&nbsp;
         </span>
     </div>
     <div class="input-group">
@@ -104,7 +104,7 @@ if (isset($_GET['new']))
                     },
                     function (data)
                     {
-                        $("#priceResell").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
+                        $("#priceResell").html("Verkoop<br />&nbsp;<?=$_CFG['CURRENCY']?>&nbsp;" + data);
 
                         $.get(
                             "item/calcString.php",
@@ -113,7 +113,7 @@ if (isset($_GET['new']))
                             },
                             function (dataTwo)
                             {
-                                $("#priceMarginOnly").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
+                                $("#priceMarginOnly").html("Marge<br />&nbsp;<?=$_CFG['CURRENCY']?>&nbsp;" + dataTwo);
                             }
                         );
                     }
@@ -125,7 +125,7 @@ if (isset($_GET['new']))
                 var vat = "<?php echo $_CFG['VAT']; ?>";
 
                 //Set price excl vat label
-                $("#priceExclVatLabel").html("Inkoop<br />&euro;&nbsp;" + $('#priceExclVat').val().replace(".", ","));
+                $("#priceExclVatLabel").html("Inkoop<br /><?=$_CFG['CURRENCY']?>&nbsp;" + $('#priceExclVat').val().replace(".", ","));
 
                 //Set vat price
                 $.get(
@@ -135,7 +135,7 @@ if (isset($_GET['new']))
                     },
                     function (data)
                     {
-                        $('#priceVatOnly').html("Btw<br />&nbsp;&euro;&nbsp;" + parseFloat(data.replace(",", ".") - $('#priceExclVat').val().replace(",", ".")).toFixed(2).replace(".", ","));
+                        $('#priceVatOnly').html("Btw<br />&nbsp;<?=$_CFG['CURRENCY']?>&nbsp;" + parseFloat(data.replace(",", ".") - $('#priceExclVat').val().replace(",", ".")).toFixed(2).replace(".", ","));
                     }
                 );
 
@@ -147,7 +147,7 @@ if (isset($_GET['new']))
                     },
                     function (data)
                     {
-                        $("#priceResell").html("Verkoop<br />&nbsp;&euro;&nbsp;" + data);
+                        $("#priceResell").html("Verkoop<br />&nbsp;<?=$_CFG['CURRENCY']?>&nbsp;" + data);
 
                         $.get(
                             "item/calcString.php",
@@ -156,7 +156,7 @@ if (isset($_GET['new']))
                             },
                             function (dataTwo)
                             {
-                                $("#priceMarginOnly").html("Marge<br />&nbsp;&euro;&nbsp;" + dataTwo);
+                                $("#priceMarginOnly").html("Marge<br />&nbsp;<?=$_CFG['CURRENCY']?>&nbsp;" + dataTwo);
                             }
                         );
                     }

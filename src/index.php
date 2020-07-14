@@ -8,18 +8,31 @@
 ?>
 <html>
     <head>
-        <!-- Bootstrap and all it's dependencies -->
-        <link rel="stylesheet" href="themes/<?php echo $_CFG['THEME']; ?>/bootstrap.css" />
-        <link rel="stylesheet" href="themes/<?php echo $_CFG['THEME']; ?>/stylesheet.css">
-        <link rel="stylesheet" href="themes/<?php echo $_CFG['THEME']; ?>/select2.min.css" />
-        <link rel="stylesheet" href="themes/<?php echo $_CFG['THEME']; ?>/bootstrap-combobox.css" />
-        <script src="js/jquery.js"></script>
-        <script src="js/bootstrap.min.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.2">
+
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap-switch.min.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/multiple-emails.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/stylesheet.css">
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/select2.min.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap-combobox.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/font-awesome.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/multiple-emails.css" />
+
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.min.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/multiple-emails.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap.min.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap-notify.min.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/select2.full.min.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.jeditable.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap-combobox.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.print.js"></script>
     </head>
     <body>
         <div class="row">
-            <div class="col-sm-6">
-                <form class="ui form panel" id="loginDiv" name="loginDiv" style="text-align: left !important;" action="index.php?login<?php if (isset($_GET['r'])) { echo '&r=' . $_GET['r']; }?>" method="POST" enctype="multipart/form-data">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <form id="loginDiv" name="loginDiv" style="text-align: left !important;" action="index.php?login<?php if (isset($_GET['r'])) { echo '&r=' . $_GET['r']; }?>" method="POST" enctype="multipart/form-data">
                     <h2>Kassa</h2>
 
                     <div class="form-group" id="usDiv">

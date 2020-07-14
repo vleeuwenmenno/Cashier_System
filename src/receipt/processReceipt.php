@@ -5,7 +5,7 @@ include_once('../includes.php');
 if (count($_SESSION['receipt']['items']) < 1)
 {
     echo '
-    <script src="../js/jquery.js"></script>
+    <script src="../js/jquery.min.js"></script>
     <script>
         $(document).ready(function() {
             $("#pageLoaderIndicator").fadeIn();
@@ -88,6 +88,7 @@ else
     echo '
 
             $("#newReceipt").html("<i class=\"fa fa-file-text\" aria-hidden=\"true\"></i>&nbsp;&nbsp; Nieuwe Bon");
+            $("#newReceipt").hide();
 
             $.get(
                 "receipt/empty.php",
