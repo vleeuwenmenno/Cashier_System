@@ -224,6 +224,8 @@ else
                         start: 0,
                         count: 25,
                         sTerm: $("#searchBar").val()
+                        <?php if (isset($_GET['returnContract'])) { echo ', returnContract: 1'; } ?>
+                        <?php if (isset($_GET['returnViewContract'])) { echo ', returnViewContract: '.$_GET['rvcid']; } ?>
                     },
                     function (data)
                     {
@@ -362,6 +364,9 @@ else
                                         start: startLocation,
                                         count: 25,
                                         sTerm: $("#searchBar").val()
+                                        <?php if (isset($_GET['returnContract'])) { echo ', returnContract: 1'; } ?>
+                                        <?php if (isset($_GET['returnViewContract'])) { echo ', returnViewContract: 1'; } ?>
+                                        <?php if (isset($_GET['returnViewContract'])) { echo ', rVCid: '.$_GET['rvcid']; } ?>
                                     },
                                     function (data)
                                     {
@@ -456,11 +461,4 @@ else
     </script>
 	<?php
 }
-
-$time = microtime();
-$time = explode(' ', $time);
-$time = $time[1] + $time[0];
-$finish = $time;
-$total_time = str_replace("0.", "", number_format(($finish - $start), 4));
-echo '<script> $(document).ready(function () { console.log("Page created in '.$total_time.'ms"); });';
-?>
+include("debug.php"); ?>

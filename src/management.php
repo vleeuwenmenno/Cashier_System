@@ -2,12 +2,46 @@
 include_once("includes.php");
 Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 
- ?>
+if (isset($_GET['applyOptions']))
+{
+	Misc::sqlUpdate("options", "companyName", "'".$_GET['companyName']."'", "id", 1);
+	Misc::sqlUpdate("options", "vat", $_GET['vat'], "id", 1);
+	Misc::sqlUpdate("options", "currency", "'".$_GET['currency']."'", "id", 1);
+
+	Misc::sqlUpdate("options", "smtpHost", "'".$_GET['smtpHost']."'", "id", 1);
+	Misc::sqlUpdate("options", "smtpPort", "'".$_GET['smtpPort']."'", "id", 1);
+	Misc::sqlUpdate("options", "smtpName", "'".$_GET['smtpName']."'", "id", 1);
+	Misc::sqlUpdate("options", "smtpUser", "'".$_GET['smtpUser']."'", "id", 1);
+	Misc::sqlUpdate("options", "smtpPass", "'".$_GET['smtpPass']."'", "id", 1);
+	Misc::sqlUpdate("options", "smtpSecure", "'".$_GET['smtpSecure']."'", "id", 1);
+	die();
+}
+if (isset($_GET['content'])) {?>
+<script>
+	$(document).ready(function() {
+		$.notify({
+			icon: 'glyphicon glyphicon-cog',
+			title: 'Instellingen zijn gewijzigt',
+			message: '<br / >'
+		},{
+			// settings
+			type: 'success',
+			placement: {
+				from: "bottom",
+				align: "right"
+			}
+		});
+	});
+</script>
+<?php } ?>
 <br />
-<div id="exTab2" class="container">
+<div id="exTab2">
 	<ul class="nav nav-tabs">
-			<li class="active">
+			<li <?php if (!isset($_GET['content'])) { echo 'class="active"'; } ?>>
         		<a  href="#1" data-toggle="tab">Gebruikers Beheer</a>
+			</li>
+			<li <?php if (isset($_GET['content'])) { echo 'class="active"'; } ?>>
+        		<a  href="#2" data-toggle="tab">Content Beheer</a>
 			</li>
 			<li>
 				<a href="#3" data-toggle="tab">Database Beheer</a>
@@ -15,7 +49,7 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 		</ul>
 
 			<div class="tab-content ">
-				<div class="tab-pane active" id="1">
+				<div class="tab-pane <?php if (!isset($_GET['content'])) { echo 'active'; } ?>" id="1">
 					<div id="userManagement">
 						<h2>Gebruikers Beheer</h2>
 					    <br />
@@ -523,6 +557,88 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 							</div>
 						</div>
 					</div>
+			</div>
+				<div class="tab-pane <?php if (isset($_GET['content'])) { echo 'active'; } ?>" id="2">
+					<div id="userManagement">
+					<h2>Content Beheer</h2>
+					    <br />
+					    <!-- <div class="form-group">
+							<h3>Briefpapier header</h3>
+							<p>De afbeelding voor het briefpapier moet een PNG-bestandsextensie zijn en moet <u>precies</u> 1656x368 pixels groot zijn.</p>
+							<input id="input-b1" name="input-b1" type="file" class="file" data-browse-on-zone-click="true">
+							<img src="/CashRegister/src/images/A4-Template.png" class="img-fluid" alt="Responsive image" style="max-width: 95%">
+						</div> -->
+						<div class="form-group">
+							<label for="familyname">Bedrijf naam: </label>
+							<input type="text" class="form-control" id="companyName" placeholder="<?=$_CFG['COMPANY_NAME']?>">
+						</div>
+								<div class="form-group">
+							<label for="taxAmount">BTW: </label>
+							<input type="text" class="form-control" id="taxAmount" placeholder="<?=number_format($_CFG['VAT'] * 100 - 100, 2)?>%">
+						</div>
+						<div class="form-group">
+							<label for="street">Valuta: </label>
+							<input type="text" class="form-control" id="currency" placeholder="<?=$_CFG['CURRENCY']?>">
+						</div>
+						<h2>SMTP Beheer</h2>
+					    <br />
+						
+						<div class="form-group">
+							<label for="familyname">SMTP Server: </label>
+							<input type="text" class="form-control" id="smtpHost" placeholder="<?=$_CFG['smtpHost']?>">
+						</div>
+						<div class="form-group">
+							<label for="taxAmount">SMTP Server poort: </label>
+							<input type="text" class="form-control" id="smtpPort" placeholder="<?=$_CFG['smtpPort']?>">
+						</div>
+						<div class="form-group">
+							<label for="taxAmount">Weergaven email: </label>
+							<input type="text" class="form-control" id="smtpName" placeholder="<?=$_CFG['smtpName']?>">
+						</div>
+						<div class="form-group">
+							<label for="taxAmount">Email: </label>
+							<input type="text" class="form-control" id="smtpUser" placeholder="<?=$_CFG['smtpUser']?>">
+						</div>
+						<div class="form-group">
+							<label for="street">Wachtwoord: </label>
+							<input type="password" class="form-control" id="smtpPass" value="<?=$_CFG['smtpPass']?>">
+						</div>
+						<div class="form-group">
+							<label for="street">SMTP Security: </label>
+							<input type="text" class="form-control" id="smtpSecure" placeholder="<?=$_CFG['smtpSecure']?>">
+						</div>
+						<input type="button" class="btn btn-primary btn-xl" id="updateVarsOptions" value="Instellingen opslaan" />
+						<script>
+							$(document).ready(function () {
+								$("#updateVarsOptions").click(function () {
+									$.get(
+										"management.php",
+										{
+											applyOptions: 1,
+											companyName: $("#companyName").val() !== null && $("#companyName").val() !== '' ? $("#companyName").val() : "<?=$_CFG['COMPANY_NAME']?>",
+											vat: $("#taxAmount").val() !== null && $("#taxAmount").val() !== '' ? $("#taxAmount").val() / 100 + 1 : "<?=$_CFG['VAT']?>",
+											currency: $("#currency").val() !== null && $("#currency").val() !== '' ? $("#currency").val() : "<?=$_CFG['CURRENCY']?>",
+											smtpHost: $("#smtpHost").val() !== null && $("#smtpHost").val() !== '' ? $("#smtpHost").val() : "<?=$_CFG['smtpHost']?>",
+											smtpPort: $("#smtpPort").val() !== null && $("#smtpPort").val() !== '' ? $("#smtpPort").val() : "<?=$_CFG['smtpPort']?>",
+											smtpName: $("#smtpName").val() !== null && $("#smtpName").val() !== '' ? $("#smtpName").val() : "<?=$_CFG['smtpName']?>",
+											smtpUser: $("#smtpUser").val() !== null && $("#smtpUser").val() !== '' ? $("#smtpUser").val() : "<?=$_CFG['smtpUser']?>",
+											smtpPass: $("#smtpPass").val() !== null && $("#smtpPass").val() !== '' ? $("#smtpPass").val() : "<?=$_CFG['smtpPass']?>",
+											smtpSecure: $("#smtpSecure").val() !== null && $("#smtpSecure").val() !== '' ? $("#smtpSecure").val() : "<?=$_CFG['smtpSecure']?>"
+										},
+										function (data)
+										{
+											$("#loaderAnimation").fadeIn();
+											$("#managementForm").fadeOut();
+											$("#balanceManagement").fadeOut();
+											$("#PageContent").load("management.php?content", function () {
+												$("#loaderAnimation").fadeOut();
+											});
+										}
+									);
+								});
+							});
+						</script>
+					</div>
 				</div>
 				<div class="tab-pane" id="3">
 					<div id="managementForm">
@@ -919,13 +1035,4 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 </div>
 
 <?php
-
-
-$time = microtime();
-$time = explode(' ', $time);
-$time = $time[1] + $time[0];
-$finish = $time;
-$total_time = str_replace("0.", "", number_format(($finish - $start), 4));
-echo '<script> $(document).ready(function () { console.log("Page created in '.$total_time.'ms"); });';
-
-?>
+include("debug.php"); ?>

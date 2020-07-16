@@ -1,0 +1,30 @@
+
+
+
+
+
+       Contract
+---------------------
+   *contractId
+    customerId
+    startDate
+    planningPeroid
+    planningDay
+
+       Log
+---------------------
+   *logId
+    contractId
+    dateTime
+    receiverEmail
+    success
+    notes
+
+
+
+
+We need to make a cron.php file that will check all contracts. Then we can add this as a cronjob to `crontab -e` so we can do this check every 5 minutes.
+When checking contracts we need to calculate if we need to send any order emails out at that time.
+Here we need to make sure we haven't send an email on that day for the same contract yet.
+If it appears that we need to send out an email, we will make a new log entry with it's details.
+

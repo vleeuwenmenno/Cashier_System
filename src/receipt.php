@@ -7,7 +7,7 @@ if (isset($_GET['recover']))
     $_SESSION['receipt'] = $_SESSION['receipt']['old'];
 
     ?>
-    <span id="receiptNo"><h2>Bon #<?php echo str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT); ?></h2></span>
+    <span id="receiptNo"><h2>Bon #<?php if (isset($_SESSION['receipt']['order'])) echo "Factuur specificatie"; else echo str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT); ?></h2></span>
 
     <script>
         $(document).ready(function ()
@@ -74,7 +74,7 @@ else if (isset($_GET['new']))
     }
 ?>
 <div id="cartForm">
-        <span id="receiptNo"><h2>Bon #<?php echo $_SESSION['receipt']['id']; ?></h2></span>
+        <span id="receiptNo"><h2>Bon #<?php if (isset($_SESSION['receipt']['order'])) echo "Factuur specificatie"; else echo str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT); ?></h2></span>
 
         <div class="panel panel filterable">
             <div class="panel-heading">
@@ -696,18 +696,6 @@ else if (isset($_GET['new']))
     </div>
 
     <h2 class="pull-right" style="margin: 0 !important; padding: 0 !important;">Totaal: <?=$_CFG['CURRENCY']?><?php echo number_format(round(Calculate::getReceiptTotal($_SESSION['receipt']['id'], true)['total'], 2), 2, ",", "."); ?></h2>
-    <div class="panel panel-default" id="debugPanel" style="display: none;">
-        <div class="panel-heading">
-            <button type="button" class="btn btn-default btn-xs spoiler-trigger" data-toggle="collapse">Debug Info</button>
-        </div>
-        <div class="panel-collapse collapse out">
-            <div class="panel-body">
-                <pre>
-                    <?php print_r ($_SESSION); ?>
-                </pre>
-            </div>
-        </div>
-    </div>
 
     <!-- Modal -->
     <div class="modal fade" id="printAmount" role="dialog">
@@ -846,11 +834,6 @@ else if (isset($_GET['new']))
                 }
             });
         <?php } ?>
-
-        function showDebug()
-        {
-            $("#debugPanel").css("display", "");
-        }
 
         function checkTotalValue()
         {
@@ -1572,12 +1555,4 @@ else
 </script>
 <?php
 }
-
-$time = microtime();
-$time = explode(' ', $time);
-$time = $time[1] + $time[0];
-$finish = $time;
-$total_time = str_replace("0.", "", number_format(($finish - $start), 4));
-echo '<script> $(document).ready(function () { console.log("Page created in '.$total_time.'ms"); });';
-
-?>
+include("debug.php"); ?>

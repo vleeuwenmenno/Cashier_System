@@ -45,5 +45,6 @@ if (isset($_GET['receiptId']))
     $_SESSION['receipt']['status'] = 'closed';
     $_SESSION['receipt']['customer'] = null;
     $_SESSION['receipt']['saved'] = false;
+    unset($_SESSION['receipt']['order']);
 }
 ?>

@@ -61,22 +61,59 @@ if (isset($_GET['sTerm']))
                                                     $("#loaderAnimation").fadeIn();
                                                     $("#PageContent").load("customer/viewCustomer.php?id=' . $row['customerId'] . '");
 						                        });
-					                        });';
-                    echo '      $("#add' . $row['customerId'] . '").on("click", function() {
-                                $.get(
-                                    "customer/customerSelect.php",
-                                    {
-                                        customerId: \'' . $row['customerId'] . '\',
-                                    },
-                                    function (data)
-                                    {
-                                        $("#pageLoaderIndicator").fadeIn();
-                                        $("#PageContent").load("receipt.php?new", function () {
-                                            $("#pageLoaderIndicator").fadeOut();
-                                        });
-                                    }
-                                );
-                                });';
+                                            });';
+                                    
+                    if (isset($_GET['returnViewContract']))
+                        echo '      $("#add' . $row['customerId'] . '").on("click", function() {
+                                        $.get(
+                                            "customer/customerSelect.php",
+                                            {
+                                                customerId: \'' . $row['customerId'] . '\',
+                                            },
+                                            function (data)
+                                            {
+                                                $("#pageLoaderIndicator").fadeIn();
+                                                $("#PageContent").load("contract/viewContract.php?id=' . $_GET['returnViewContract'] . '&loadFromItems", function () {
+                                                    $("#pageLoaderIndicator").fadeOut();
+                                                });
+                                            }
+                                        );
+                                    });';
+
+                    if (isset($_GET['returnContract']))
+                        echo '      $("#add' . $row['customerId'] . '").on("click", function() {
+                                        $.get(
+                                            "customer/customerSelect.php",
+                                            {
+                                                customerId: \'' . $row['customerId'] . '\',
+                                            },
+                                            function (data)
+                                            {
+                                                $("#pageLoaderIndicator").fadeIn();
+                                                $("#PageContent").load("contract.php?new", function () {
+                                                    $("#pageLoaderIndicator").fadeOut();
+                                                });
+                                            }
+                                        );
+                                    });';
+                    
+                    if (!isset($_GET['returnContract']) && !isset($_GET['returnViewContract']))
+                        echo '      $("#add' . $row['customerId'] . '").on("click", function() {
+                            $.get(
+                                "customer/customerSelect.php",
+                                {
+                                    customerId: \'' . $row['customerId'] . '\',
+                                },
+                                function (data)
+                                {
+                                    $("#pageLoaderIndicator").fadeIn();
+                                    $("#PageContent").load("receipt.php?new", function () {
+                                        $("#pageLoaderIndicator").fadeOut();
+                                    });
+                                }
+                            );
+                            });';
+
                     echo '    </script>';
 
                     echo '    </tr>';

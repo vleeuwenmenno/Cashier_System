@@ -456,4 +456,18 @@ class Calculate
         }
         return $final;
     }
+
+    public static function getContractTotal($json, $session = false)
+    {
+        global $config;
+        global $_CFG;
+
+        $final = array();
+        foreach ($json as $key => $val)
+        {
+            $final['total'] += (Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier']) * $val['count']);
+            $final['exclVat'] += round($val['priceAPiece']['priceExclVat'] *  $val['count'], 2);
+        }
+        return $final;
+    }
 }

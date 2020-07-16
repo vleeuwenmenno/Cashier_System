@@ -12,7 +12,7 @@ if ($_GET['receipt'])
     $_SESSION['receipt']['items'] = $json;
 
     if (Misc::sqlGet("customerId", "receipt", "receiptId", $_GET['receipt'])['customerId'] != 0)
-    $_SESSION['receipt']['customer'] = Misc::sqlGet("customerId", "receipt", "receiptId", $_GET['receipt'])['customerId'];
+        $_SESSION['receipt']['customer'] = Misc::sqlGet("customerId", "receipt", "receiptId", $_GET['receipt'])['customerId'];
 
     echo '<pre>';
     print_r($_SESSION);

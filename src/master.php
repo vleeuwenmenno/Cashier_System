@@ -49,7 +49,10 @@
                         <?php
                         if ($_SESSION['receipt']['status'] == 'open')
                         {
-                            echo '<li><a href="#" id="newReceipt"><span class="glyphicon glyphicon-file"></span> Bon #' . str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT) .'</a></li>';
+                            if (isset($_SESSION['receipt']['order'])) 
+                                echo '<li><a href="#" id="newReceipt"><span class="glyphicon glyphicon-file"></span> Factuur specificatie</a></li>';
+                            else
+                                echo '<li><a href="#" id="newReceipt"><span class="glyphicon glyphicon-file"></span> Bon #' . str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT) .'</a></li>';
                         }
                         else
                         {
@@ -58,13 +61,6 @@
                         ?>
                         <?php if (Misc::crIsActive()) { ?>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Bonnen <span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#" id="searchReceipt"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;Zoeken</a></li>
-                                <li><a href="#" id="newReceiptBtn"><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;&nbsp; Nieuwe Bon</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Artikelen <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="#" id="searchItem"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;Zoeken</a></li>
@@ -72,20 +68,27 @@
                                 <li><a href="#" id="itemEntryUpdate"><i class="fa fa-barcode" aria-hidden="true"></i>&nbsp;Artikel Inboeken</a></li>
                             </ul>
                         </li>
-                        <?php } ?>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Klanten <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Bonnen <span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a href="#" id="load_custm"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;Zoeken</a></li>
-                                <li><a href="#" id="load_ncustm"><i class="fa fa-address-card-o" aria-hidden="true"></i> Nieuwe Klant</a></li>
+                                <li><a href="#" id="searchReceipt"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;Zoeken</a></li>
+                                <li><a href="#" id="newReceiptBtn"><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;&nbsp; Nieuwe Bon</a></li>
                             </ul>
                         </li>
+                        <?php } ?>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Contracten <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="#" id="searchContracts"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;Zoeken</a></li>
                                 <li><a href="#" id="showContractsOverview"><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;Contracten overzicht</a></li>
                                 <li><a href="#" id="createContract"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;Nieuw contract</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Klanten <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#" id="load_custm"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;Zoeken</a></li>
+                                <li><a href="#" id="load_ncustm"><i class="fa fa-address-card-o" aria-hidden="true"></i> Nieuwe Klant</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -240,27 +243,16 @@
             });
         </script>
         <div class="row">
-            
-            <span style="color: #a1a1a1;
-                position: absolute;
-                margin-left: auto;
-                margin-right: auto;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                bottom: -2px;
-                font-size: 10px;">
-                <div class="loader mainLoader" id="pageLoaderIndicator" style="display: none;"></div>
-                Ontwikkelt door <span id="mennoName">M.C. van Leeuwen</span>
-            </span>
 
             <script>
                 var clickCount = 0;
                 $("#mennoName").on("click", function () {
-                    if (clickCount < 7)
+                    if (clickCount < 5)
                         clickCount++;
                     else
                     {
-                        alert("Well, I'd suppose you like my name so much that you started mashing on it?\n\nCooldown dude ;)\n\nDeze software is gemaakt door...\n\nMenno van Leeuwen\nmenno.vanleeuwen@stardebris.net");
+                        alert("Well, I'd suppose you like my name so much that you started mashing on it?\n\nCooldown dude ;)\n\nDeze software is gemaakt door...\n\nMenno van Leeuwen\nmenno@vleeuwen.me");
+                        window.open("https://menno.vleeuwen.me");
                         clickCount = 0;
                     }
                 });
@@ -273,5 +265,19 @@
 			</div>
             <div class="col-sm-1"></div>
         </div>
+        <div class="loader mainLoader" id="pageLoaderIndicator" style="display: none;"></div>
+        <br />
+        <br />
+        <br />
+            <span style="color: #a1a1a1;
+                position: relative;
+                margin-left: auto;
+                margin-right: auto;
+                left: 42%;
+                transform: translate(-50%, -50%);
+                font-size: 10px;
+                top: -8px;">
+                Ontwikkelt door <span id="mennoName">Menno van Leeuwen</span>
+            </span>
     </body>
 </html>

@@ -672,11 +672,4 @@ else
 </script>
 <?php
 }
-
-$time = microtime();
-$time = explode(' ', $time);
-$time = $time[1] + $time[0];
-$finish = $time;
-$total_time = str_replace("0.", "", number_format(($finish - $start), 4));
-echo '<script> $(document).ready(function () { console.log("Page created in '.$total_time.'ms"); });';
-?>
+include("debug.php"); ?>

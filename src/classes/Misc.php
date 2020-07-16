@@ -67,6 +67,31 @@ class Misc
 	public static function sqlGet($what, $table, $something, $isSomething)
 	{
 		$sql = "SELECT $what FROM $table WHERE $something='$isSomething';";
+
+		global $config;
+
+		$db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
+
+		if($db->connect_errno > 0)
+		{
+			die('Unable to connect to database [' . $db->connect_error . ']');
+		}
+
+		if(!$result = $db->query($sql))
+		{
+			die('Er was een fout tijdens het uitvoeren van deze query (' . $db->error . ') (' . $sql . ')');
+		}
+
+		while($row = $result->fetch_assoc())
+		{
+			return $row;
+		}
+	}
+
+	public static function sqlGetAll($what, $table)
+	{
+		$sql = "SELECT $what FROM $table;";
+
 		global $config;
 
 		$db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);

@@ -489,12 +489,4 @@ if (isset($_GET['id']))
 
 	}
 }
-
-$time = microtime();
-$time = explode(' ', $time);
-$time = $time[1] + $time[0];
-$finish = $time;
-$total_time = round(($finish - $start), 4);
-echo '<script> $(document).ready(function () { console.log("Page created in '.$total_time.'ms"); });';
-
-?>
+include("debug.php"); ?>

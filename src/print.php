@@ -80,10 +80,6 @@ else if (isset($_GET['closeReport']))
     <html>
         <head>
             <!-- Bootstrap and all it's dependencies -->
-            <?php
-            if ($_CFG['THEME'] == "")
-                $_CFG['THEME'] = 'Default';
-            ?>
             <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap-switch.min.css" />
             <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/multiple-emails.css" />
             <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap.css" />
@@ -177,10 +173,6 @@ else if (isset($_GET['closeReportPrint']))
     <html>
         <head>
             <!-- Bootstrap and all it's dependencies -->
-            <?php
-            if ($_CFG['THEME'] == "")
-                $_CFG['THEME'] = 'Default';
-            ?>
             <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap-switch.min.css" />
             <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/multiple-emails.css" />
             <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap.css" />
@@ -246,11 +238,6 @@ else if (isset($_GET['receiptPrint']))
 <html>
     <head>
         <!-- Bootstrap and all it's dependencies -->
-        <?php
-
-        if ($_CFG['THEME'] == "")
-            $_CFG['THEME'] = 'Default';
-        ?>
         <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap-switch.min.css" />
         <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/multiple-emails.css" />
         <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap.css" />
@@ -379,11 +366,6 @@ else if (isset($_GET['receipt']))
 <html>
     <head>
         <!-- Bootstrap and all it's dependencies -->
-        <?php
-
-        if ($_CFG['THEME'] == "")
-            $_CFG['THEME'] = 'Default';
-        ?>
         <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap-switch.min.css" />
         <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/multiple-emails.css" />
         <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap.css" />

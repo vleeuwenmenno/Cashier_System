@@ -7,24 +7,96 @@ if (isset($_GET['new']))
 ?>
 		<div id="customerForm">
 			<h2>Nieuw contract</h2>
-            
             <label for="email">Factuur datum: </label>
+            <!-- Button trigger modal -->
+            <a href="#" data-toggle="modal" data-target="#exampleModal">
+                factuur planning uitleg
+            </a>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title" id="exampleModalLabel">Factuur datum uitleg</h2>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p style="font-size: 9pt;">
+                            <h3>Jaar</h3>
+                            Ieder jaar wordt gefactureerd op de maand van de start datum en op de aangegeven dag. <br />(Bijvoorbeeld: start datum 02-2018 en aangegeven dag 5, dan wordt de eerstvolgende data 05-03-2018 en dan 05-03-2019, 05-03-2020 enz.)<br /><br />
+                            
+                            <h3>Kwartaal</h3>
+                            Ieder kwartaal wordt gefactureerd op de eerste maand van dat kwartaal op de aangegeven dag.<br />(Bijvoorbeeld: start datum 02-2018 en aangegeven dag 5, dan wordt de eerstvolgende data 05-03-2018 en dan 05-04-2018, 05-07-2018, 05-10-2018 enz.)<br /><br />
+                            
+                            <h3>Maand</h3>
+                            Iedere maand wordt gefactureerd op de op de aangegeven dag van de maand.<br />(Bijvoorbeeld: start datum 02-2018 en aangegeven dag 5, dan wordt de eerstvolgende data 05-03-2018 en dan 05-04-2019, 05-05-2020, enz.)<br /><br />
+                            
+                            <h3>Overige</h3>
+                            Om direct een factuur te sturen na het aanmaken vink dan "Factuur direct sturen" aan.<br /> (Dit veranderd de planning de daarna komende facturen niet)<br /><br />
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Sluiten</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
             <div class="input-group">
                 <span class="input-group-addon" type="button" id="selectCustomer" id="basic-addon2">Ieder(e)</span>
-                <input type="text" class="form-control" placeholder="jaar, kwartaal of maand" aria-describedby="basic-addon2">
-                <span class="input-group-addon" type="button" id="selectCustomer" id="basic-addon2">op</span>
-                <input type="text" class="form-control" placeholder="20" aria-describedby="basic-addon2">
+                <select class="combobox form-control" id="paymentPeroid">
+                    <option value="year">jaar</option>
+                    <option value="quarter">kwartaal</option>
+                    <option value="month">maand</option>
+                </select>
+                <span class="input-group-addon" type="button" id="selectCustomer" id="basic-addon2">op de</span>
+                <select class="combobox form-control" id="paymentDate">
+                    <option value="1">1ste</option>
+                    <option value="2">2de</option>
+                    <option value="3">3de</option>
+                    <option value="4">4de</option>
+                    <option value="5">5de</option>
+                    <option value="6">6de</option>
+                    <option value="7">7de</option>
+                    <option value="8">8ste</option>
+                    <option value="9">9de</option>
+                    <option value="10">10de</option>
+                    <option value="11">11de</option>
+                    <option value="12">12de</option>
+                    <option value="13">13de</option>
+                    <option value="14">14de</option>
+                    <option value="15">15de</option>
+                    <option value="16">16de</option>
+                    <option value="17">17de</option>
+                    <option value="18">18de</option>
+                    <option value="19">19de</option>
+                    <option value="20">20ste</option>
+                    <option value="21">21ste</option>
+                    <option value="22">22ste</option>
+                    <option value="23">23ste</option>
+                    <option value="24">24ste</option>
+                    <option value="25">25ste</option>
+                    <option value="26">26ste</option>
+                    <option value="27">27ste</option>
+                    <option value="28">28ste</option>
+                </select>
             </div><br />
             
             <label for="email">Start datum: </label>
 			<div class="form-group">
                 <div class='input-group date' id='datetimepicker2'>
-                    <input type='text' class="form-control" id="startDate" placeholder="20-07-2020" />
+                    <input type='text' class="form-control" id="startDate" placeholder="07-2020" />
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
                 </div>
-			</div><br />
+			</div>
+            
+            <div class="checkbox">
+                <label><input type="checkbox" id="sendOrderImmediatly" value="">Factuur direct sturen (Met factuur datum: <span id="today"></span>)</label>
+            </div>
             
             <label for="email">Klant: </label>
             <div class="input-group">
@@ -36,8 +108,11 @@ if (isset($_GET['new']))
                     
                     if (Misc::sqlGet("companyName", "customers", "customerId", $_SESSION['receipt']['customer'])['companyName'] != "")
                         echo Misc::sqlGet("companyName", "customers", "customerId", $_SESSION['receipt']['customer'])['companyName'] . ' | ';
-
-                    echo Misc::sqlGet("email", "customers", "customerId", $_SESSION['receipt']['customer'])['email'];
+                    
+                    if (Misc::sqlGet("email", "customers", "customerId", $_SESSION['receipt']['customer'])['email'] == "")
+                        echo "Geen email, voeg email adres toe!";
+                    else
+                        echo Misc::sqlGet("email", "customers", "customerId", $_SESSION['receipt']['customer'])['email'];
                 }
                 ?>" aria-describedby="basic-addon2" readonly>
                 <a href="#" class="input-group-addon" type="button" id="selectCust">Selecteer klant</a>
@@ -87,9 +162,7 @@ if (isset($_GET['new']))
                             else
                                 echo '<a href="#" style="color: black;" id="itemDesc' . key($_SESSION['receipt']['items']) . '">' . $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['itemDesc'] . '</a>';
                             
-                            echo '    
-                                          
-                                      </th>';
+                            echo '    </th>';
                             echo '    <th><span class="priceClickable" id="' . key($_SESSION['receipt']['items']) . '" data-placement="bottom" data-trigger="hover">';
                             echo '        <span id="editPrice' . key($_SESSION['receipt']['items']) . '">';
                             echo '            '.$_CFG['CURRENCY'].'&nbsp;' . number_format(round(round($total, 2) * $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['count'], 2), 2, ",", ".") . '</span>';
@@ -146,12 +219,16 @@ if (isset($_GET['new']))
                             const event = new Date();
                             const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
 
-                            $("#startDate").attr("placeholder", event.toLocaleDateString('nl-NL', options));
+                            $("#startDate").attr("placeholder", event.toLocaleDateString('nl-NL', options).substring(3));
+                            $("#today").html(event.toLocaleDateString('nl-NL', options));
 
                             $('#datetimepicker2').datepicker({
-                                language: 'nl',
+                                format: "mm-yyyy",
                                 calendarWeeks: true,
-                                orientation: "bottom auto"
+                                orientation: "bottom auto",    
+                                viewMode: "months", 
+                                minViewMode: "months",
+                                startDate: "today"
                             });
 
                             $("#loadNewReceipt").click(function() {
@@ -163,7 +240,7 @@ if (isset($_GET['new']))
 
                             $('#selectCust').click(function () {
                                 $("#pageLoaderIndicator").fadeIn();
-                                $("#PageContent").load("customer.php", function () {
+                                $("#PageContent").load("customer.php?returnContract=1", function () {
                                     $("#pageLoaderIndicator").fadeOut();
                                 });
                             });
@@ -171,9 +248,242 @@ if (isset($_GET['new']))
                     </script>
                 </div>
             </div>
+			<div class="text-center panel panel-info">
+                <div class="panel-heading" style="position: relative; top: -1;">
+                    <h3 class="panel-title">Factuur planning</h3>
+                </div>
+                <div class="panel-body">
+					<ul class="list-group" id="nextOrderTime">
+					</ul>
+				</div>
+			</div>
+            <button type="button" id="addContractBtn" class="btn btn-primary" <?php if(!isset($_SESSION['receipt']['customer']) || !isset($_SESSION['receipt']['items']) || Misc::sqlGet("email", "customers", "customerId", $_SESSION['receipt']['customer'])['email'] == "") {?>disabled<?php } ?>>Contract toevoegen</button>
+            <script>
+                function updateMonths()
+                {
+                    const options = { year: 'numeric', month: 'long', day: 'numeric' };
 
-            <button type="button" id="applyBtn" class="btn btn-primary" <?php if(!isset($_SESSION['receipt']['customer']) || !isset($_SESSION['receipt']['items'])) {?>disabled<?php } ?>>Contract toevoegen</button>
-		</div>
+                    $("#nextOrderTime").html("Eerste factuur wordt verzonden op de volgende data: <br />");
+
+                    for (var i = 0; i < 6; i++)
+                    {
+                        var date = calculateNext(i);
+
+                        if ($("#paymentPeroid").children("option:selected").val() == "quarter")
+                            $("#nextOrderTime").html($("#nextOrderTime").html() + "<li class=\"list-group-item\">" + date.toLocaleDateString('nl-NL', options) + " kwartaal " + getQuarter(date) + "</li>");
+                        else
+                            $("#nextOrderTime").html($("#nextOrderTime").html() + "<li class=\"list-group-item\">" + date.toLocaleDateString('nl-NL', options) + "</li>");
+                    }
+                }
+        
+                $( document ).ready(function() {
+                    
+                    $("#paymentDate").change(function(){
+                        updateMonths();
+                    });
+                    
+                    $("#paymentPeroid").change(function(){
+                        updateMonths();
+                    });
+                    
+                    $("#startDate").change(function(){
+                        updateMonths();
+                    });
+
+                    $("#addContractBtn").click(function () {
+                        const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+
+                        $.get(
+                            "contract/contractAdd.php",
+                            {
+                                startDate: "01-" + $("#startDate").val() + " 00:00:00",
+                                planningPeriod: $("#paymentPeroid").children("option:selected").val(),
+                                planningDay: parseInt($("#paymentDate").children("option:selected").val()),
+                                sendNow: $('#sendOrderImmediatly').is(":checked"),
+                            },
+							function(data)
+							{
+								if (data.replace(/(\r\n|\n|\r)/gm,"").startsWith("OK"))
+								{        
+                                    $("#newReceipt").html("<i class=\"fa fa-file-text\" aria-hidden=\"true\"></i>&nbsp;&nbsp; Nieuwe Bon");
+                                    $("#newReceipt").hide();
+
+									var arr = data.replace(/(\r\n|\n|\r)/gm,"").split(' ');
+									$("#contractId").val(arr[1]);
+									$("#okMessage").modal("show");
+								}
+								else
+								{
+									$("#errorMessageContent").text(data);
+									$("#errorMessage").modal("show");
+								}
+							}
+                        );
+                    });
+                });
+
+                // safety check to see if the prototype name is already defined
+                Function.prototype.method = function (name, func) {
+                    if (!this.prototype[name]) {
+                        this.prototype[name] = func;
+                        return this;
+                    }
+                };
+
+                Date.method('inPast', function () {
+                    return this < new Date($.now());// the $.now() requires jQuery
+                });
+
+                // including this prototype as using in example
+                Date.method('addDays', function (days) {
+                    var date = new Date(this);
+                    date.setDate(date.getDate() + (days));    
+                    return date;
+                });
+
+                // including this prototype as using in example
+                Date.method('addMonths', function (months) {
+                    var date = new Date(this);
+                    var d = date.getDate();
+                    date.setMonth(date.getMonth() + +months);
+                    if (date.getDate() != d) {
+                        date.setDate(0);
+                    }
+                    return date;
+                });
+
+                function monthDiff(d1, d2) 
+                {
+                    var months;
+                    months = (d2.getFullYear() - d1.getFullYear()) * 12;
+                    months -= d1.getMonth();
+                    months += d2.getMonth();
+                    return months <= 0 ? 0 : months;
+                }
+
+                function leapYear(year)
+                {
+                    return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+                }
+
+                function getQuarter(d) 
+                {
+                    d = d || new Date(); // If no date supplied, use today
+                    var q = [1,2,3,4];
+                    return q[Math.floor(d.getMonth() / 3)];
+                }
+
+                function getDaysLeftinQuarter(d)
+                {
+                    var today = d;
+                    var quarter = Math.floor((today.getMonth() + 3) / 3);
+                    var nextq;
+                    if (quarter == 4) {
+                        nextq = new Date (today.getFullYear() + 1, 1, 1);
+                    } else {
+                        nextq = new Date (today.getFullYear(), quarter * 3, 1);
+                    }
+                    var millis1 = today.getTime();
+                    var millis2 = nextq.getTime();
+                    return (millis2 - millis1) / 1000 / 60 / 60 / 24;
+                }
+
+                function calculateNext(nextNext = 0)
+                {
+                    var start = new Date($("#startDate").val().split("-")[1] + "-" + $("#startDate").val().split("-")[0] + "-01");
+                    var period = $("#paymentPeroid").children("option:selected").val();
+                    var day = parseInt($("#paymentDate").children("option:selected").val());
+                    var sendNow = $('#sendOrderImmediatly').is(":checked");
+                    var now = new Date();
+                    var next = new Date();
+
+                    if (period == "year")
+                    {
+                        if (day < now.getDate()) /// Check if we have to skip to the next month
+                        {
+                            if ((next.getMonth() + 2) == 13) /// Make sure we don't try to say month 13
+                                next = new Date(now.getFullYear()+1 + "-01-" + day); // If it is month 13, we change it to 1 and increase the year by 1
+                            else
+                                next = new Date(now.getFullYear() + "-" + (next.getMonth() + 1) + "-" + day); // Continue normally
+                        }
+                        else /// This month
+                        {
+                            next = new Date(now.getFullYear() + "-" + (next.getMonth() + 1) + "-" + day);
+                        }
+
+                        if (sendNow && nextNext == 0) /// Check if we have to send it now
+                            return now;
+
+                        next.setFullYear(next.getFullYear() + nextNext);
+
+                        if (next.inPast())
+                            next = new Date();
+                    }
+                    else if (period == "quarter")
+                    {
+                        next = new Date().addDays(Math.ceil(getDaysLeftinQuarter(new Date())));
+                        next = next.addMonths(monthDiff(next, start))
+                        next = next.addDays(day-1)
+
+
+                        if (nextNext > 0 && sendNow)
+                        {
+                            next = next.addDays(92*(nextNext-1));
+                            next = new Date(next.getFullYear() + "-" + (next.getMonth()+1) + "-" + day);
+                        }
+                        else if (nextNext > 0)
+                        {
+                            next = next.addDays(92*nextNext);
+                            next = new Date(next.getFullYear() + "-" + (next.getMonth()+1) + "-" + day);
+                        }
+                        else if (nextNext == 0 && sendNow)
+                        {
+                            next = new Date();
+                        }
+                    }
+                    else // month
+                    {
+                        if (day < now.getDate()) /// Check if we have to skip to the next month
+                        {
+                            if ((next.getMonth() + 2) == 13) /// Make sure we don't try to say month 13
+                                next = new Date((now.getFullYear()+1) + "-01-" + day); // If it is month 13, we change it to 1 and increase the year by 1
+                            else
+                                next = new Date(now.getFullYear() + "-" + (next.getMonth() + 2) + "-" + day); // Continue normally
+                        }
+                        else /// This month
+                        {
+                            next = new Date(now.getFullYear() + "-" + (next.getMonth() + 1) + "-" + day);
+                        }
+                        
+                        /// Check if we have to send it now and this is the first
+                        if (sendNow && nextNext == 0)
+                            next = new Date();
+                        else if (sendNow) /// Check if we send one today
+                            next.setMonth(next.getMonth() + nextNext-1);
+                        else // Continue normally
+                            next.setMonth(next.getMonth() + nextNext);
+                    }
+
+                    /// Check if the start date is later than today except for yearly 
+                    if (start.getTime() > now.getTime() && period == "year")
+                    {
+                        start.setFullYear(start.getFullYear() + nextNext);
+                        start.setDate(day);
+                            
+                        return start; // The start date is later than today so we will set the next date to be the start date.
+                    }
+                    else if (start.getTime() > now.getTime() && period == "month")
+                    {
+                        start.setMonth(start.getMonth() + nextNext);
+                        start.setDate(day);
+                            
+                        return start; // The start date is later than today so we will set the next date to be the start date.
+                    }
+                    else
+                        return next; // The start date has already passed so the next date will be as planned.
+                }
+            </script>
+        </div>
 
 		<div class="modal fade" id="errorMessage">
 		  <div class="modal-dialog" role="document">
@@ -210,15 +520,15 @@ if (isset($_GET['new']))
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				  <span aria-hidden="true">&times;</span>
 				</button>
-				<h4 class="modal-title">Nieuwe klant</h4>
+				<h4 class="modal-title">Nieuw contract</h4>
 			  </div>
 			  <div class="modal-body">
-				<p>De klant gegevens zijn verwerkt in het systeem.</p>
+				<p>Contract gegevens zijn verwerkt in het systeem.</p>
 			  </div>
 			  <div class="modal-footer">
-				<button type="button" class="btn btn-primary" id="openCustBtn" data-dismiss="modal">Weergeef klant</button>
+				<button type="button" class="btn btn-primary" id="openCustBtn" data-dismiss="modal">Weergeef contract</button>
 				<button type="button" class="btn btn-secondary" id="closeOkBtn" data-dismiss="modal">Sluiten</button>
-				<input type="hidden" id="customerId" name="customerId" value="">
+				<input type="hidden" id="contractId" name="contractId" value="">
 				<script>
 					$(document).ready(function ()
 					{
@@ -227,7 +537,7 @@ if (isset($_GET['new']))
 						});
 
 						$('#okMessage').on('hidden.bs.modal', function () {
-						    $("#PageContent").load('customer/viewCustomer.php?id=' + $('#customerId').val());
+						    $("#PageContent").load('contract/viewContract.php?id=' + $('#contractId').val());
 						});
 
 						$("#closeOkBtn").on("click", function () {
@@ -256,7 +566,7 @@ if (isset($_GET['new']))
 			<div class="blob blob-3"></div>
 			<div class="blob blob-4"></div>
 			<div class="blob blob-5"></div>
-			<center>Nieuwe klant wordt verwerkt in het systeem...</center>
+			<center>Contract wordt verwerkt in het systeem...</center>
 		</div>
 	<?php
 }
@@ -273,85 +583,109 @@ else if (isset($_GET['overview']))
                     </div>
                     <div class="panel-body" style="display: inline-block; text-align: left">
                         <b>Contracten:</b><br />
-                        <div><span style="margin-left: 2.5em; font-size: 12px;">Active contracten:</span><i style="float: right;">&nbsp;&nbsp;10</i></div><br />
-                        <div style="position: relative; top: -16px;"><span style="margin-left: 2.5em; font-size: 12px;">Geannuleerde contracten:</span><i style="float: right;">&nbsp;&nbsp;12</i></div><br />
-                        <div style="position: relative; top: -32px;"><b style="margin-left: 2.5em; font-size: 12px;">Totaal aantal contracten:</b><i style="float: right;">&nbsp;&nbsp;22</i></div>
-                        
-                        <b>Active contracten:</b><br />
-                        <div><span style="margin-left: 2.5em; font-size: 12px;">Gemiddelde:</span><i style="float: right;"><?=$_CFG['CURRENCY']?>&nbsp;34,95</i></div><br />
-                        <div style="position: relative; top: -16px;"><b style="margin-left: 2.5em; font-size: 12px;">Totaal inkomend:</b><i style="float: right;"><?=$_CFG['CURRENCY']?>&nbsp;363.85</i></div>
+                        <div><span style="margin-left: 2.5em; font-size: 12px;">Totaal aantal contracten:</b><i style="float: right;">&nbsp;&nbsp;<?=Misc::sqlGetAll("COUNT(contractId)", "contract")['COUNT(contractId)']?></i></div><br />
+                        <div style="position: relative; top: -16px;"><span style="margin-left: 2.5em; font-size: 12px;">Foutmeldingen:</span><i style="float: right; font-size: 12px;">&nbsp;&nbsp;<?=Misc::sqlGet("COUNT(success)", "log", "success", "0")['COUNT(success)']?></i></div><br />
 
-                        <b>Uitgaande mails:</b><br />
-                        <div><span style="margin-left: 2.5em; font-size: 12px;">Verstuurd:</span><i style="float: right;">&nbsp;&nbsp;5</i></div><br />
-                        <div style="position: relative; top: -16px;"><span style="margin-left: 2.5em; font-size: 12px;">Nog te versturen:</span><i style="float: right;">&nbsp;&nbsp;7</i></div><br />
-                        <div style="position: relative; top: -32px;"><b style="margin-left: 2.5em; font-size: 12px;">Uitgaande mailbox:</b><i style="float: right;">&nbsp;&nbsp;facturen@comtoday.nl</i></div>
+                    
+                        <b>Mail agenda: WIP</b><br />
+                        <div class="panel panel-info">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Tijd & Datum</th>
+                                        <th scope="col">Contract</th>
+                                        <th scope="col">Ontvanger</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>2020-07-18 23:55:00</th>
+                                        <th><a href="#">#2020001</a></th>
+                                        <td>menno@vleeuwen.me</td>
+                                    </tr>
+                                    <tr>
+                                        <th>2020-07-15 23:55:00</th>
+                                        <th><a href="#">#2020001</a></th>
+                                        <td>rob@comtoday.nl</td>
+                                    </tr>
+                                    <tr>
+                                        <th>2020-07-17 23:55:00</th>
+                                        <th><a href="#">#2020001</a></th>
+                                        <td>harryhakman@hotmail.com</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
+                <b>Factuur historie:</b> <?php echo $row['openDate']; ?><br />
                 <div class="panel panel-info">
-                    <b>Mail agenda:</b> <?php echo $row['openDate']; ?><br />
                     <table class="table">
                         <thead>
                             <tr>
                                 <th scope="col">Tijd & Datum</th>
-                                <th scope="col">Contract</th>
-                                <th scope="col">Ontvanger</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th>2020-07-18T23:55:00+0000</th>
-                                <th><a href="#">#2020001</a></th>
-                                <td>menno@vleeuwen.me</td>
-                            </tr>
-                            <tr>
-                                <th>2020-07-15T23:55:00+0000</th>
-                                <th><a href="#">#2020001</a></th>
-                                <td>rob@comtoday.nl</td>
-                            </tr>
-                            <tr>
-                                <th>2020-07-17T23:55:00+0000</th>
-                                <th><a href="#">#2020001</a></th>
-                                <td>harryhakman@hotmail.com</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="panel panel-info">
-                    <b>Mail log:</b> <?php echo $row['openDate']; ?><br />
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Tijd & Datum</th>
+                                <th scope="col">Factuur #</th>
                                 <th scope="col">Contract</th>
                                 <th scope="col">Ontvanger</th>
                                 <th scope="col">Succesvol verstuurd</th>
-                                <th scope="col">Melding</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th>2020-07-14T11:52:40+0000</th>
-                                <th><a href="#">#2020001</a></th>
-                                <td>menno@vleeuwen.me</td>
-                                <td>Ja</td>
-                                <td>N.v.t.</td>
-                            </tr>
-                            <tr>
-                                <th>2020-07-14T11:52:40+0000</th>
-                                <th><a href="#">#2020001</a></th>
-                                <td>rob@comtoday.nl</td>
-                                <td>Ja</td>
-                                <td>N.v.t.</td>
-                            </tr>
-                            <tr>
-                                <th>2020-07-14T11:52:40+0000</th>
-                                <th><a href="#">#2020001</a></th>
-                                <td>harryhakman@hotmail.com</td>
-                                <td>Nee</td>
-                                <td>501 5.7.0 – Authentication failed.  Username or password is invalid.</td>
-                            </tr>
+                            <?php
+                                
+                                $sql = "SELECT * FROM log;";
+
+                                global $config;
+                        
+                                $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
+                        
+                                if($db->connect_errno > 0)
+                                {
+                                    die('Unable to connect to database [' . $db->connect_error . ']');
+                                }
+                        
+                                if(!$result = $db->query($sql))
+                                {
+                                    die('Er was een fout tijdens het uitvoeren van deze query (' . $db->error . ') (' . $sql . ')');
+                                }
+
+                                $list = array();
+                                $i = 0;
+                                while($row = $result->fetch_assoc())
+                                {
+                                    $list[$i] = $row;
+                                    $i++;
+                                }
+
+                                usort($list, function($a, $b) {
+                                    return new DateTime($a['dateTime']) <=> new DateTime($b['dateTime']);
+                                });
+                                $list= array_reverse($list);
+
+                                foreach ($list as $key => $row)
+                                {
+                                    ?>
+                                    <tr>
+                                        <th><?=$row['dateTime']?></th>
+                                        <th>#<?=str_pad($row['logId'], 8, '0', STR_PAD_LEFT)?></th>
+                                        <th><a href="#" id="contract<?=$row['contractId']?>Btn">#<?=str_pad($row['contractId'], 8, '0', STR_PAD_LEFT)?></a></th>
+                                        <td><?=$row['receiverEmail']?></td>
+                                        <td><?=$row['success'] ? "Ja": "Nee"?></td>
+                                    </tr>
+                                    <script>
+                                    	$(document).ready(function ()
+                                        {
+                                            $("#contract<?=$row['contractId']?>Btn").on("click", function () {
+                                                $("#loaderAnimation").fadeIn();
+                                                $("#PageContent").load("contract/viewContract.php?id=<?=$row['contractId']?>");
+                                            });
+                                        });
+                
+                                    </script>
+                                <?php
+                                }
+                            ?>
                         </tbody>
                     </table>
                 </div>
@@ -368,7 +702,7 @@ else
         $(".js-example-basic-multiple").select2();
     </script>
 
-    <div class="row">
+    <div class="row" style="display: none;">
         <div class="col-lg-offset-3 col-lg-6">
         <div class="input-group">
             <input type="text" class="form-control" name="searchBar" id="searchBar" placeholder="Zoek term... (Klant voorletter, Klant achternaam, Id)" aria-describedby="basic-addon2">
@@ -400,7 +734,7 @@ else
                 $("#listContents").html("");
 
                 $.get(
-                    "customer/customerLoad.php",
+                    "contract/contractLoad.php",
                     {
                         start: 0,
                         count: 25,
@@ -451,22 +785,22 @@ else
                     <tr class="filters">
                         <th>
                             <a href="#" class="mustFocus">
-                                <input type="text" class="form-control" placeholder="Voorletters" disabled />
+                                <input type="text" class="form-control" placeholder="Contract" disabled />
                             </a>
                         </th>
                         <th>
                             <a href="#" class="mustFocus">
-                                <input type="text" class="form-control" placeholder="Achternaam" disabled />
+                                <input type="text" class="form-control" placeholder="Klant" disabled />
                             </a>
                         </th>
                         <th>
                             <a href="#" class="mustFocus">
-                                <input type="text" class="form-control" placeholder="Bedrijfsnaam" disabled />
+                                <input type="text" class="form-control" placeholder="Periode" disabled />
                             </a>
                         </th>
                         <th>
                             <a href="#" class="mustFocus">
-                                <input type="text" class="form-control" placeholder="Postcode" disabled />
+                                <input type="text" class="form-control" placeholder="Volgende factuur" disabled />
                             </a>
                         </th>
                     </tr>
@@ -533,7 +867,7 @@ else
                                 });
 
                                 $.get(
-                                    "customer/customerLoad.php",
+                                    "contract/contractLoad.php",
                                     {
                                         start: startLocation,
                                         count: 25,
@@ -632,11 +966,4 @@ else
     </script>
 	<?php
 }
-
-$time = microtime();
-$time = explode(' ', $time);
-$time = $time[1] + $time[0];
-$finish = $time;
-$total_time = str_replace("0.", "", number_format(($finish - $start), 4));
-echo '<script> $(document).ready(function () { console.log("Page created in '.$total_time.'ms"); });';
-?>
+include("debug.php"); ?>
