@@ -12,6 +12,55 @@ abstract class PaymentMethod
     const iDeal = 5;
 }
 
+class Quarters
+{
+    public static function getQuarter($d) 
+    {
+        $q = [1,2,3,4];
+        return $q[floor($d->format('m') / 3)];
+    }
+    
+    public static function monthDiff($date1, $date2)
+    {
+        $ts1 = strtotime($date1->format("Y-m-d"));
+        $ts2 = strtotime($date2->format("Y-m-d"));
+
+        $year1 = date('Y', $ts1);
+        $year2 = date('Y', $ts2);
+
+        $month1 = date('m', $ts1);
+        $month2 = date('m', $ts2);
+
+        return (($year2 - $year1) * 12) + ($month2 - $month1);
+    }
+
+    public static function getQuarterByMonth($monthNumber) {
+        return floor(($monthNumber - 1) / 3) + 1;
+    }
+
+    public static function getDaysLeftInQuarter($d)
+    {
+        $today = new DateTime($d->format("Y-m-d"));
+        $quarter = Quarters::getQuarterByMonth($today->format("m"));
+        $nextq;
+        
+        if ($quarter == 1)
+            $nextq = new DateTime ("01-04-".($today->format("Y")));
+        else if ($quarter == 2)
+            $nextq = new DateTime ("01-07-".($today->format("Y")));
+        else if ($quarter == 3)
+            $nextq = new DateTime ("01-10-".($today->format("Y")));
+        else if ($quarter == 4)
+            $nextq = new DateTime ("01-01-".($today->format("Y")+1));
+            
+        $end = strtotime($nextq->format("Y-m-d"));
+        $start = strtotime($today->format("Y-m-d"));
+        
+        $days_between = ceil(abs($end - $start) / 86400);
+        return $days_between;
+    }
+}
+
 class Calculate
 {
     public static function getGrossTurnover($identifier, $sessionID)
@@ -469,5 +518,97 @@ class Calculate
             $final['exclVat'] += round($val['priceAPiece']['priceExclVat'] *  $val['count'], 2);
         }
         return $final;
+    }
+
+    public static function calculateNextOrder($period, $day, $start, $nextTime = 0, $sendNow = false)
+    {
+        $now = new DateTime();
+        $next = new DateTime();
+
+        /// Strip off the time to prevent nasty issues
+        $now =  new DateTime($now->format("Y-m-d"));
+        $next =  new DateTime($next->format("Y-m-d"));
+
+        if ($sendNow && $nextTime == 0)
+            return new DateTime();
+
+        if ($period == "year")
+        {
+            $next = new DateTime("+$nextTime year");
+            $next = new DateTime($next->format('Y')."-".$next->format('m')."-".$day);
+
+            if ($next < $now)
+                $next = new DateTime();
+        }
+        else if ($period == "quarter")
+        {
+            $daysLeftQ = ceil(Quarters::getDaysLeftinQuarter(new DateTime()));
+            $diff = ceil(Quarters::monthDiff($next, $start));
+            
+            $next = $next->modify("+ $daysLeftQ days");
+            $next = $next->modify("+ $diff months");
+            $next = $next->modify("- 1 days");
+            $next = $next->modify('+ 1 month'); // Correct the diff month returning 1 too less (Always)
+
+            $next = new DateTime($next->format('Y')."-".($next->format('m'))."-".$day);
+            
+            if ($nextTime > 0 && $sendNow)
+            {
+                $next = $next->modify('+ '.(92*($nextTime-1)).' days');
+                $next = new DateTime($next->format('Y')."-".($next->format('m'))."-".$day);
+            }
+            else if ($nextTime > 0)
+            {
+                $next = $next->modify('+ '.(92*($nextTime)).' days');
+                $next = new DateTime($next->format('Y')."-".($next->format('m'))."-".$day);
+            }
+            else if ($nextTime == 0 && $sendNow)
+            {
+                $next = new DateTime();
+            }
+        }
+        else // Month
+        {
+            $next = new DateTime("+$nextTime month");
+            $next = new DateTime($next->format('Y')."-".$next->format('m')."-".$day);
+
+            $diff = $next->diff($now);
+            $diffDays = (integer)$diff->format( "%R%a" );
+
+            if ($diffDays == 0)
+            {
+                $next = $now;
+            }
+            
+            if ($next < $now)
+            {
+                $next = new DateTime("+".($nextTime+1)." month");
+                $next = new DateTime($next->format('Y')."-".$next->format('m')."-".$day);
+            }
+            
+            if (new DateTime($now->format('Y')."-".$now->format('m')."-".$day) < $now && !$sendNow)
+            {
+                $next = new DateTime("+".($nextTime+1)." month");
+                $next = new DateTime($next->format('Y')."-".$next->format('m')."-".$day);
+            }
+        }
+
+        /// Check if the start date is later than today except for yearly 
+        if ($start > $now && $period == "year")
+        {
+            $start = new DateTime(date("Y-m-d", strtotime("+ $nextTime year", strtotime($start->format("Y-m-d H:i:s")))));
+            $start = new DateTime($start->format('Y')."-".$start->format('m')."-".$day);
+            
+            return $start; // The start date is later than today so we will set the next date to be the start date.
+        }
+        else if ($start > $now && $period == "month")
+        {
+            $start = new DateTime(date("Y-m-d", strtotime("+ $nextTime month", strtotime($start->format("Y-m-d H:i:s")))));
+            $start = new DateTime($start->format('Y')."-".$start->format('m')."-".$day);
+                
+            return $start; // The start date is later than today so we will set the next date to be the start date.
+        }
+        else
+            return $next; // The start date has already passed so the next date will be as planned.
     }
 }

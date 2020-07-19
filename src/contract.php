@@ -282,6 +282,10 @@ if (isset($_GET['new']))
                         updateMonths();
                     });
                     
+                    $('#sendOrderImmediatly').change(function() {
+                        updateMonths();   
+                    });
+                    
                     $("#paymentPeroid").change(function(){
                         updateMonths();
                     });
