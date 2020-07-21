@@ -259,13 +259,25 @@ if (isset($_GET['id']))
                                 {
                                     ?>
                                     <tr>
-                                        <th>#<?=str_pad($rowss['logId'], 8, '0', STR_PAD_LEFT)?></th>
+                                        <th><a href="#" id="contractInvoice<?=$rowss['logId']?>Btn">#<?=str_pad($rowss['logId'], 8, '0', STR_PAD_LEFT)?></a></th>
                                         <th><?=$rowss['dateTime']?></th>
                                         <td><?=$rowss['receiverEmail']?></td>
                                         <td><?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round($rowss['total'], 2), 2, ",", "."); ?></td>
                                         <td><?=$rowss['success'] ? "Ja": "Nee"?></td>
                                         <td><?=$rowss['notes']?></td>
                                     </tr>
+                                    <script>
+                                    	$(document).ready(function ()
+                                        {
+                                            $("#contractInvoice<?=$rowss['logId']?>Btn").on("click", function () {
+                                                $("#pageLoaderIndicator").fadeIn();
+                                                $("#PageContent").load("pdf/pdf.php?cid=<?=$_GET['id']?>&lid=<?=$rowss['logId']?>&exvat", function () {
+                                                    $("#pageLoaderIndicator").fadeOut();
+                                                });
+                                            });
+                                        });
+                
+                                    </script>
                                     <?php
                                 }
                             ?>

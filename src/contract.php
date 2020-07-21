@@ -219,7 +219,7 @@ if (isset($_GET['new']))
                             const event = new Date();
                             const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
 
-                            $("#startDate").attr("placeholder", event.toLocaleDateString('nl-NL', options).substring(3));
+                            $("#startDate").attr("value", event.toLocaleDateString('nl-NL', options).substring(3));
                             $("#today").html(event.toLocaleDateString('nl-NL', options));
 
                             $('#datetimepicker2').datepicker({
@@ -655,7 +655,7 @@ else if (isset($_GET['overview']))
                                     ?>
                                     <tr>
                                         <th><?=$row['dateTime']?></th>
-                                        <th>#<?=str_pad($row['logId'], 8, '0', STR_PAD_LEFT)?></th>
+                                        <th><a href="#" id="contractInvoice<?=$row['contractId']?>Btn">#<?=str_pad($row['logId'], 8, '0', STR_PAD_LEFT)?></a></th>
                                         <th><a href="#" id="contract<?=$row['contractId']?>Btnfh">#<?=str_pad($row['contractId'], 8, '0', STR_PAD_LEFT)?></a></th>
                                         <td><?=$row['receiverEmail']?></td>
                                         <td><?=$row['success'] ? "Ja": "Nee"?></td>
@@ -666,6 +666,13 @@ else if (isset($_GET['overview']))
                                             $("#contract<?=$row['contractId']?>Btnfh").on("click", function () {
                                                 $("#loaderAnimation").fadeIn();
                                                 $("#PageContent").load("contract/viewContract.php?id=<?=$row['contractId']?>");
+                                            });
+                                            
+                                            $("#contractInvoice<?=$row['contractId']?>Btn").on("click", function () {
+                                                $("#pageLoaderIndicator").fadeIn();
+                                                $("#PageContent").load("pdf/pdf.php?cid=<?=$row['contractId']?>&lid=<?=$row['logId']?>&exvat", function () {
+                                                    $("#pageLoaderIndicator").fadeOut();
+                                                });
                                             });
                                         });
                 

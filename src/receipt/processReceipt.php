@@ -59,7 +59,15 @@ else
         }
     }
 
-    $_SESSION['receipt']['saved'] = true;
+    $_SESSION['receipt']['old'] = null;
+    $_SESSION['receipt']['old'] = $_SESSION['receipt'];
+
+    $_SESSION['receipt']['id'] = 0;
+    $_SESSION['receipt']['items'] = null;
+    $_SESSION['receipt']['status'] = 'closed';
+    $_SESSION['receipt']['customer'] = null;
+    $_SESSION['receipt']['saved'] = false;
+    unset($_SESSION['receipt']['order']);
 
     //Move receipt data in session to OLD
     //Go to print page
@@ -71,48 +79,25 @@ else
     if (Misc::sqlGet("paymentMethod", "receipt", "receiptId", $receiptId)['paymentMethod'] == "BANK")
     {
         echo '
-        $("#pageLoaderIndicator").fadeIn();
-        $("#PageContent").load("print.php?receipt=' . str_pad($receiptId, 4, '0', STR_PAD_LEFT) . '&printLetterPaper=' . $_GET['printLetterPaper'] . '&mail=' . $_GET['mail'] . '&print=' . $printAmount . '&mailList=' . urlencode($_GET['mailList']) . '", function () {
-            $("#pageLoaderIndicator").fadeOut();
-        });';
+            $("#pageLoaderIndicator").fadeIn();
+            $("#PageContent").load("mail.php?receipt=' . str_pad($receiptId, 4, '0', STR_PAD_LEFT) . '&mail=' . $_GET['mail'] . '&mailList=' . urlencode($_GET['mailList']) . '", function () {
+                $("#pageLoaderIndicator").fadeOut();
+            });';
     }
     else
     {
         echo '
-        $("#pageLoaderIndicator").fadeIn();
-        $("#PageContent").load("print.php?receipt=' . str_pad($receiptId, 4, '0', STR_PAD_LEFT) . '&printLetterPaper=' . $_GET['printLetterPaper'] . '&mail=' . $_GET['mail'] . '&print=' . $printAmount . '&nobcc=1&mailList=' . urlencode($_GET['mailList']) . '", function () {
-            $("#pageLoaderIndicator").fadeOut();
-        });';
+            console.log("mail.php?receipt=' . str_pad($receiptId, 4, '0', STR_PAD_LEFT) . '&mail=' . $_GET['mail'] . '&nobcc=1&mailList=' . urlencode($_GET['mailList']) . '");
+            $("#pageLoaderIndicator").fadeIn();
+            $("#PageContent").load("mail.php?receipt=' . str_pad($receiptId, 4, '0', STR_PAD_LEFT) . '&mail=' . $_GET['mail'] . '&nobcc=1&mailList=' . urlencode($_GET['mailList']) . '", function () {
+                $("#pageLoaderIndicator").fadeOut();
+            });';
     }
 
     echo '
 
             $("#newReceipt").html("<i class=\"fa fa-file-text\" aria-hidden=\"true\"></i>&nbsp;&nbsp; Nieuwe Bon");
             $("#newReceipt").hide();
-
-            $.get(
-                "receipt/empty.php",
-                {
-                    receiptId: \'' . $receiptId . '\'
-                },
-                function (data)
-                {
-                    $.notify({
-                        icon: \'fa fa-shopping-cart fa-2x\',
-                        title: \'<b>Bon verwerkt</b><br / >\',
-                        message: \'Bon is betaalt en verwerkt in het systeem.\'
-                    }, {
-                        // settings
-                        type: \'success\',
-                        delay: 1000,
-                        timer: 2,
-                        placement: {
-                            from: "bottom",
-                            align: "right"
-                        }
-                    });
-                }
-            );
         });
     </script>';
 }

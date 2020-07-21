@@ -4,16 +4,28 @@ Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 
 if (isset($_GET['applyOptions']))
 {
-	Misc::sqlUpdate("options", "companyName", "'".$_GET['companyName']."'", "id", 1);
-	Misc::sqlUpdate("options", "vat", $_GET['vat'], "id", 1);
-	Misc::sqlUpdate("options", "currency", "'".$_GET['currency']."'", "id", 1);
-
 	Misc::sqlUpdate("options", "smtpHost", "'".$_GET['smtpHost']."'", "id", 1);
 	Misc::sqlUpdate("options", "smtpPort", "'".$_GET['smtpPort']."'", "id", 1);
 	Misc::sqlUpdate("options", "smtpName", "'".$_GET['smtpName']."'", "id", 1);
 	Misc::sqlUpdate("options", "smtpUser", "'".$_GET['smtpUser']."'", "id", 1);
 	Misc::sqlUpdate("options", "smtpPass", "'".$_GET['smtpPass']."'", "id", 1);
 	Misc::sqlUpdate("options", "smtpSecure", "'".$_GET['smtpSecure']."'", "id", 1);
+
+	Misc::sqlUpdate("options", "companyAddress", "'".$_GET['companyAddress']."'", "id", 1);
+	Misc::sqlUpdate("options", "companyPhone", "'".$_GET['companyPhone']."'", "id", 1);
+	Misc::sqlUpdate("options", "companyFax", "'".$_GET['companyFax']."'", "id", 1);
+	Misc::sqlUpdate("options", "companyEmail", "'".$_GET['companyEmail']."'", "id", 1);
+	Misc::sqlUpdate("options", "companyWebsite", "'".$_GET['companyWebsite']."'", "id", 1);
+	Misc::sqlUpdate("options", "companyKvk", "'".$_GET['companyKvk']."'", "id", 1);
+	Misc::sqlUpdate("options", "companyIBAN", "'".$_GET['companyIBAN']."'", "id", 1);
+	Misc::sqlUpdate("options", "companyVATNo", "'".$_GET['companyVATNo']."'", "id", 1);
+	Misc::sqlUpdate("options", "disclaimer", "'".$_GET['disclaimer']."'", "id", 1);
+	Misc::sqlUpdate("options", "invoiceExpireDays", "'".$_GET['invoiceExpireDays']."'", "id", 1);
+
+	Misc::sqlUpdate("options", "companyName", "'".$_GET['companyName']."'", "id", 1);
+	Misc::sqlUpdate("options", "vat", $_GET['vat'], "id", 1);
+	Misc::sqlUpdate("options", "currency", "'".$_GET['currency']."'", "id", 1);
+
 	die();
 }
 if (isset($_GET['content'])) {?>
@@ -572,13 +584,53 @@ if (isset($_GET['content'])) {?>
 							<label for="familyname">Bedrijf naam: </label>
 							<input type="text" class="form-control" id="companyName" placeholder="<?=$_CFG['COMPANY_NAME']?>">
 						</div>
-								<div class="form-group">
+						<div class="form-group">
 							<label for="taxAmount">BTW: </label>
 							<input type="text" class="form-control" id="taxAmount" placeholder="<?=number_format($_CFG['VAT'] * 100 - 100, 2)?>%">
 						</div>
 						<div class="form-group">
-							<label for="street">Valuta: </label>
+							<label for="currency">Valuta: </label>
 							<input type="text" class="form-control" id="currency" placeholder="<?=$_CFG['CURRENCY']?>">
+						</div>
+						<div class="form-group">
+							<label for="street">Adres: </label>
+							<input type="text" class="form-control" id="companyAddress" placeholder="<?=$_CFG['companyAddress']?>">
+						</div> <!-- NEW -->
+						<div class="form-group">
+							<label for="street">Telefoon: </label>
+							<input type="text" class="form-control" id="companyPhone" placeholder="<?=$_CFG['companyPhone']?>">
+						</div>
+						<div class="form-group">
+							<label for="street">Fax: </label>
+							<input type="text" class="form-control" id="companyFax" placeholder="<?=$_CFG['companyFax']?>">
+						</div>
+						<div class="form-group">
+							<label for="street">Email: </label>
+							<input type="text" class="form-control" id="companyEmail" placeholder="<?=$_CFG['companyEmail']?>">
+						</div>
+						<div class="form-group">
+							<label for="street">Website: </label>
+							<input type="text" class="form-control" id="companyWebsite" placeholder="<?=$_CFG['companyWebsite']?>">
+						</div>
+						<div class="form-group">
+							<label for="street">KvK Nummer: </label>
+							<input type="text" class="form-control" id="companyKvk" value="<?=$_CFG['companyKvk']?>">
+						</div>
+						<div class="form-group">
+							<label for="street">IBAN: </label>
+							<input type="text" class="form-control" id="companyIBAN" value="<?=$_CFG['companyIBAN']?>">
+						</div>
+						<div class="form-group">
+							<label for="street">BTW Nummer: </label>
+							<input type="text" class="form-control" id="companyVATNo" value="<?=$_CFG['companyVATNo']?>">
+						</div>
+						<div class="form-group">
+							<label for="street">Disclaimer: </label>
+							<textarea type="text" class="form-control" id="disclaimer" placeholder="<?=$_CFG['disclaimer']?>"><?=$_CFG['disclaimer']?></textarea>
+						</div>
+						<div class="form-group">
+							<label for="street">Factuur verval tijd (in dagen): </label>
+							<input type="text" class="form-control" id="invoiceExpireDays" placeholder="<?=$_CFG['invoiceExpireDays']?>">
 						</div>
 						<h2>SMTP Beheer</h2>
 					    <br />
@@ -617,13 +669,23 @@ if (isset($_GET['content'])) {?>
 											applyOptions: 1,
 											companyName: $("#companyName").val() !== null && $("#companyName").val() !== '' ? $("#companyName").val() : "<?=$_CFG['COMPANY_NAME']?>",
 											vat: $("#taxAmount").val() !== null && $("#taxAmount").val() !== '' ? $("#taxAmount").val() / 100 + 1 : "<?=$_CFG['VAT']?>",
-											currency: $("#currency").val() !== null && $("#currency").val() !== '' ? $("#currency").val() : "<?=$_CFG['CURRENCY']?>",
+											currency: $("#currency").val() !== null && $("#currency").val() !== '' ? $("#currency").val() : "<?=$_CFG['currency']?>",
 											smtpHost: $("#smtpHost").val() !== null && $("#smtpHost").val() !== '' ? $("#smtpHost").val() : "<?=$_CFG['smtpHost']?>",
 											smtpPort: $("#smtpPort").val() !== null && $("#smtpPort").val() !== '' ? $("#smtpPort").val() : "<?=$_CFG['smtpPort']?>",
 											smtpName: $("#smtpName").val() !== null && $("#smtpName").val() !== '' ? $("#smtpName").val() : "<?=$_CFG['smtpName']?>",
 											smtpUser: $("#smtpUser").val() !== null && $("#smtpUser").val() !== '' ? $("#smtpUser").val() : "<?=$_CFG['smtpUser']?>",
 											smtpPass: $("#smtpPass").val() !== null && $("#smtpPass").val() !== '' ? $("#smtpPass").val() : "<?=$_CFG['smtpPass']?>",
-											smtpSecure: $("#smtpSecure").val() !== null && $("#smtpSecure").val() !== '' ? $("#smtpSecure").val() : "<?=$_CFG['smtpSecure']?>"
+											smtpSecure: $("#smtpSecure").val() !== null && $("#smtpSecure").val() !== '' ? $("#smtpSecure").val() : "<?=$_CFG['smtpSecure']?>",
+											companyAddress: $("#companyAddress").val() !== null && $("#companyAddress").val() !== '' ? $("#companyAddress").val() : "<?=$_CFG['companyAddress']?>",
+											companyPhone: $("#companyPhone").val() !== null && $("#companyPhone").val() !== '' ? $("#companyPhone").val() : "<?=$_CFG['companyPhone']?>",
+											companyFax: $("#companyFax").val() !== null && $("#companyFax").val() !== '' ? $("#companyFax").val() : "<?=$_CFG['companyFax']?>",
+											companyEmail: $("#companyEmail").val() !== null && $("#companyEmail").val() !== '' ? $("#companyEmail").val() : "<?=$_CFG['companyEmail']?>",
+											companyWebsite: $("#companyWebsite").val() !== null && $("#companyWebsite").val() !== '' ? $("#companyWebsite").val() : "<?=$_CFG['companyWebsite']?>",
+											companyKvk: $("#companyKvk").val() !== null && $("#companyKvk").val() !== '' ? $("#companyKvk").val() : "<?=$_CFG['companyKvk']?>",
+											companyIBAN: $("#companyIBAN").val() !== null && $("#companyIBAN").val() !== '' ? $("#companyIBAN").val() : "<?=$_CFG['companyIBAN']?>",
+											companyVATNo: $("#companyVATNo").val() !== null && $("#companyVATNo").val() !== '' ? $("#companyVATNo").val() : "<?=$_CFG['companyVATNo']?>",
+											disclaimer: $("#disclaimer").val() !== null && $("#disclaimer").val() !== '' ? $("#disclaimer").val() : "<?=$_CFG['disclaimer']?>",
+											invoiceExpireDays: $("#invoiceExpireDays").val() !== null && $("#invoiceExpireDays").val() !== '' ? $("#invoiceExpireDays").val() : "<?=$_CFG['invoiceExpireDays']?>",
 										},
 										function (data)
 										{

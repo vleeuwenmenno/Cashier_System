@@ -31,78 +31,48 @@ if (isset($_GET['sTerm']))
         foreach ($items as $key => $row)
         {
             $i++;
-
             $obj = json_decode($row['items'], TRUE);
-            if (true)
+            if ($row['items'] != "")
             {
-                if ($row['paymentMethod'] != "")
-                {
-                    echo '    <tr id="' . $row['receiptId'] . '">';
-                    echo '        <td>' . $row['receiptId'] . '</td>';
-                    echo '        <td>' . Misc::sqlGet("paidDt", "receipt", "receiptId", $row['receiptId'])['paidDt'] . '</td>';
-                    echo '        <td>' . $row['receiptId'] . '</td>';
-                    echo '        <td>'.$_CFG['CURRENCY'].'&nbsp;' . number_format(round(Calculate::getReceiptTotal(Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId'])['items'])['total'], 2), 2, ",", ".") . '</td>';
-                    echo '<td>';
-                    if ($row['paymentMethod'] == "CASH") { echo "Kontant"; } else if ($row['paymentMethod'] == "PIN") { echo 'Pin'; } else if ($row['paymentMethod'] == "BANK") { echo 'Bankoverdracht'; } else if ($row['paymentMethod'] == "iDeal") { echo 'iDeal'; } else if ($row['paymentMethod'] == "PC") { echo 'Pin en Kontant'; }
-                    echo '</td>';
-                    echo '<td>
-                            <button id="viewReceipt' . $i . '" type="button" class="btn btn-info"><i class="fa fa-folder-open-o" aria-hidden="true"></i></button>';
-                    echo '</td>';
-                    echo '    </tr>';
-                    echo '
-                      <script>
-                        $(document).ready(function ()
-    			        {
-                            $("#viewReceipt' . $i . '").click(function() {
-                                window.open("receipt/viewReceipt.php?receipt=' . $row['receiptId'] . '");
-                                
-                                $("#pageLoaderIndicator").fadeIn();
-                                $("#PageContent").load("item.php", function () {
-                                    $("#pageLoaderIndicator").fadeOut();
-                                });
-                            });
-    			        });
-                      </script>';
-                }
-                else
-                {
-                    if ($row['items'] != "")
+                ?>
+                <tr id="<?=$row['receiptId']?>">
+                    <td><?=$row['receiptId']?></td>
+                    <td><?=Misc::sqlGet("createDt", "receipt", "receiptId", $row['receiptId'])['createDt']?></td>
+                    <td><?=$_CFG['CURRENCY']?>&nbsp;<?=number_format(round(Calculate::getReceiptTotal(Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId'])['items'])['total'], 2), 2, ",", ".")?></td>
+                    
+                    <?php if ($row['paymentMethod'] != "") { ?>
+                        <td><?php if ($row['paymentMethod'] == "CASH") { echo "Kontant"; } else if ($row['paymentMethod'] == "PIN") { echo 'Pin'; } else if ($row['paymentMethod'] == "BANK") { echo 'Bankoverdracht'; } else if ($row['paymentMethod'] == "iDeal") { echo 'iDeal'; } else if ($row['paymentMethod'] == "PC") { echo 'Pin en Kontant'; } ?></td>
+                    <?php } ?>
+                    <?php if ($row['paymentMethod'] == "") { ?><td>N.V.T</td><?php } ?>
+                    
+                    <td>
+                        <a id="viewReceipt<?=$i?>" href="#">PDF Openen</a>
+                        <?php if ($row['paymentMethod'] == "") { ?>
+                            &nbsp;<a id="loadReceipt<?=$i?>" href="#">/ Bon laden</a>
+                        <?php } ?>
+                    </td>
+                </tr>
+                <script>
+                    $(document).ready(function ()
                     {
-                        echo '    <tr id="' . $row['receiptId'] . '">';
-                        echo '        <td>' . $row['receiptId'] . '</td>';
-                        echo '        <td>' . Misc::sqlGet("createDt", "receipt", "receiptId", $row['receiptId'])['createDt'] . '</td>';
-                        echo '        <td>' . $row['receiptId'] . '</td>';
-                        echo '        <td>'.$_CFG['CURRENCY'].'&nbsp;' . number_format(round(Calculate::getReceiptTotal(Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId'])['items'])['total'], 2), 2, ",", ".") . '</td>';
-                        echo '<td>N.V.T</td>';
-                        echo '<td>
-                                <button id="viewReceipt' . $i . '" type="button" class="btn btn-info"><i class="fa fa-folder-open-o" aria-hidden="true"></i></span></button>
-                                &nbsp;
-                                <button id="loadReceipt' . $i . '" type="button" class="btn btn-primary"><i class="fa fa-download" aria-hidden="true"></i></button>';
-                        echo '</td>';
-                        echo '    </tr>';
-                        echo '
-                          <script>
-                            $(document).ready(function ()
-                            {
-                                $("#viewReceipt' . $i . '").click(function() {
-                                    window.open("receipt/viewReceipt.php?receipt=' . $row['receiptId'] . '");
-                                    
-                                    $("#pageLoaderIndicator").fadeIn();
-                                    $("#PageContent").load("item.php", function () {
-                                        $("#pageLoaderIndicator").fadeOut();
-                                    });
-                                });
-                                
-                                $("#loadReceipt' . $i . '").click(function() {
-                                    $("#pageLoaderIndicator").fadeIn();
-                                    $("#PageContent").load("receipt/loadReceipt.php?receipt=' . $row['receiptId'] . '", function () {
-                                        $("#pageLoaderIndicator").fadeOut();
-                                    });
-                                });
+                        $("#viewReceipt<?=$i?>").click(function() {
+                            $("#pageLoaderIndicator").fadeIn();
+                            $("#PageContent").load("pdf/pdf.php?rid=<?=$row['receiptId']?>", function () {
+                                $("#pageLoaderIndicator").fadeOut();
                             });
-                          </script>';
-                      }
-                }
+                        });
+                        
+                        <?php if ($row['paymentMethod'] == "") { ?>
+                        $("#loadReceipt<?=$i?>").click(function() {
+                            $("#pageLoaderIndicator").fadeIn();
+                            $("#PageContent").load("receipt/loadReceipt.php?receipt=<?=$row['receiptId']?>", function () {
+                                $("#pageLoaderIndicator").fadeOut();
+                            });
+                        });
+                        <?php } ?>
+                    });
+                </script>
+                <?php
             }
         }
     }

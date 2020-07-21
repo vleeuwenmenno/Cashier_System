@@ -654,7 +654,33 @@ else if (isset($_GET['new']))
             </table>
         </div>
     <div class="row">
-        <button type="button" id="payBtn" class="btn btn-success" data-toggle="modal" data-target="#printAmount" style="float: left; margin-left: 8px; margin-right: 8px;">Betalen</button>
+        <button type="button" id="payBtn" class="btn btn-success" style="float: left; margin-left: 8px; margin-right: 8px;">Betalen</button>
+        <script>
+            $( document ).ready(function() {
+                $("#payBtn").click(function () {
+                    <?php
+                        if (isset($_SESSION['receipt']['customer']))
+                        {
+                            ?>
+                            $('#printAmount').modal('show');
+                            <?php
+                        }
+                        else
+                        {
+                            ?>
+                            isButtonClick = true;
+                            $('#printAmount').trigger('hidden.bs.modal');
+                            $("#processReceipt").trigger("click");
+
+                            isButtonClick = true;
+                            $('#printAmount').trigger('hidden.bs.modal');
+                            $("#processReceipt").trigger("click");
+                            <?php
+                        }
+                    ?>
+                });
+            });
+        </script>
         
         <div class="dropdown" style="float: left; margin-left: 8px; margin-right: 8px;">
             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Bon opties
@@ -704,10 +730,7 @@ else if (isset($_GET['new']))
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Bon printen?</h4>
-                </div>
-                <div class="modal-body">
-                    <p>Wil de klant een bon?</p>
+                    <h4 class="modal-title">Bon mailen?</h4>
                 </div>
 
                 <div class="modal-footer">
@@ -722,7 +745,7 @@ else if (isset($_GET['new']))
                                     if (Misc::sqlGet("email", "customers", "customerId", $_SESSION['receipt']['customer'])['email'] == "")
                                     {
                                         ?>
-                                            <input type='text' id='example_email' name='example_emailSUI' class='form-control' value='["<?php echo "facturen@comforttoday.nl"; ?>"]'>
+                                            <input type='text' id='example_email' name='example_emailSUI' class='form-control' value='["<?php echo $_CFG['smtpName']; ?>"]'>
                                         <?php
                                     }
                                     else
@@ -768,7 +791,7 @@ else if (isset($_GET['new']))
                         </span>
                         <div class="row" id="emailList">
                             <div class="column">
-                                <input type='text' id='example_email' name='example_emailSUI' class='form-control' value='["<?php echo "facturen@comforttoday.nl"; ?>"]'>
+                                <input type='text' id='example_email' name='example_emailSUI' class='form-control' value='["<?php echo $_CFG['smtpName']; ?>"]'>
                             </div>
                         </div>
                         <script type="text/javascript">
@@ -799,9 +822,7 @@ else if (isset($_GET['new']))
                     </div>
                     <br />
                     <?php } ?>
-                    <div style="float: left;"><input id="letterPaperInput" type="checkbox" name="letterPaperInput"> Print briefpapier</input></div>
-                    <button type="button" class="btn btn-success" id="printReceipt" data-dismiss="modal">Bon printen</button>
-                    <button type="button" class="btn btn-warning" id="printNoReceipt" data-dismiss="modal">Geen bon printen</button>
+                    <button type="button" class="btn btn-success" id="processReceipt" data-dismiss="modal">Bon verwerken</button>
                 </div>
             </div>
         </div>
@@ -985,7 +1006,6 @@ else if (isset($_GET['new']))
                 checkTotalValue();
             });
 
-            var printAmount = 0;
             var isButtonClick = false;
 
             $('#paymentMethod').on('change', function() {
@@ -1026,14 +1046,12 @@ else if (isset($_GET['new']))
                             var cashVal = $('#cashVal').val();
 
                             $("#pageLoaderIndicator").fadeIn();
-                            $("#sideBarMenu").addClass("disabledbutton");
-                            $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&printLetterPaper=" + $("#letterPaperInput").is(':checked') + "&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=" + printAmount + "&paymentMethod=" + $( "#paymentMethod" ).val() +"&receiptDesc=" + encodeURIComponent($('#receiptDescription').val()) + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&pin=" + pinVal + "&cash=" + cashVal, function () { });
+                            $("#PageContent").load("receipt/processReceipt.php?receiptId=<?=$_SESSION['receipt']['id']?>&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=0&paymentMethod=" + $( "#paymentMethod" ).val() +"&receiptDesc=" + encodeURIComponent($('#receiptDescription').val()) + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&pin=" + pinVal + "&cash=" + cashVal, function () { });
                        }
                        else
                        {
                            $("#pageLoaderIndicator").fadeIn();
-                           $("#sideBarMenu").addClass("disabledbutton");
-                           $("#PageContent").load("receipt/processReceipt.php?receiptId=<?php echo $_SESSION['receipt']['id']; ?>&printLetterPaper=" + $("#letterPaperInput").is(':checked') + "&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=" + printAmount + "&receiptDesc=" + encodeURIComponent($('#receiptDescription').val()) + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&paymentMethod=" + $( "#paymentMethod" ).val(), function () { });
+                           $("#PageContent").load("receipt/processReceipt.php?receiptId=<?=$_SESSION['receipt']['id']?>&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=0&receiptDesc=" + encodeURIComponent($('#receiptDescription').val()) + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&paymentMethod=" + $( "#paymentMethod" ).val(), function () { });
                        }
                     }
                     else
@@ -1043,14 +1061,7 @@ else if (isset($_GET['new']))
                 }
             });
 
-            $('#printReceipt').click(function() {
-                printAmount = 1;
-                isButtonClick = true;
-                $('#printAmount').modal('hide');
-            });
-
-            $('#printNoReceipt').click(function() {
-                printAmount = 0;
+            $('#processReceipt').click(function() {
                 isButtonClick = true;
                 $('#printAmount').modal('hide');
             });
@@ -1375,17 +1386,17 @@ else
                     </th>
                     <th>
                         <a href="#" class="mustFocus">
-                            <input type="text" class="form-control" placeholder="Klant/Bedrijf" disabled />
-                        </a>
-                    </th>
-                    <th>
-                        <a href="#" class="mustFocus">
                             <input type="text" class="form-control" placeholder="Bon totaal" disabled />
                         </a>
                     </th>
                     <th>
                         <a href="#" class="mustFocus">
                             <input type="text" class="form-control" placeholder="Betaal Methode" disabled />
+                        </a>
+                    </th>
+                    <th>
+                        <a href="#" class="mustFocus">
+                            <input type="text" class="form-control" placeholder="Opties" disabled />
                         </a>
                     </th>
                 </tr>

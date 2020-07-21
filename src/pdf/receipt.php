@@ -43,7 +43,14 @@
                     <div><span><?=strftime("%d %B %Y %H:%M:%S", $time->getTimestamp()), PHP_EOL?></span> DATUM</div>
                     <div><span><?=$cashier?></span> KASSA</div>
                     <div><span><?=$creator?></span> MEDEWERKER</div>
-                    <div><span><?=$pMethod != "" ? $pMethod : "Nog niet betaald"?></span> BETAALWIJZE</div>
+                    <div><span>
+                        <?php 
+                            if ($pMethod != "")
+                                if ($pMethod == "CASH") { echo "Kontant"; } else if ($pMethod == "PIN") { echo 'Pin'; } else if ($pMethod == "BANK") { echo 'Bankoverdracht'; } else if ($pMethod == "iDeal") { echo 'iDeal'; } else if ($pMethod == "PC") { echo 'Pin en Kontant'; }
+                            else 
+                                echo "Nog niet betaald";
+                        ?>
+                    </span> BETAALWIJZE</div>
                 </div>
                 <div id="project">
                     <div><span>BEDRIJF</span> <?=Misc::sqlGet("companyName", "customers", "customerId", $custId)['companyName'] != ""? Misc::sqlGet("companyName", "customers", "customerId", $custId)['companyName']: "Particulier"?></div>
