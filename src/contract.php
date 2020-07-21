@@ -259,21 +259,50 @@ if (isset($_GET['new']))
 			</div>
             <button type="button" id="addContractBtn" class="btn btn-primary" <?php if(!isset($_SESSION['receipt']['customer']) || !isset($_SESSION['receipt']['items']) || Misc::sqlGet("email", "customers", "customerId", $_SESSION['receipt']['customer'])['email'] == "") {?>disabled<?php } ?>>Contract toevoegen</button>
             <script>
-                function updateMonths()
+
+                function populate(date)
                 {
                     const options = { year: 'numeric', month: 'long', day: 'numeric' };
 
+                    if ($("#paymentPeroid").children("option:selected").val() == "quarter")
+                        $("#nextOrderTime").html($("#nextOrderTime").html() + "<li class=\"list-group-item\">" + date.toLocaleDateString('nl-NL', options) + " kwartaal " + getQuarter(date) + "</li>");
+                    else
+                        $("#nextOrderTime").html($("#nextOrderTime").html() + "<li class=\"list-group-item\">" + date.toLocaleDateString('nl-NL', options) + "</li>");
+                }
+
+                function updateMonths()
+                {
                     $("#nextOrderTime").html("Eerste factuur wordt verzonden op de volgende data: <br />");
 
-                    for (var i = 0; i < 6; i++)
+                    calculateNext(0, function (date)
                     {
-                        var date = calculateNext(i);
+                        populate(date);
 
-                        if ($("#paymentPeroid").children("option:selected").val() == "quarter")
-                            $("#nextOrderTime").html($("#nextOrderTime").html() + "<li class=\"list-group-item\">" + date.toLocaleDateString('nl-NL', options) + " kwartaal " + getQuarter(date) + "</li>");
-                        else
-                            $("#nextOrderTime").html($("#nextOrderTime").html() + "<li class=\"list-group-item\">" + date.toLocaleDateString('nl-NL', options) + "</li>");
-                    }
+                        calculateNext(1, function (date)
+                        {
+                            populate(date);
+
+                            calculateNext(2, function (date)
+                            {
+                                populate(date);
+
+                                calculateNext(3, function (date)
+                                {
+                                    populate(date);
+
+                                    calculateNext(4, function (date)
+                                    {
+                                        populate(date);
+
+                                        calculateNext(5, function (date)
+                                        {
+                                            populate(date);
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
                 }
         
                 $( document ).ready(function() {
@@ -392,99 +421,27 @@ if (isset($_GET['new']))
                     return (millis2 - millis1) / 1000 / 60 / 60 / 24;
                 }
 
-                function calculateNext(nextNext = 0)
+                function calculateNext(nextNext = 0, funct)
                 {
                     var start = new Date($("#startDate").val().split("-")[1] + "-" + $("#startDate").val().split("-")[0] + "-01");
                     var period = $("#paymentPeroid").children("option:selected").val();
                     var day = parseInt($("#paymentDate").children("option:selected").val());
                     var sendNow = $('#sendOrderImmediatly').is(":checked");
-                    var now = new Date();
-                    var next = new Date();
 
-                    if (period == "year")
-                    {
-                        if (day < now.getDate()) /// Check if we have to skip to the next month
+                    $.get(
+                        "contract/contractGetNext.php",
+                        { 
+                            period: period,
+                            day: day,
+                            start: start.getFullYear()+"-"+("0"+(start.getMonth()+1)).slice(-2)+"-"+("0"+(start.getDate())).slice(-2),
+                            nextTime: nextNext,
+                            sendNow: sendNow ? 1 : 0
+                        },
+                        function (data)
                         {
-                            if ((next.getMonth() + 2) == 13) /// Make sure we don't try to say month 13
-                                next = new Date(now.getFullYear()+1 + "-01-" + day); // If it is month 13, we change it to 1 and increase the year by 1
-                            else
-                                next = new Date(now.getFullYear() + "-" + (next.getMonth() + 1) + "-" + day); // Continue normally
+                            funct(new Date(data));
                         }
-                        else /// This month
-                        {
-                            next = new Date(now.getFullYear() + "-" + (next.getMonth() + 1) + "-" + day);
-                        }
-
-                        if (sendNow && nextNext == 0) /// Check if we have to send it now
-                            return now;
-
-                        next.setFullYear(next.getFullYear() + nextNext);
-
-                        if (next.inPast())
-                            next = new Date();
-                    }
-                    else if (period == "quarter")
-                    {
-                        next = new Date().addDays(Math.ceil(getDaysLeftinQuarter(new Date())));
-                        next = next.addMonths(monthDiff(next, start))
-                        next = next.addDays(day-1)
-
-
-                        if (nextNext > 0 && sendNow)
-                        {
-                            next = next.addDays(92*(nextNext-1));
-                            next = new Date(next.getFullYear() + "-" + (next.getMonth()+1) + "-" + day);
-                        }
-                        else if (nextNext > 0)
-                        {
-                            next = next.addDays(92*nextNext);
-                            next = new Date(next.getFullYear() + "-" + (next.getMonth()+1) + "-" + day);
-                        }
-                        else if (nextNext == 0 && sendNow)
-                        {
-                            next = new Date();
-                        }
-                    }
-                    else // month
-                    {
-                        if (day < now.getDate()) /// Check if we have to skip to the next month
-                        {
-                            if ((next.getMonth() + 2) == 13) /// Make sure we don't try to say month 13
-                                next = new Date((now.getFullYear()+1) + "-01-" + day); // If it is month 13, we change it to 1 and increase the year by 1
-                            else
-                                next = new Date(now.getFullYear() + "-" + (next.getMonth() + 2) + "-" + day); // Continue normally
-                        }
-                        else /// This month
-                        {
-                            next = new Date(now.getFullYear() + "-" + (next.getMonth() + 1) + "-" + day);
-                        }
-                        
-                        /// Check if we have to send it now and this is the first
-                        if (sendNow && nextNext == 0)
-                            next = new Date();
-                        else if (sendNow) /// Check if we send one today
-                            next.setMonth(next.getMonth() + nextNext-1);
-                        else // Continue normally
-                            next.setMonth(next.getMonth() + nextNext);
-                    }
-
-                    /// Check if the start date is later than today except for yearly 
-                    if (start.getTime() > now.getTime() && period == "year")
-                    {
-                        start.setFullYear(start.getFullYear() + nextNext);
-                        start.setDate(day);
-                            
-                        return start; // The start date is later than today so we will set the next date to be the start date.
-                    }
-                    else if (start.getTime() > now.getTime() && period == "month")
-                    {
-                        start.setMonth(start.getMonth() + nextNext);
-                        start.setDate(day);
-                            
-                        return start; // The start date is later than today so we will set the next date to be the start date.
-                    }
-                    else
-                        return next; // The start date has already passed so the next date will be as planned.
+                    );
                 }
             </script>
         </div>
@@ -591,32 +548,58 @@ else if (isset($_GET['overview']))
                         <div style="position: relative; top: -16px;"><span style="margin-left: 2.5em; font-size: 12px;">Foutmeldingen:</span><i style="float: right; font-size: 12px;">&nbsp;&nbsp;<?=Misc::sqlGet("COUNT(success)", "log", "success", "0")['COUNT(success)']?></i></div><br />
 
                     
-                        <b>Mail agenda: WIP</b><br />
+                        <b>Mail agenda:</b><br />
                         <div class="panel panel-info">
                             <table class="table">
                                 <thead>
                                     <tr>
                                         <th scope="col">Tijd & Datum</th>
                                         <th scope="col">Contract</th>
+                                        <th scope="col">Bedrijf</th>
                                         <th scope="col">Ontvanger</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <th>2020-07-18 23:55:00</th>
-                                        <th><a href="#">#2020001</a></th>
-                                        <td>menno@vleeuwen.me</td>
-                                    </tr>
-                                    <tr>
-                                        <th>2020-07-15 23:55:00</th>
-                                        <th><a href="#">#2020001</a></th>
-                                        <td>rob@comtoday.nl</td>
-                                    </tr>
-                                    <tr>
-                                        <th>2020-07-17 23:55:00</th>
-                                        <th><a href="#">#2020001</a></th>
-                                        <td>harryhakman@hotmail.com</td>
-                                    </tr>
+                                <?php 
+                                    $sqls = "SELECT * FROM contract WHERE 1;";                        
+                                    $dbs = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
+                            
+                                    if($dbs->connect_errno > 0)
+                                    {
+                                        die('Unable to connect to database [' . $dbs->connect_error . ']');
+                                    }
+                            
+                                    if(!$results = $dbs->query($sqls))
+                                    {
+                                        die('Er was een fout tijdens het uitvoeren van deze query (' . $dbs->error . ') (' . $sqls . ')');
+                                    }
+    
+                                    while($rows = $results->fetch_assoc())
+                                    {                                        
+                                        $startDate = new DateTime($rows['startDate']);
+                                        $time = Calculate::calculateNextOrder($rows['planningPeriod'], $rows['planningDay'], $startDate, 0, $rows['sendOrderNow']);
+                                        $cn = Misc::sqlGet("companyName", "customers", "customerId", $rows['customerId'])['companyName'];
+                                        
+                                        ?>
+                                            <tr>
+                                                <th><?=strftime("%d %B %Y", $time->getTimestamp()), PHP_EOL?></th>
+                                                <th><a href="#" id="contract<?=$rows['contractId']?>Btn">#<?=str_pad($rows['contractId'], 8, '0', STR_PAD_LEFT)?></a></th>
+                                                <td><?=$cn != "" ? $cn : "Particulier"?></td>
+                                                <td><?=Misc::sqlGet("email", "customers", "customerId", $rows['customerId'])['email']?></td>
+                                            </tr>
+                                            <script>
+                                                $(document).ready(function ()
+                                                {
+                                                    $("#contract<?=$rows['contractId']?>Btn").on("click", function () {
+                                                        $("#loaderAnimation").fadeIn();
+                                                        $("#PageContent").load("contract/viewContract.php?id=<?=$rows['contractId']?>");
+                                                    });
+                                                });
+                                            </script>
+                                        <?php
+                                        
+                                    }
+                                ?>
                                 </tbody>
                             </table>
                         </div>
@@ -673,14 +656,14 @@ else if (isset($_GET['overview']))
                                     <tr>
                                         <th><?=$row['dateTime']?></th>
                                         <th>#<?=str_pad($row['logId'], 8, '0', STR_PAD_LEFT)?></th>
-                                        <th><a href="#" id="contract<?=$row['contractId']?>Btn">#<?=str_pad($row['contractId'], 8, '0', STR_PAD_LEFT)?></a></th>
+                                        <th><a href="#" id="contract<?=$row['contractId']?>Btnfh">#<?=str_pad($row['contractId'], 8, '0', STR_PAD_LEFT)?></a></th>
                                         <td><?=$row['receiverEmail']?></td>
                                         <td><?=$row['success'] ? "Ja": "Nee"?></td>
                                     </tr>
                                     <script>
                                     	$(document).ready(function ()
                                         {
-                                            $("#contract<?=$row['contractId']?>Btn").on("click", function () {
+                                            $("#contract<?=$row['contractId']?>Btnfh").on("click", function () {
                                                 $("#loaderAnimation").fadeIn();
                                                 $("#PageContent").load("contract/viewContract.php?id=<?=$row['contractId']?>");
                                             });

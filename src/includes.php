@@ -10,6 +10,7 @@
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
 
+    setlocale(LC_TIME, 'nl_NL', 'Dutch', 'Dutch');
     include_once('functions.php');
 
  ?>

@@ -99,7 +99,7 @@ else
                 {
                     $.notify({
                         icon: \'fa fa-shopping-cart fa-2x\',
-                        title: \'\',
+                        title: \'<b>Bon verwerkt</b><br / >\',
                         message: \'Bon is betaalt en verwerkt in het systeem.\'
                     }, {
                         // settings

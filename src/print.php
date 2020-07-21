@@ -56,14 +56,14 @@ else if (isset($_GET['openReport']))
             echo '<br />Kas-in: '.$_CFG['CURRENCY'].' ' . $row['cashIn'];
         echo '</div>';
 
-        $content = Misc::url_get_contents('http://' . $_SERVER['HTTP_HOST'] . '/CashRegister/src/print.php?openReportPrint');
+        $content = Misc::url_get_contents('http://' . $_SERVER['HTTP_HOST'] . '/print.php?openReportPrint');
         file_put_contents(getcwd() . "/temp/" . $row['cashSessionId'] . "-open.html", $content);
 
         ?>
         <script>
             $(document).ready(function() {
                 var w = (window.parent)?window.parent:window
-                w.location.assign('printhelp://<?php echo urlencode('http://' . $_SERVER['HTTP_HOST'] . '/CashRegister/src/temp/' . $_GET['receipt'] . $row['cashSessionId'] . '-open.html'); ?>')
+                w.location.assign('printhelp://<?php echo urlencode('http://' . $_SERVER['HTTP_HOST'] . '/temp/' . $_GET['receipt'] . $row['cashSessionId'] . '-open.html'); ?>')
             });
         </script>
         <?php
@@ -73,30 +73,30 @@ else if (isset($_GET['closeReport']))
 {
     $cashSessionId = $_GET['closeReport'];
 
-    $content = Misc::url_get_contents('http://' . $_SERVER['HTTP_HOST'] . '/CashRegister/src/print.php?closeReportPrint=' . $cashSessionId);
+    $content = Misc::url_get_contents('http://' . $_SERVER['HTTP_HOST'] . '/print.php?closeReportPrint=' . $cashSessionId);
     file_put_contents(getcwd() . "/temp/" . $cashSessionId . "-close.html", $content);
 
     ?>
     <html>
         <head>
             <!-- Bootstrap and all it's dependencies -->
-            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap-switch.min.css" />
-            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/multiple-emails.css" />
-            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap.css" />
-            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/stylesheet.css">
-            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/select2.min.css" />
-            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap-combobox.css" />
-            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/font-awesome.css" />
-            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/multiple-emails.css" />
+            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/bootstrap-switch.min.css" />
+            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/multiple-emails.css" />
+            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/bootstrap.css" />
+            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/stylesheet.css">
+            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/select2.min.css" />
+            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/bootstrap-combobox.css" />
+            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/font-awesome.css" />
+            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/multiple-emails.css" />
 
-            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.min.js"></script>
-            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/multiple-emails.js"></script>
-            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap.min.js"></script>
-            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap-notify.min.js"></script>
-            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/select2.full.min.js"></script>
-            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.jeditable.js"></script>
-            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap-combobox.js"></script>
-            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.print.js"></script>
+            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/jquery.min.js"></script>
+            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/multiple-emails.js"></script>
+            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/bootstrap.min.js"></script>
+            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/bootstrap-notify.min.js"></script>
+            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/select2.full.min.js"></script>
+            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/jquery.jeditable.js"></script>
+            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/bootstrap-combobox.js"></script>
+            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/jquery.print.js"></script>
         </head>
         <body>
             <div id="reportPrint" style="margin: 32px; font-size: 12px;">
@@ -151,7 +151,7 @@ else if (isset($_GET['closeReport']))
                         $("#backTo").css("display", "none");
 
                         var w = (window.parent)?window.parent:window
-                        w.location.assign('printhelp://<?php echo urlencode('http://' . $_SERVER['HTTP_HOST'] . '/CashRegister/src/temp/' . $_GET['receipt'] . $cashSessionId . '-close.html'); ?>')
+                        w.location.assign('printhelp://<?php echo urlencode('http://' . $_SERVER['HTTP_HOST'] . '/temp/' . $_GET['receipt'] . $cashSessionId . '-close.html'); ?>')
 
                         $("#printBtn").css("display", "");
                         $("#backTo").css("display", "");
@@ -173,23 +173,23 @@ else if (isset($_GET['closeReportPrint']))
     <html>
         <head>
             <!-- Bootstrap and all it's dependencies -->
-            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap-switch.min.css" />
-            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/multiple-emails.css" />
-            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap.css" />
-            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/stylesheet.css">
-            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/select2.min.css" />
-            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap-combobox.css" />
-            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/font-awesome.css" />
-            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/multiple-emails.css" />
+            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/bootstrap-switch.min.css" />
+            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/multiple-emails.css" />
+            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/bootstrap.css" />
+            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/stylesheet.css">
+            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/select2.min.css" />
+            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/bootstrap-combobox.css" />
+            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/font-awesome.css" />
+            <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/multiple-emails.css" />
 
-            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.min.js"></script>
-            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/multiple-emails.js"></script>
-            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap.min.js"></script>
-            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap-notify.min.js"></script>
-            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/select2.full.min.js"></script>
-            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.jeditable.js"></script>
-            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap-combobox.js"></script>
-            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.print.js"></script>
+            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/jquery.min.js"></script>
+            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/multiple-emails.js"></script>
+            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/bootstrap.min.js"></script>
+            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/bootstrap-notify.min.js"></script>
+            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/select2.full.min.js"></script>
+            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/jquery.jeditable.js"></script>
+            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/bootstrap-combobox.js"></script>
+            <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/jquery.print.js"></script>
         <body>
             <div id="reportPrint" style="margin: 32px; font-size: 12px;">
                 <div style="width: 256px;">
@@ -238,23 +238,23 @@ else if (isset($_GET['receiptPrint']))
 <html>
     <head>
         <!-- Bootstrap and all it's dependencies -->
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap-switch.min.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/multiple-emails.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/stylesheet.css">
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/select2.min.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap-combobox.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/font-awesome.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/multiple-emails.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/bootstrap-switch.min.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/multiple-emails.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/bootstrap.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/stylesheet.css">
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/select2.min.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/bootstrap-combobox.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/font-awesome.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/multiple-emails.css" />
 
-        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.min.js"></script>
-        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/multiple-emails.js"></script>
-        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap.min.js"></script>
-        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap-notify.min.js"></script>
-        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/select2.full.min.js"></script>
-        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.jeditable.js"></script>
-        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap-combobox.js"></script>
-        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.print.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/jquery.min.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/multiple-emails.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/bootstrap.min.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/bootstrap-notify.min.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/select2.full.min.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/jquery.jeditable.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/bootstrap-combobox.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/jquery.print.js"></script>
     </head>
     <body>
         <?php
@@ -360,29 +360,29 @@ else if (isset($_GET['receiptPrint']))
 }
 else if (isset($_GET['receipt']))
 {
-    $content = Misc::url_get_contents('http://' . $_SERVER['HTTP_HOST'] . '/CashRegister/src/print.php?receiptPrint=' . $_GET['receipt']);
+    $content = Misc::url_get_contents('http://' . $_SERVER['HTTP_HOST'] . '/print.php?receiptPrint=' . $_GET['receipt']);
     file_put_contents(getcwd() . "/temp/" . $_GET['receipt'] . ".html", $content);
 ?>
 <html>
     <head>
         <!-- Bootstrap and all it's dependencies -->
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap-switch.min.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/multiple-emails.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/stylesheet.css">
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/select2.min.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/bootstrap-combobox.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/font-awesome.css" />
-        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/css/multiple-emails.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/bootstrap-switch.min.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/multiple-emails.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/bootstrap.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/stylesheet.css">
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/select2.min.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/bootstrap-combobox.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/font-awesome.css" />
+        <link rel="stylesheet" href="http://<?php echo $_CFG['HOST_NAME']; ?>/css/multiple-emails.css" />
 
-        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.min.js"></script>
-        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/multiple-emails.js"></script>
-        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap.min.js"></script>
-        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap-notify.min.js"></script>
-        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/select2.full.min.js"></script>
-        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.jeditable.js"></script>
-        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/bootstrap-combobox.js"></script>
-        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/js/jquery.print.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/jquery.min.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/multiple-emails.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/bootstrap.min.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/bootstrap-notify.min.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/select2.full.min.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/jquery.jeditable.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/bootstrap-combobox.js"></script>
+        <script src="http://<?php echo $_CFG['HOST_NAME']; ?>/js/jquery.print.js"></script>
     </head>
     <body>
     <?php
@@ -404,7 +404,7 @@ else if (isset($_GET['receipt']))
         margin: 0 auto;
         box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
         position: absolute;">
-        <img src="http://<?php echo $_CFG['HOST_NAME']; ?>/CashRegister/src/images/A4-Template.png" id="letterPaper" style="position: absolute; top: -32px; width: 21cm;<?php if ($_GET['printLetterPaper'] == "true") { ?> display: block; <?php } else { ?> display: none; <?php } ?>" />
+        <img src="http://<?php echo $_CFG['HOST_NAME']; ?>/images/A4-Template.png" id="letterPaper" style="position: absolute; top: -32px; width: 21cm;<?php if ($_GET['printLetterPaper'] == "true") { ?> display: block; <?php } else { ?> display: none; <?php } ?>" />
         <div style="position: absolute; top: 196px; width: 18cm;">
             <div style="position: relative; left: 48px; font-size: 12px;">
                 Bon Nr. <?php echo $_GET['receipt']; ?><br />
@@ -518,7 +518,7 @@ else if (isset($_GET['receipt']))
                 $("#printAgain").css("display", "none");
 
                 var w = (window.parent)?window.parent:window
-                w.location.assign('printhelp://<?php echo urlencode('http://' . $_SERVER['HTTP_HOST'] . '/CashRegister/src/temp/' . $_GET['receipt'] . '.html'); ?>')
+                w.location.assign('printhelp://<?php echo urlencode('http://' . $_SERVER['HTTP_HOST'] . '/temp/' . $_GET['receipt'] . '.html'); ?>')
 
                 $("#emailAgain").css("display", "inline");
                 $("#letterPaper").css("display", "inline");
@@ -535,7 +535,7 @@ else if (isset($_GET['receipt']))
                     $("#letterPaperInput").css("display", "none");
 
                     var w = (window.parent)?window.parent:window
-                    w.location.assign('printhelp://<?php echo urlencode('http://' . $_SERVER['HTTP_HOST'] . '/CashRegister/src/temp/' . $_GET['receipt'] . '.html'); ?>')
+                    w.location.assign('printhelp://<?php echo urlencode('http://' . $_SERVER['HTTP_HOST'] . '/temp/' . $_GET['receipt'] . '.html'); ?>')
 
                     $("#emailAgain").css("display", "inline");
                     $("#letterPaper").css("display", "inline");
@@ -553,7 +553,7 @@ else if (isset($_GET['receipt']))
                 unlink(getcwd() . "/temp/" . $_GET['receipt'] . ".html");
             }
 
-            $content = Misc::url_get_contents('http://127.0.0.1/CashRegister/src/receipt/viewReceipt.php?receipt=' . $_GET['receipt'] . '&mail=true');
+            $content = Misc::url_get_contents('http://cashier.local/receipt/viewReceipt.php?receipt=' . $_GET['receipt'] . '&mail=true');
             file_put_contents(getcwd() . "/temp/" . $_GET['receipt'] . "-mail.html", $content);
 
             //Check which os we use to convert this to PDF
@@ -567,7 +567,7 @@ else if (isset($_GET['receipt']))
                     $(document).ready(function() {
                         $.notify({
                             icon: 'fa fa-envelope-o fa-2x',
-                            title: 'Mail niet verstuurd<br />',
+                            title: '<b>Mail niet verstuurd</b><br / >',
                             message: 'Kassa op Windows host ondersteund geen PDF printen'
                         }, {
                             // settings
@@ -646,7 +646,7 @@ else if (isset($_GET['receipt']))
                     $(document).ready(function() {
                         $.notify({
                             icon: 'fa fa-envelope-o fa-2x',
-                            title: 'Mail NIET verstuurd<br />',
+                            title: '<b>Mail NIET verstuurd</b><br / >',
                             message: 'De email is niet verstuurd naar de klant wegens een fout!. <br /><?php echo $mail->ErrorInfo; ?>'
                         }, {
                             // settings
@@ -673,7 +673,7 @@ else if (isset($_GET['receipt']))
                     $(document).ready(function() {
                         $.notify({
                             icon: 'fa fa-envelope-o fa-2x',
-                            title: 'Mail verstuurd<br />',
+                            title: '<b>Mail verstuurd</b><br / >',
                             message: 'De email is succesvol verstuurd naar de klant.'
                         }, {
                             // settings

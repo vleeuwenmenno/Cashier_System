@@ -537,30 +537,45 @@ class Calculate
             $next = new DateTime("+$nextTime year");
             $next = new DateTime($next->format('Y')."-".$next->format('m')."-".$day);
 
-            if ($next < $now)
+            if ($sendNow && $nextTime == 0)
                 $next = new DateTime();
+                
+            if (!$sendNow && $nextTime > 0)
+                $next = new DateTime(($next->format('Y')+1)."-".$next->format('m')."-".$day);
+
+            if ($next < $now)
+                $next = new DateTime(($next->format('Y')+1)."-".$next->format('m')."-".$day);
         }
         else if ($period == "quarter")
         {
-            $daysLeftQ = ceil(Quarters::getDaysLeftinQuarter(new DateTime()));
+            $now = new DateTime();
+            $now =  new DateTime($now->format("Y").$now->format("m")."-01");
+
             $diff = ceil(Quarters::monthDiff($next, $start));
             
-            $next = $next->modify("+ $daysLeftQ days");
             $next = $next->modify("+ $diff months");
             $next = $next->modify("- 1 days");
-            $next = $next->modify('+ 1 month'); // Correct the diff month returning 1 too less (Always)
+
+            if ($start->format("m") == "7" || $start->format("m") == "8" || $start->format("m") == "9")
+                $next =  new DateTime($start->format("Y")."-10-01");
+            else if ($start->format("m") == "1" || $start->format("m") == "2" || $start->format("m") == "3")
+                $next =  new DateTime($start->format("Y")."-04-01");
+            else if ($start->format("m") == "4" || $start->format("m") == "5" || $start->format("m") == "6")
+                $next =  new DateTime($start->format("Y")."-07-01");
+            else if ($start->format("m") == "10" || $start->format("m") == "11" || $start->format("m") == "12")
+                $next =  new DateTime(($start->format("Y")+1)."-01-01");
 
             $next = new DateTime($next->format('Y')."-".($next->format('m'))."-".$day);
-            
+
             if ($nextTime > 0 && $sendNow)
             {
-                $next = $next->modify('+ '.(92*($nextTime-1)).' days');
-                $next = new DateTime($next->format('Y')."-".($next->format('m'))."-".$day);
+                $next = $next->modify('+ '.(3*($nextTime-1)).' month');
+                $next = new DateTime($next->format('Y')."-".$next->format('m')."-".$day);
             }
             else if ($nextTime > 0)
             {
-                $next = $next->modify('+ '.(92*($nextTime)).' days');
-                $next = new DateTime($next->format('Y')."-".($next->format('m'))."-".$day);
+                $next = $next->modify('+ '.(3*($nextTime)).' month');
+                $next = new DateTime($next->format('Y')."-".$next->format('m')."-".$day);
             }
             else if ($nextTime == 0 && $sendNow)
             {

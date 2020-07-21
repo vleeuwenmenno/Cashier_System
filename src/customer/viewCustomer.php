@@ -212,8 +212,8 @@ if (isset($_GET['id']))
 
 													$.notify({
 														icon: 'glyphicon glyphicon-trash',
-														title: '',
-														message: 'Klant verwijderd uit het systeem.'
+														title: '<b>Klant verwijderd uit het systeem</b><br / >',
+														message: ''
 													}, {
 														// settings
 														type: 'info',

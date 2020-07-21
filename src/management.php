@@ -21,8 +21,8 @@ if (isset($_GET['content'])) {?>
 	$(document).ready(function() {
 		$.notify({
 			icon: 'glyphicon glyphicon-cog',
-			title: 'Instellingen zijn gewijzigt',
-			message: '<br / >'
+			title: '<b>Instellingen zijn gewijzigt</b><br />',
+			message: ''
 		},{
 			// settings
 			type: 'success',
@@ -121,8 +121,8 @@ if (isset($_GET['content'])) {?>
 																{
 																	$.notify({
 																		icon: 'glyphicon glyphicon-warning-sign',
-																		title: 'Weergavenaam is gewijzigt',
-																		message: '<br / >'
+																		title: '<b>Weergavenaam is gewijzigt</b><br />',
+																		message: ''
 																	},{
 																		// settings
 																		type: 'success',
@@ -141,8 +141,8 @@ if (isset($_GET['content'])) {?>
 																{
 																	$.notify({
 																		icon: 'glyphicon glyphicon-warning-sign',
-																		title: 'Fout',
-																		message: '<br / >' + data
+																		title: '<b>Fout</b><br />',
+																		message: data
 																	},{
 																		// settings
 																		type: 'danger',
@@ -178,8 +178,8 @@ if (isset($_GET['content'])) {?>
 																{
 																	$.notify({
 																		icon: 'glyphicon glyphicon-warning-sign',
-																		title: 'Gebruikersnaam is gewijzigt',
-																		message: '<br / >'
+																		title: '<b>Gebruikersnaam is gewijzigt</b><br / >',
+																		message: ''
 																	},{
 																		// settings
 																		type: 'success',
@@ -198,8 +198,8 @@ if (isset($_GET['content'])) {?>
 																{
 																	$.notify({
 																		icon: 'glyphicon glyphicon-warning-sign',
-																		title: 'Fout',
-																		message: '<br / >' + data
+																		title: '<b>Fout</b><br / >',
+																		message: data
 																	},{
 																		// settings
 																		type: 'danger',
@@ -246,8 +246,8 @@ if (isset($_GET['content'])) {?>
 																	{
 																		$.notify({
 																			icon: 'glyphicon glyphicon-warning-sign',
-																			title: 'Fout',
-																			message: '<br / >' + data
+																			title: '<b>Fout</b><br / >',
+																			message: data
 																		},{
 																			// settings
 																			type: 'danger',
@@ -280,8 +280,8 @@ if (isset($_GET['content'])) {?>
 																	{
 																		$.notify({
 																			icon: 'glyphicon glyphicon-ok',
-																			title: 'Gebruiker is verwijderd',
-																			message: '<br / >De gebruiker is succesvol verwijderd uit het systeem'
+																			title: '<b>Gebruiker is verwijderd</b><br / >',
+																			message: 'De gebruiker is succesvol verwijderd uit het systeem'
 																		},{
 																			// settings
 																			type: 'success',
@@ -300,8 +300,8 @@ if (isset($_GET['content'])) {?>
 																	{
 																		$.notify({
 																			icon: 'glyphicon glyphicon-warning-sign',
-																			title: 'Fout',
-																			message: '<br / >' + data
+																			title: '<b>Fout</b><br / >',
+																			message: data
 																		},{
 																			// settings
 																			type: 'danger',
@@ -338,8 +338,8 @@ if (isset($_GET['content'])) {?>
 															{
 																$.notify({
 																	icon: 'glyphicon glyphicon-warning-sign',
-																	title: 'Wachtwoord is gewijzigt',
-																	message: '<br / >'
+																	title: '<b>Wachtwoord is gewijzigt</b><br / >',
+																	message: ''
 																},{
 																	// settings
 																	type: 'success',
@@ -358,8 +358,8 @@ if (isset($_GET['content'])) {?>
 															{
 																$.notify({
 																	icon: 'glyphicon glyphicon-warning-sign',
-																	title: 'Fout',
-																	message: '<br / >' + data
+																	title: '<b>Fout</b><br / >',
+																	message: data
 																},{
 																	// settings
 																	type: 'danger',
@@ -510,8 +510,8 @@ if (isset($_GET['content'])) {?>
                                                     {
                                                         $.notify({
                                                             icon: 'glyphicon glyphicon-ok',
-                                                            title: 'Gebruiker toegevoegt',
-                                                            message: '<br / >De gebruiker is succesvol toegevoegt'
+                                                            title: '<b>Gebruiker toegevoegt</b><br / >',
+                                                            message: 'De gebruiker is succesvol toegevoegt'
                                                         },{
                                                             // settings
                                                             type: 'success',
@@ -530,8 +530,8 @@ if (isset($_GET['content'])) {?>
                                                     {
                                                         $.notify({
                                                             icon: 'glyphicon glyphicon-warning-sign',
-                                                            title: 'Fout',
-                                                            message: '<br / >' + data
+                                                            title: '<b>Fout</b><br / >',
+                                                            message: data
                                                         },{
                                                             // settings
                                                             type: 'danger',
@@ -566,7 +566,7 @@ if (isset($_GET['content'])) {?>
 							<h3>Briefpapier header</h3>
 							<p>De afbeelding voor het briefpapier moet een PNG-bestandsextensie zijn en moet <u>precies</u> 1656x368 pixels groot zijn.</p>
 							<input id="input-b1" name="input-b1" type="file" class="file" data-browse-on-zone-click="true">
-							<img src="/CashRegister/src/images/A4-Template.png" class="img-fluid" alt="Responsive image" style="max-width: 95%">
+							<img src="/images/A4-Template.png" class="img-fluid" alt="Responsive image" style="max-width: 95%">
 						</div> -->
 						<div class="form-group">
 							<label for="familyname">Bedrijf naam: </label>
@@ -912,8 +912,8 @@ if (isset($_GET['content'])) {?>
 																$("#databaseWipeModal").modal("hide");
 																$.notify({
 								                                    icon: 'glyphicon glyphicon-ok',
-								                                    title: 'Database wipe',
-								                                    message: '<br / >Database veranderingen succesvol verwerkt.'
+								                                    title: '<b>Database wipe</b><br / >',
+								                                    message: 'Database veranderingen succesvol verwerkt.'
 							                                    },{
 								                                    // settings
 								                                    type: 'success',

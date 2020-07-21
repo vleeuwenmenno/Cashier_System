@@ -376,21 +376,50 @@ if (isset($_GET['id']))
 			</div>
             
             <script>
-                function updateMonths()
+
+                function populate(date)
                 {
                     const options = { year: 'numeric', month: 'long', day: 'numeric' };
 
-                    $("#nextOrderTime").html("Deze factuur wordt verzonden op de volgende datums: <br />");
+                    if ($("#paymentPeroid").children("option:selected").val() == "quarter")
+                        $("#nextOrderTime").html($("#nextOrderTime").html() + "<li class=\"list-group-item\">" + date.toLocaleDateString('nl-NL', options) + " kwartaal " + getQuarter(date) + "</li>");
+                    else
+                        $("#nextOrderTime").html($("#nextOrderTime").html() + "<li class=\"list-group-item\">" + date.toLocaleDateString('nl-NL', options) + "</li>");
+                }
 
-                    for (var i = 0; i < 6; i++)
+                function updateMonths()
+                {
+                    $("#nextOrderTime").html("Eerste factuur wordt verzonden op de volgende data: <br />");
+
+                    calculateNext(0, function (date)
                     {
-                        var date = calculateNext(i);
+                        populate(date);
 
-                        if ($("#paymentPeroid").children("option:selected").val() == "quarter")
-                            $("#nextOrderTime").html($("#nextOrderTime").html() + "<li class=\"list-group-item\">" + date.toLocaleDateString('nl-NL', options) + " kwartaal " + getQuarter(date) + "</li>");
-                        else
-                            $("#nextOrderTime").html($("#nextOrderTime").html() + "<li class=\"list-group-item\">" + date.toLocaleDateString('nl-NL', options) + "</li>");
-                    }
+                        calculateNext(1, function (date)
+                        {
+                            populate(date);
+
+                            calculateNext(2, function (date)
+                            {
+                                populate(date);
+
+                                calculateNext(3, function (date)
+                                {
+                                    populate(date);
+
+                                    calculateNext(4, function (date)
+                                    {
+                                        populate(date);
+
+                                        calculateNext(5, function (date)
+                                        {
+                                            populate(date);
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
                 }
         
                 $( document ).ready(function() {
@@ -442,26 +471,64 @@ if (isset($_GET['id']))
                         const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
 
                         $.get(
-                            "contract/contractUpdate.php",
+                            "contract/viewContract.php",
                             {
-								id: <?=$_GET['id']?>,
-                                startDate: "01-" + $("#startDate").val() + " 00:00:00",
-                                planningPeriod: $("#paymentPeroid").children("option:selected").val(),
-                                planningDay: parseInt($("#paymentDate").children("option:selected").val())
+                                loadFromReceipt: 1,
+								id: <?=$_GET['id']?>
                             },
-							function(data)
-							{
-								if (data.replace(/(\r\n|\n|\r)/gm,"").startsWith("OK"))
-								{
-									$("#okMessage").modal("show");
-								}
-								else
-								{
-									$("#errorMessageContent").text(data);
-									$("#errorMessage").modal("show");
-								}
+							function(data2)
+							{ 
+                                $.get(
+                                    "contract/contractUpdate.php",
+                                    {
+                                        id: <?=$_GET['id']?>,
+                                        startDate: "01-" + $("#startDate").val() + " 00:00:00",
+                                        planningPeriod: $("#paymentPeroid").children("option:selected").val(),
+                                        planningDay: parseInt($("#paymentDate").children("option:selected").val())
+                                    },
+                                    function(data)
+                                    {
+                                        if (data.replace(/(\r\n|\n|\r)/gm,"").startsWith("OK"))
+                                        {
+                                            $.get(
+                                                "receipt/empty.php",
+                                                {
+                                                    receiptId: '<?php echo $_SESSION['receipt']['id']; ?>',
+                                                    destroy: 'true'
+                                                },
+                                                function (data3)
+                                                {
+                                                    $("#pageLoaderIndicator").fadeIn();
+                                                    $("#PageContent").load("contract.php", function () {
+                                                        $("#pageLoaderIndicator").fadeOut();
+                                                    });
+
+                                                    $.notify({
+                                                        icon: 'glyphicon glyphicon-floppy-disk',
+                                                        title: '<b>Contract bijgewerkt</b><br />',
+                                                        message: 'De contract gegevens zijn bijgewerkt'
+                                                    }, {
+                                                        // settings
+                                                        type: 'success',
+                                                        delay: 5000,
+                                                        timer: 10,
+                                                        placement: {
+                                                            from: "bottom",
+                                                            align: "right"
+                                                        }
+                                                    });
+                                                }
+                                            );
+                                        }
+                                        else
+                                        {
+                                            $("#errorMessageContent").text(data);
+                                            $("#errorMessage").modal("show");
+                                        }
+                                    }
+                                );
 							}
-                        );
+						);
                     });
                 });
 
@@ -531,99 +598,27 @@ if (isset($_GET['id']))
                     return (millis2 - millis1) / 1000 / 60 / 60 / 24;
                 }
 
-                function calculateNext(nextNext = 0)
+                function calculateNext(nextNext = 0, funct)
                 {
                     var start = new Date($("#startDate").val().split("-")[1] + "-" + $("#startDate").val().split("-")[0] + "-01");
                     var period = $("#paymentPeroid").children("option:selected").val();
                     var day = parseInt($("#paymentDate").children("option:selected").val());
                     var sendNow = $('#sendOrderImmediatly').is(":checked");
-                    var now = new Date();
-                    var next = new Date();
 
-                    if (period == "year")
-                    {
-                        if (day < now.getDate()) /// Check if we have to skip to the next month
+                    $.get(
+                        "contract/contractGetNext.php",
+                        { 
+                            period: period,
+                            day: day,
+                            start: start.getFullYear()+"-"+("0"+(start.getMonth()+1)).slice(-2)+"-"+("0"+(start.getDate())).slice(-2),
+                            nextTime: nextNext,
+                            sendNow: sendNow ? 1 : 0
+                        },
+                        function (data)
                         {
-                            if ((next.getMonth() + 2) == 13) /// Make sure we don't try to say month 13
-                                next = new Date(now.getFullYear()+1 + "-01-" + day); // If it is month 13, we change it to 1 and increase the year by 1
-                            else
-                                next = new Date(now.getFullYear() + "-" + (next.getMonth() + 1) + "-" + day); // Continue normally
+                            funct(new Date(data));
                         }
-                        else /// This month
-                        {
-                            next = new Date(now.getFullYear() + "-" + (next.getMonth() + 1) + "-" + day);
-                        }
-
-                        if (sendNow && nextNext == 0) /// Check if we have to send it now
-                            return now;
-
-                        next.setFullYear(next.getFullYear() + nextNext);
-
-                        if (next.inPast())
-                            next = new Date();
-                    }
-                    else if (period == "quarter")
-                    {
-                        next = new Date().addDays(Math.ceil(getDaysLeftinQuarter(new Date())));
-                        next = next.addMonths(monthDiff(next, start))
-                        next = next.addDays(day-1)
-
-
-                        if (nextNext > 0 && sendNow)
-                        {
-                            next = next.addDays(92*(nextNext-1));
-                            next = new Date(next.getFullYear() + "-" + (next.getMonth()+1) + "-" + day);
-                        }
-                        else if (nextNext > 0)
-                        {
-                            next = next.addDays(92*nextNext);
-                            next = new Date(next.getFullYear() + "-" + (next.getMonth()+1) + "-" + day);
-                        }
-                        else if (nextNext == 0 && sendNow)
-                        {
-                            next = new Date();
-                        }
-                    }
-                    else // month
-                    {
-                        if (day < now.getDate()) /// Check if we have to skip to the next month
-                        {
-                            if ((next.getMonth() + 2) == 13) /// Make sure we don't try to say month 13
-                                next = new Date((now.getFullYear()+1) + "-01-" + day); // If it is month 13, we change it to 1 and increase the year by 1
-                            else
-                                next = new Date(now.getFullYear() + "-" + (next.getMonth() + 2) + "-" + day); // Continue normally
-                        }
-                        else /// This month
-                        {
-                            next = new Date(now.getFullYear() + "-" + (next.getMonth() + 1) + "-" + day);
-                        }
-                        
-                        /// Check if we have to send it now and this is the first
-                        if (sendNow && nextNext == 0)
-                            next = new Date();
-                        else if (sendNow) /// Check if we send one today
-                            next.setMonth(next.getMonth() + nextNext-1);
-                        else // Continue normally
-                            next.setMonth(next.getMonth() + nextNext);
-                    }
-
-                    /// Check if the start date is later than today except for yearly 
-                    if (start.getTime() > now.getTime() && period == "year")
-                    {
-                        start.setFullYear(start.getFullYear() + nextNext);
-                        start.setDate(day);
-                            
-                        return start; // The start date is later than today so we will set the next date to be the start date.
-                    }
-                    else if (start.getTime() > now.getTime() && period == "month")
-                    {
-                        start.setMonth(start.getMonth() + nextNext);
-                        start.setDate(day);
-                            
-                        return start; // The start date is later than today so we will set the next date to be the start date.
-                    }
-                    else
-                        return next; // The start date has already passed so the next date will be as planned.
+                    );
                 }
             </script>
         </div>
@@ -673,8 +668,8 @@ if (isset($_GET['id']))
 
 												$.notify({
 													icon: 'glyphicon glyphicon-trash',
-													title: '',
-													message: 'Klant verwijderd uit het systeem.'
+													title: '<b>Klant verwijderd uit het systeem</b><br / >',
+													message: ''
 												}, {
 													// settings
 													type: 'info',
@@ -748,7 +743,7 @@ if (isset($_GET['id']))
 					$(document).ready(function ()
 					{
 						$("#closeOkBtn").on("click", function () {
-						    $("#PageContent").load('contract/viewContract.php?id=<?=$_GET['id']?>';
+						    $("#PageContent").load('contract/viewContract.php?id=<?=$_GET['id']?>');
 						});
 					});
 				</script>

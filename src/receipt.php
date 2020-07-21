@@ -25,8 +25,8 @@ if (isset($_GET['recover']))
 
             $.notify({
                 icon: 'glyphicon glyphicon-trash',
-                title: '',
-                message: 'Bon is successvol herstelt'
+                title: '<b>Bon is successvol herstelt</b><br / >',
+                message: ''
             }, {
                 // settings
                 type: 'success',
@@ -184,7 +184,7 @@ else if (isset($_GET['new']))
 
                                                                 $.notify({
                                                                     icon: \'fa fa-check fa-2x\',
-                                                                    title: \'Artikel naam veranderd<br />\',
+                                                                    title: \'<b>Artikel naam veranderd</b><br / >\',
                                                                     message: \'Artikel naam is voor deze bon veranderd.\'
                                                                 }, {
                                                                     // settings
@@ -201,7 +201,7 @@ else if (isset($_GET['new']))
                                                             {
                                                                 $.notify({
                                                                     icon: \'fa fa-exclamation-triangle fa-2x\',
-                                                                    title: \'Error<br />\',
+                                                                    title: \'<b>Error</b><br / >\',
                                                                     message: data
                                                                 }, {
                                                                     // settings
@@ -585,7 +585,7 @@ else if (isset($_GET['new']))
                                       {
                                         $.notify({
                                             icon: \'glyphicon glyphicon-trash\',
-                                            title: \'' . urldecode(Items::getField("itemName", key($_SESSION['receipt']['items']))) . '\',
+                                            title: \'<b>' . urldecode(Items::getField("itemName", key($_SESSION['receipt']['items']))) . '</b><br / >\',
                                             message: \'<br />Verwijderd van bon <a style="color: white;" href="#" id="undo' . key($_SESSION['receipt']['items']) . '">(Ongedaan maken)</a>\'
                                         }, {
                                             // settings
@@ -616,7 +616,7 @@ else if (isset($_GET['new']))
                                               {
                                                 $.notify({
                                                     icon: \'glyphicon glyphicon-trash\',
-                                                    title: \'' . urldecode(Items::getField("itemName", key($_SESSION['receipt']['items']))) . '\',
+                                                    title: \'<b>' . urldecode(Items::getField("itemName", key($_SESSION['receipt']['items']))) . '</b><br / >\',
                                                     message: \'<br />Toegevoegt aan bon.\'
                                                 }, {
                                                     // settings
@@ -919,8 +919,8 @@ else if (isset($_GET['new']))
                             {
                                 $.notify({
                                     icon: 'glyphicon glyphicon-warning-sign',
-                                    title: 'Fout',
-                                    message: '<br />Bon is niet opgeslagen :(<br />' + data
+                                    title: '<b>Fout</b><br / >',
+                                    message: 'Bon is niet opgeslagen :(<br />' + data
                                 }, {
                                     // settings
                                     type: 'danger',
@@ -939,8 +939,8 @@ else if (isset($_GET['new']))
                 {
                     $.notify({
                         icon: 'glyphicon glyphicon-warning-sign',
-                        title: 'Bon is niet opgeslagen',
-                        message: '<br />Voeg eerst artikelen toe om de bon op te slaan.'
+                        title: '<b>Bon is niet opgeslagen</b><br / >',
+                        message: 'Voeg eerst artikelen toe om de bon op te slaan.'
                     }, {
                         // settings
                         type: 'warning',
@@ -1068,8 +1068,8 @@ else if (isset($_GET['new']))
                     {
                         $.notify({
                             icon: 'glyphicon glyphicon-trash',
-                            title: '',
-                            message: 'Klant verwijderd van bon'
+                            title: '<b>Klant verwijderd van bon</b><br / >',
+                            message: ''
                         }, {
                             // settings
                             type: 'info',
@@ -1114,7 +1114,7 @@ else if (isset($_GET['new']))
                     {
                         $.notify({
                             icon: 'glyphicon glyphicon-trash',
-                            title: 'Bon is verwijderd',
+                            title: '<b>Bon is verwijderd</b><br / >',
                             message: '<a href="#" id="undoCloseReceipt" style="color: white;">(Ongedaan maken)</a>'
                         }, {
                             // settings
@@ -1157,7 +1157,7 @@ else if (isset($_GET['new']))
                     {
                         $.notify({
                             icon: 'glyphicon glyphicon-trash',
-                            title: 'Bon venster gesloten',
+                            title: '<b>Bon venster gesloten</b><br / >',
                             message: '<a href="#" id="undoCloseReceipt" style="color: white;">(Ongedaan maken)</a>'
                         }, {
                             // settings

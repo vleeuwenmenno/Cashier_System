@@ -315,7 +315,7 @@ else if (isset($_GET['close']))
                                 {
                                     $.notify({
                                         icon: 'fa fa-exclamation-triangle fa-2x',
-                                        title: 'Vul alle velden<br />',
+                                        title: '<b>Vul alle velden</b><br />',
                                         message: 'Niet alle velden waren ingevuld, vul alle velden A.U.B'
                                     }, {
                                         // settings

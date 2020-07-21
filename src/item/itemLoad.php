@@ -101,8 +101,8 @@ if (isset($_GET['sTerm']))
 
                                 $.notify({
                                     icon: \'fa fa-cart-plus fa-2x\',
-                                    title: \'  Toegevoegt aan bon\',
-                                    message: \'<br />' . urldecode($row['itemName']) . '\'
+                                    title: \'<b>Toegevoegt aan bon</b><br / >\',
+                                    message: \'' . urldecode($row['itemName']) . '\'
                                 }, {
                                     // settings
                                     type: \'success\',
@@ -131,8 +131,8 @@ if (isset($_GET['sTerm']))
 
                             $.notify({
                                 icon: \'fa fa-cart-plus fa-2x\',
-                                title: \'  Toegevoegt aan bon\',
-                                message: \'<br />' . urldecode($row['itemName']) . '\'
+                                title: \'<b>Toegevoegt aan bon</b><br / >\',
+                                message: \'' . urldecode($row['itemName']) . '\'
                             }, {
                                 // settings
                                 type: \'success\',
@@ -160,8 +160,8 @@ if (isset($_GET['sTerm']))
 
                     $.notify({
                         icon: \'fa fa-archive fa-2x\',
-                        title: \'  Retour is toegevoegt aan bon\',
-                        message: \'<br />' . urldecode($row['itemName']) . '\'
+                        title: \'<b>Retour is toegevoegt aan bon</b><br / >\',
+                        message: \'' . urldecode($row['itemName']) . '\'
                     }, {
                         // settings
                         type: \'success\',
@@ -273,8 +273,8 @@ if (isset($_GET['sTerm']))
 
                                         $.notify({
                                             icon: \'fa fa-cart-plus fa-2x\',
-                                            title: \'  Toegevoegt aan bon\',
-                                            message: \'<br />' . urldecode($row['itemName']) . '\'
+                                            title: \'<b>Toegevoegt aan bon</b><br / >\',
+                                            message: \'' . urldecode($row['itemName']) . '\'
                                         }, {
                                             // settings
                                             type: \'success\',
@@ -303,7 +303,7 @@ if (isset($_GET['sTerm']))
 
                                     $.notify({
                                         icon: \'fa fa-cart-plus fa-2x\',
-                                        title: \'  Toegevoegt aan bon\',
+                                        title: \'<b>Toegevoegt aan bon</b><br / >\',
                                         message: \'<br />' . urldecode($row['itemName']) . '\'
                                     }, {
                                         // settings
@@ -332,8 +332,8 @@ if (isset($_GET['sTerm']))
 
                             $.notify({
                                 icon: \'fa fa-archive fa-2x\',
-                                title: \'  Retour is toegevoegt aan bon\',
-                                message: \'<br />' . urldecode($row['itemName']) . '\'
+                                title: \'<b>Retour is toegevoegt aan bon</b><br / >\',
+                                message: \'' . urldecode($row['itemName']) . '\'
                             }, {
                                 // settings
                                 type: \'success\',

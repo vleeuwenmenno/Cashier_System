@@ -54,11 +54,14 @@ if (isset($_GET['sTerm']))
                     else
                         $name = $name . Misc::sqlGet("email", "customers", "customerId", $row['customerId'])['email'];
 
+                    $startDate = new DateTime($row['startDate']);
+                    $time = Calculate::calculateNextOrder($row['planningPeriod'], $row['planningDay'], $startDate, 0, $row['sendOrderNow']);
+
                     echo '    <tr>';
                     echo '            <td><a href="#" id="contract' . $row['contractId'] . 'Btn">#' . str_pad($row['contractId'], 8, '0', STR_PAD_LEFT) . '</a></td>';
                     echo '            <td>' . $name . '</td>';
                     echo '            <td>' . ($row['planningPeriod'] == "month" ? "Maandelijks" : ($row['planningPeriod'] == "quarter" ? "Per kwartaal" : "Jaarlijks")) . ' op de '.$row['planningDay'].'ste</td>';
-                    echo '            <td>22-07-2020</td>';
+                    echo '            <td>'. strftime("%d-%m-%Y", $time->getTimestamp()), PHP_EOL.'</td>';
 
                     echo '    <script>';
                     echo '    	$(document).ready(function ()

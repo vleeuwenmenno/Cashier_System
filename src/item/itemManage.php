@@ -210,8 +210,8 @@ else if (isset($_GET['update']))
 							    {
                                     $.notify({
 	                                    icon: 'glyphicon glyphicon-ok',
-	                                    title: 'Inboeken succesvol verwerkt',
-	                                    message: '<br />Voorraad voor ' + data.replace('OK', '') + ' is succesvol geupdate.'
+	                                    title: '<b>Inboeken succesvol verwerkt</b><br / >',
+	                                    message: 'Voorraad voor ' + data.replace('OK', '') + ' is succesvol geupdate.'
                                     },{
 	                                    // settings
 	                                    type: 'success',
@@ -241,8 +241,8 @@ else if (isset($_GET['update']))
             							    {
                                                 $.notify({
             	                                    icon: 'glyphicon glyphicon-ok',
-            	                                    title: 'Inboeken succesvol verwerkt',
-            	                                    message: '<br />Voorraad voor ' + data.replace('OK', '') + ' is succesvol geupdate.'
+            	                                    title: '<b>Inboeken succesvol verwerkt</b><br / >',
+            	                                    message: 'Voorraad voor ' + data.replace('OK', '') + ' is succesvol geupdate.'
                                                 },{
             	                                    // settings
             	                                    type: 'success',
@@ -262,7 +262,7 @@ else if (isset($_GET['update']))
             							    {
             							        $.notify({
             	                                    icon: 'glyphicon glyphicon-warning-sign',
-            	                                    title: 'Fout<br />',
+            	                                    title: '<b>Fout</b><br / >',
             	                                    message: data
                                                 },{
             	                                    // settings
@@ -326,8 +326,8 @@ else if (isset($_GET['update']))
             							    {
                                                 $.notify({
             	                                    icon: 'glyphicon glyphicon-ok',
-            	                                    title: 'Inboeken succesvol verwerkt',
-            	                                    message: '<br />Voorraad voor ' + data.replace('OK', '') + ' is succesvol geupdate.'
+            	                                    title: '<b>Inboeken succesvol verwerkt</b><br / >',
+            	                                    message: 'Voorraad voor ' + data.replace('OK', '') + ' is succesvol geupdate.'
                                                 },{
             	                                    // settings
             	                                    type: 'success',
@@ -347,7 +347,7 @@ else if (isset($_GET['update']))
             							    {
             							        $.notify({
             	                                    icon: 'glyphicon glyphicon-warning-sign',
-            	                                    title: 'Fout<br />',
+            	                                    title: '<b>Fout</b><br / >',
             	                                    message: data
                                                 },{
             	                                    // settings
