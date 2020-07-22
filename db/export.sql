@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 22, 2020 at 02:07 AM
+-- Generation Time: Jul 22, 2020 at 03:08 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.5
 
@@ -170,7 +170,7 @@ CREATE TABLE `options` (
 --
 
 INSERT INTO `options` (`id`, `companyName`, `vat`, `currency`, `smtpHost`, `smtpName`, `smtpUser`, `smtpPass`, `smtpSecure`, `smtpPort`, `companyAddress`, `companyPhone`, `companyFax`, `companyEmail`, `companyWebsite`, `companyKvk`, `companyIBAN`, `companyVATNo`, `disclaimer`, `invoiceExpireDays`) VALUES
-(1, '', '1.21', '€', '', '', '', '', '', '', '', '', '', '', '', '', 'IBAN ', 'BTW nr. ', '', 14);
+(1, '', '1.0', '€', '', '', '', '', '', '', '', '', '', '', '', 'KVK nr. ', 'IBAN ', 'BTW nr. ', '', 14);
 
 -- --------------------------------------------------------
 
@@ -226,7 +226,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`userId`, `username`, `nickName`, `hash`, `salt`, `userTheme`, `managementUser`) VALUES
-('1', 'menno', 'Menno', '3ADB8B060DCE1F463452243AD1FE0082044523E71EE6DC20EB81F15855A47085230BBFB260861C5559443575FC8BF34B4C6A1C0444DA6BD650B62B91CBAEB405', 'hkjfhihg3no35giheawfuon4fwpislkdzgnhxn', 'Superhero', 1);
+('1', 'admin', 'Admin', '3B75DDDF71B8F3A273FC917FDBAD3554119EF92DE80DE36A2FADA83BF6F4FFEBE373C502D5E6E7490A5D1F3B08373E09344EBD19FBA9825F10C1E602E9B789F1', 'rrOHdicTpimJFDbi2DBz5n7SXA3j1Tb7ayyvXssJzO40ib1hfpQMcKbJVrsgWps4g7bSVuMG9qs17ii91BbugNqstYibrqK4iO1pDY4SzaCURfevr6ukD5ln9CQaiMTO', 'Superhero', 1);
 
 --
 -- Indexes for dumped tables

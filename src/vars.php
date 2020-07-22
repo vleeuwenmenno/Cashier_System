@@ -1,5 +1,4 @@
 <?php 
-
 $config = array(
     'SQL_PASS' => "",
     'SQL_USER' => "root",

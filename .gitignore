@@ -1,3 +1,4 @@
 src/temp/*
 src/vendor/*
 !src/temp/.gitkeep 
+src/test/
