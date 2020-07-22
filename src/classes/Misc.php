@@ -13,7 +13,7 @@ class Misc
         return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);
     }
 
-    function url_get_contents ($Url)
+    public static function url_get_contents ($Url)
     {
         if (!function_exists('curl_init'))
         {
@@ -324,7 +324,7 @@ class Misc
 		$operator_stack = array();
 
 		while ($i < strlen($mathexp)) {
-			$char = $mathexp{$i};
+			$char = $mathexp[$i];
 			if (Misc::is_number($char)) {
 				$num = Misc::readnumber($mathexp, $i);
 				array_push($final_stack, $num);
@@ -366,7 +366,7 @@ class Misc
 
 		while (Misc::is_number(substr($string, $i, 1)))
 		{
-			$number .= $string{$i};
+			$number .= $string[$i];
 			$i++;
 		}
 		return $number;

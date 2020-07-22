@@ -120,7 +120,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <?php if ($_POST['notice'] != "") {?>
+                <?php if (isset($_POST['notice']) && $_POST['notice'] != "") {?>
                 <div id="notices">
                     <div>OPMERKING:</div>
                     <div class="notice">&emsp;<?=urldecode($_SESSION['pdf']['notice'])?></div>

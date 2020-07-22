@@ -514,7 +514,7 @@ else
                                 echo 'U bevindt zich niet op een kassa systeem! (' . $thisIp . ')';
                                 return;
                             }*/
-
+                            $cashSessionId = 0;
                             if (Misc::crIsActive())
                             {
                                 $sql = "SELECT * FROM cashsession ORDER BY cashSessionId DESC LIMIT 1;";
@@ -578,10 +578,7 @@ else
                             }, 1000);
 
                             $("#printReport").on("click", function() {
-                                $("#pageLoaderIndicator").fadeIn();
-                                $("#PageContent").load("print.php?openReport", function () {
-                                    $("#pageLoaderIndicator").fadeOut();
-                                });
+                                window.open("print.php?openReport=<?=$cashSessionId?>");
                             });
 
                             $("#openCr").on("click", function() {

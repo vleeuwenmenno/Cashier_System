@@ -382,7 +382,7 @@ if (isset($_GET['id']))
 				<ul class="dropdown-menu">
 					<li><button type="button" id="loadReceiptFromItems" style="width: 100%;" class="btn btn-info">Factuur specificatie laden</button></li>
 					<li><button type="button" id="loadItemsFromReceipt" style="width: 100%;" class="btn btn-info">Contract naar bon laden</button></li>
-					<li><button type="button" id="sendNewOrder" style="width: 100%;" class="btn btn-warning">Nieuwe factuur mailen</button></li>
+					<li><button type="button" id="sendNewOrder" style="width: 100%;" class="btn btn-warning">Factuur vandaag inplannen</button></li>
 					<li><button type="button" id="deleteContract" style="width: 100%;" class="btn btn-danger">Contract verwijderen</button></li>
 				</ul>
 			</div>
@@ -478,6 +478,13 @@ if (isset($_GET['id']))
 							$("#pageLoaderIndicator").fadeOut();
 						});
 					});
+					
+                    $("#sendNewOrder").click(function () {
+                        $("#pageLoaderIndicator").fadeIn();
+						$("#PageContent").load("contract/contractForceSend.php?id=<?=$_GET['id']?>", function () {
+							$("#pageLoaderIndicator").fadeOut();
+						});
+					});
 
                     $("#updateContractBtn").click(function () {
                         const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
@@ -485,7 +492,6 @@ if (isset($_GET['id']))
                         $.get(
                             "contract/viewContract.php",
                             {
-                                loadFromReceipt: 1,
 								id: <?=$_GET['id']?>
                             },
 							function(data2)

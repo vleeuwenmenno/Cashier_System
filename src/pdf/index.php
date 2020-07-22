@@ -16,7 +16,7 @@
             header('Content-Disposition: attachment; filename="file.pdf"');
 
         $snappy->resetOptions();
-        $snappy->setOption('post', array('exvat' => isset($_GET['exvat']), 'lid' => $_GET['lid'], 'cid' => $_GET['cid'], 'notice' => $_GET['notice']));
+        $snappy->setOption('post', array('exvat' => isset($_GET['exvat']), 'lid' => $_GET['lid'], 'cid' => $_GET['cid'], 'notice' => isset($_GET['notice']) ? $_GET['notice'] : ""));
 
         echo $snappy->getOutput('http://cashier.local/pdf/invoice.php');
     }

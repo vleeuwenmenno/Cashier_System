@@ -498,6 +498,10 @@ class Calculate
         }
 
         $final = array();
+        
+        $final['total'] = 0;
+        $final['exclVat'] = 0;
+
         foreach ($json as $key => $val)
         {
             $final['total'] += (Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier']) * $val['count']);
@@ -511,7 +515,11 @@ class Calculate
         global $config;
         global $_CFG;
 
-        $final = array();
+        $final = array();  
+              
+        $final['total'] = 0;
+        $final['exclVat'] = 0;
+
         foreach ($json as $key => $val)
         {
             $final['total'] += (Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier']) * $val['count']);

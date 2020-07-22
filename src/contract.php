@@ -547,7 +547,19 @@ else if (isset($_GET['overview']))
                         <div><span style="margin-left: 2.5em; font-size: 12px;">Totaal aantal contracten:</b><i style="float: right;">&nbsp;&nbsp;<?=Misc::sqlGetAll("COUNT(contractId)", "contract")['COUNT(contractId)']?></i></div><br />
                         <div style="position: relative; top: -16px;"><span style="margin-left: 2.5em; font-size: 12px;">Foutmeldingen:</span><i style="float: right; font-size: 12px;">&nbsp;&nbsp;<?=Misc::sqlGet("COUNT(success)", "log", "success", "0")['COUNT(success)']?></i></div><br />
 
-                    
+                        <a style="float: right;" href="#" id="forceSendNow">Forceer mail-update</a>
+                        
+                        <script>
+                            $(document).ready(function ()
+                            {
+                                $("#forceSendNow").on("click", function () {
+                                    $("#pageLoaderIndicator").fadeIn();
+                                    $("#PageContent").load("cron.php", function () {
+                                        $("#pageLoaderIndicator").fadeOut();
+                                    });
+                                });
+                            });
+                        </script>
                         <b>Mail agenda:</b><br />
                         <div class="panel panel-info">
                             <table class="table">
@@ -606,7 +618,7 @@ else if (isset($_GET['overview']))
                     </div>
                 </div>
 
-                <b>Factuur historie:</b> <?php echo $row['openDate']; ?><br />
+                <b>Factuur historie:</b><br />
                 <div class="panel panel-info">
                     <table class="table">
                         <thead>

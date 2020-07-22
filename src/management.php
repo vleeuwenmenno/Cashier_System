@@ -644,12 +644,12 @@ if (isset($_GET['content'])) {?>
 							<input type="text" class="form-control" id="smtpPort" placeholder="<?=$_CFG['smtpPort']?>">
 						</div>
 						<div class="form-group">
-							<label for="taxAmount">Weergaven email: </label>
-							<input type="text" class="form-control" id="smtpName" placeholder="<?=$_CFG['smtpName']?>">
-						</div>
-						<div class="form-group">
 							<label for="taxAmount">Email: </label>
 							<input type="text" class="form-control" id="smtpUser" placeholder="<?=$_CFG['smtpUser']?>">
+						</div>
+						<div class="form-group">
+							<label for="taxAmount">BCC Email: </label>
+							<input type="text" class="form-control" id="smtpName" placeholder="<?=$_CFG['smtpName']?>">
 						</div>
 						<div class="form-group">
 							<label for="street">Wachtwoord: </label>

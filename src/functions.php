@@ -2,7 +2,6 @@
 
 include('vars.php');
 include('classes/Misc.php');
-include('classes/Contract.php');
 include('classes/permissions.php');
 include('classes/Items.php');
 include('classes/Calculate.php');

@@ -1,6 +1,12 @@
 <?php
 include_once("includes.php");
-require 'classes/PHPMailer/PHPMailerAutoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+// Load Composer's autoloader
+require 'vendor/autoload.php';
 
 Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 
@@ -67,11 +73,11 @@ if (isset($_GET['receipt']))
             $mail->addAttachment(getcwd() . "/temp/factuur-" . $_GET['receipt'] . ".pdf");
             $mail->isHTML(true);
 
-            $mail->Subject = 'Uw factuur';
+            $mail->Subject = 'Uw bon';
             $mail->Body    = 'Geachte klant,<br /><br />
 
                                 Bedankt voor uw aankoop bij '.$_CFG['COMPANY_NAME'].'.<br />
-                                De bijlage bevat uw factuur.<br /><br />
+                                De bijlage bevat uw bon.<br /><br />
 
                                 Wij wensen u veel plezier met uw aankoop<br /><br />
 
@@ -138,7 +144,7 @@ if (isset($_GET['receipt']))
                 <?php
             }
 
-            //unlink(getcwd() . "/temp/factuur-" . $_GET['receipt'] . ".pdf");
+            unlink(getcwd() . "/temp/factuur-" . $_GET['receipt'] . ".pdf");
         }
         ?>
         <script>
