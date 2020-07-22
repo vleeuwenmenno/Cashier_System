@@ -32,12 +32,4 @@ $_CFG['smtpUser'] = Misc::sqlGet("smtpUser", "options", "id", 1)['smtpUser'];
 $_CFG['smtpPass'] = Misc::sqlGet("smtpPass", "options", "id", 1)['smtpPass'];
 $_CFG['smtpSecure'] = Misc::sqlGet("smtpSecure", "options", "id", 1)['smtpSecure'];
 
-
-$config = array(
-  'SQL_PASS' => "",
-  'SQL_USER' => "root",
-  'SQL_HOST' => "localhost",
-  'SQL_DB' => 'cashier',
-'timeout' => 480 // Session timeout
-);
 ?>

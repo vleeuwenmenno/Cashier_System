@@ -57,7 +57,7 @@ if (isset($_POST['mysqlHost']) && isset($_POST['mysqlPass']) && isset($_POST['my
                 <p class="lead">
                     <?php
     echo 'Downloading archive ...<br/>';
-    $f = file_put_contents("cashier.zip", fopen("https://github.com/vleeuwenmenno/Cashier_System/archive/v2.0.3-beta.zip", 'r'), LOCK_EX);
+    $f = file_put_contents("cashier.zip", fopen("https://github.com/vleeuwenmenno/Cashier_System/archive/v2.0.4-beta.zip", 'r'), LOCK_EX);
     if(FALSE === $f)
         die("Couldn't write to file.");
 
@@ -89,7 +89,7 @@ if (isset($_POST['mysqlHost']) && isset($_POST['mysqlPass']) && isset($_POST['my
         $conn = new mysqli($_POST['mysqlHost'], $_POST['mysqlUser'], $_POST['mysqlPass'] , $_POST['mysqlDb']);
 
         $query = '';
-        $sqlScript = file('./Cashier_System-2.0.3-beta/db/export.sql');
+        $sqlScript = file('./Cashier_System-2.0.4-beta/db/export.sql');
         foreach ($sqlScript as $line)	
         {
             $startWith = substr(trim($line), 0 ,2);
@@ -107,7 +107,6 @@ if (isset($_POST['mysqlHost']) && isset($_POST['mysqlPass']) && isset($_POST['my
         }
 
         echo 'Writing config file for database ...<br/>';
-        unlink("vars.php");
         $myfile = fopen("vars.php", "w") or die("Unable to open file!");
         $txt = '
         <?php 
@@ -126,13 +125,13 @@ if (isset($_POST['mysqlHost']) && isset($_POST['mysqlPass']) && isset($_POST['my
         shell_exec ("composer update");
 
         echo 'Removing junk files ...<br/>';
-        movefiles("./Cashier_System-2.0.3-beta/src", ".");
-        unlink("./Cashier_System-2.0.3-beta/.gitignore");
+        movefiles("./Cashier_System-2.0.4-beta/src", ".");
+        unlink("./Cashier_System-2.0.4-beta/.gitignore");
         unlink("cashier.zip");
         unlink("setup.php");
-        rmrf("./Cashier_System-2.0.3-beta");
+        rmrf("./Cashier_System-2.0.4-beta");
         
-        echo 'Done! Default user: admin|admin ...<br/>';
+        echo 'Done!!<br/><br/>The default login credentials are admin | admin<br />Please once logged in change the password to something more secure.<br/><a href="index.php">Click here to continue to login</a>';
         ?>
         </p>
             </div>
