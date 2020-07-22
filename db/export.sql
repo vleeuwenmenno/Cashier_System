@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 16, 2020 at 10:35 PM
+-- Generation Time: Jul 22, 2020 at 02:07 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.5
 
@@ -59,7 +59,7 @@ CREATE TABLE `cash_registers` (
 --
 
 INSERT INTO `cash_registers` (`id`, `crName`, `crStaticIP`, `status`, `currentSession`) VALUES
-(0, 'Kassa 1', '127.0.0.1', 'LoggedOn', 298);
+(0, 'Kassa 1', '127.0.0.1', 'LoggedOff', 0);
 
 -- --------------------------------------------------------
 
@@ -73,6 +73,7 @@ CREATE TABLE `contract` (
   `startDate` varchar(128) NOT NULL,
   `planningPeriod` varchar(64) NOT NULL,
   `planningDay` int(11) NOT NULL,
+  `sendOrderNow` tinyint(1) NOT NULL,
   `items` varchar(8192) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -125,13 +126,14 @@ CREATE TABLE `items` (
 CREATE TABLE `log` (
   `logId` int(11) NOT NULL,
   `contractId` int(11) NOT NULL,
+  `orderDate` date NOT NULL,
   `dateTime` timestamp NOT NULL DEFAULT current_timestamp(),
   `customerId` int(11) NOT NULL,
   `receiverEmail` varchar(96) NOT NULL,
   `items` varchar(8192) NOT NULL,
   `total` decimal(18,2) NOT NULL,
-  `success` int(11) NOT NULL,
-  `notes` varchar(1024) NOT NULL
+  `success` int(11) NOT NULL DEFAULT 0,
+  `notes` varchar(1024) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -150,15 +152,25 @@ CREATE TABLE `options` (
   `smtpUser` varchar(256) NOT NULL,
   `smtpPass` varchar(256) NOT NULL,
   `smtpSecure` varchar(256) NOT NULL,
-  `smtpPort` varchar(256) NOT NULL
+  `smtpPort` varchar(256) NOT NULL,
+  `companyAddress` varchar(512) NOT NULL,
+  `companyPhone` varchar(512) NOT NULL,
+  `companyFax` varchar(512) NOT NULL,
+  `companyEmail` varchar(512) NOT NULL,
+  `companyWebsite` varchar(512) NOT NULL,
+  `companyKvk` varchar(512) NOT NULL,
+  `companyIBAN` varchar(512) NOT NULL,
+  `companyVATNo` varchar(512) NOT NULL,
+  `disclaimer` varchar(8192) NOT NULL,
+  `invoiceExpireDays` int(11) NOT NULL DEFAULT 14
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `options`
 --
 
-INSERT INTO `options` (`id`, `companyName`, `vat`, `currency`, `smtpHost`, `smtpName`, `smtpUser`, `smtpPass`, `smtpSecure`, `smtpPort`) VALUES
-(1, 'Com Today', '1.21', '&euro;', 'smtp02.hostnet.nl', 'facturen@comtoday.nl', 'smtp@comforttoday.nl', 'Maerelaan26!', 'STARTTLS', '587');
+INSERT INTO `options` (`id`, `companyName`, `vat`, `currency`, `smtpHost`, `smtpName`, `smtpUser`, `smtpPass`, `smtpSecure`, `smtpPort`, `companyAddress`, `companyPhone`, `companyFax`, `companyEmail`, `companyWebsite`, `companyKvk`, `companyIBAN`, `companyVATNo`, `disclaimer`, `invoiceExpireDays`) VALUES
+(1, '', '1.21', '€', '', '', '', '', '', '', '', '', '', '', '', '', 'IBAN ', 'BTW nr. ', '', 14);
 
 -- --------------------------------------------------------
 
@@ -255,7 +267,9 @@ ALTER TABLE `items`
 -- Indexes for table `log`
 --
 ALTER TABLE `log`
-  ADD PRIMARY KEY (`logId`);
+  ADD PRIMARY KEY (`logId`),
+  ADD KEY `contractId` (`contractId`),
+  ADD KEY `orderDate` (`orderDate`);
 
 --
 -- Indexes for table `options`
