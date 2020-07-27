@@ -45,7 +45,8 @@
                             <th></th>
                             <th>STUKPRIJS</th>
                             <th>AANTAL</th>
-                            <th><?=$_POST['exvat'] ? "EXCL BTW" : "BEDRAG"?></th>
+                            <th><?=$_POST['exvat'] ? "EXCL. BTW" : "BEDRAG"?></th>
+                            <?=$_POST['exvat'] ? "<th>INCL. BTW</th>" : ""?>
                         </tr>
                     </thead>
                     <tbody>
@@ -69,29 +70,31 @@
                                         echo $json[key($json)]['itemDesc'];
                                 ?></td>
                                 <td class="unit"></td>
-                                <td class="unit"><?=$_CFG['CURRENCY']?>&nbsp;<?=$_POST['exvat'] ? number_format((round($total, 2) / 1.21), 2, ",", "."): number_format((round($total, 2)), 2, ",", ".")?></td>
+                                <td class="unit"><?=$_CFG['CURRENCY']?>&nbsp;<?=$_POST['exvat'] ? number_format((round($total, 2))-(round($total, 2) * 0.21), 2, ",", "."): number_format((round($total, 2)), 2, ",", ".")?></td>
                                 <td class="qty"><?=$json[key($json)]['count']?></td>
-                                <td class="total"><?=$_CFG['CURRENCY']?>&nbsp;<?=$_POST['exvat'] ? number_format((round(round($total, 2) * $json[key($json)]['count'], 2) / 1.21), 2, ",", ".") : number_format((round(round($total, 2) * $json[key($json)]['count'], 2)), 2, ",", ".")?></td>
+                                <td class="total"><?=$_CFG['CURRENCY']?>&nbsp;<?=$_POST['exvat'] ? number_format((round(round($total, 2) * $json[key($json)]['count'], 2))-(round(round($total, 2) * $json[key($json)]['count'], 2) * 0.21), 2, ",", ".") : number_format((round(round($total, 2) * $json[key($json)]['count'], 2)), 2, ",", ".")?></td>
+                                <?php if ($_POST['exvat']) { ?><td class="total"><?=$_CFG['CURRENCY']?>&nbsp;<?=number_format((round(round($total, 2) * $json[key($json)]['count'], 2)), 2, ",", ".")?></td><?php } ?>
                             </tr>
                             <?php
                             $totalIncVat = $totalIncVat + round(round($total, 2) * $json[key($json)]['count'], 2);
                             next($json);
                         }
                         
-                        $totalVat = $totalIncVat-($totalIncVat / 1.21);
+                        $totalVat = $totalIncVat * 0.21;
                         $totalExVat = $totalIncVat - $totalVat;
                         ?>
-                        <?php if ($_POST['exvat']) {?>
                         <tr>
-                            <td colspan="4">SUB-TOTAAL</td>
+                            <?php if ($_POST['exvat']) { ?><td class="total"></td><?php } ?>
+                            <td colspan="4" class="total">EXCL. BTW</td>
                             <td class="total"><?=$_CFG['CURRENCY']?>&nbsp;<?=number_format(round($totalExVat, 2), 2, ",", ".")?></td>
                         </tr>
-                        <?php } ?>
                         <tr>
+                            <?php if ($_POST['exvat']) { ?><td></td><?php } ?>
                             <td colspan="4">BTW <?=$_CFG['VAT']*100-100?>%</td>
                             <td class="total"><?=$_CFG['CURRENCY']?>&nbsp;<?=number_format(round($totalVat, 2), 2, ",", ".")?></td>
                         </tr>
                         <tr>
+                            <?php if ($_POST['exvat']) { ?><td class="grand total"></td><?php } ?>
                             <td colspan="4" class="grand total">EINDTOTAAL</td>
                             <td class="grand total"><?=$_CFG['CURRENCY']?>&nbsp;<?=number_format(round($totalIncVat, 2), 2, ",", ".")?></td>
                         </tr>

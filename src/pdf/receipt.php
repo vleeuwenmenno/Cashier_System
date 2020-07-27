@@ -6,6 +6,7 @@
 
     $time = new DateTime(Misc::sqlGet("createDt", "receipt", "receiptId", $_POST['rid'])['createDt']);
     $pMethod = Misc::sqlGet("paymentMethod", "receipt", "receiptId", $_POST['rid'])['paymentMethod'];
+    $notice = Misc::sqlGet("receiptDesc", "receipt", "receiptId", $_POST['rid'])['receiptDesc'];
     $creator = Misc::sqlGet("nickName", "users", "userId", Misc::sqlGet("creator", "receipt", "receiptId", $_POST['rid'])['creator'])['nickName'];
     $cashier = Misc::sqlGet("crName", "cash_registers", "id", Misc::sqlGet("cashRegisterId", "cashsession", "cashSessionId", Misc::sqlGet("parentSession", "receipt", "receiptId", $_POST['rid'])['parentSession'])['cashRegisterId'])['crName'];
     ?>
@@ -68,7 +69,8 @@
                             <th></th>
                             <th>STUKPRIJS</th>
                             <th>AANTAL</th>
-                            <th><?=$_POST['exvat'] ? "EXCL BTW" : "BEDRAG"?></th>
+                            <th><?=$_POST['exvat'] ? "EXCL. BTW" : "BEDRAG"?></th>
+                            <?=$_POST['exvat'] ? "<th>INCL. BTW</th>" : ""?>
                         </tr>
                     </thead>
                     <tbody>
@@ -92,38 +94,40 @@
                                         echo $json[key($json)]['itemDesc'];
                                 ?></td>
                                 <td class="unit"></td>
-                                <td class="unit"><?=$_CFG['CURRENCY']?>&nbsp;<?=$_POST['exvat'] ? number_format((round($total, 2) / 1.21), 2, ",", "."): number_format((round($total, 2)), 2, ",", ".")?></td>
+                                <td class="unit"><?=$_CFG['CURRENCY']?>&nbsp;<?=$_POST['exvat'] ? number_format((round($total, 2))-(round($total, 2) * 0.21), 2, ",", "."): number_format((round($total, 2)), 2, ",", ".")?></td>
                                 <td class="qty"><?=$json[key($json)]['count']?></td>
-                                <td class="total"><?=$_CFG['CURRENCY']?>&nbsp;<?=$_POST['exvat'] ? number_format((round(round($total, 2) * $json[key($json)]['count'], 2) / 1.21), 2, ",", ".") : number_format((round(round($total, 2) * $json[key($json)]['count'], 2)), 2, ",", ".")?></td>
+                                <td class="total"><?=$_CFG['CURRENCY']?>&nbsp;<?=$_POST['exvat'] ? number_format((round(round($total, 2) * $json[key($json)]['count'], 2))-(round(round($total, 2) * $json[key($json)]['count'], 2) * 0.21), 2, ",", ".") : number_format((round(round($total, 2) * $json[key($json)]['count'], 2)), 2, ",", ".")?></td>
+                                <?php if ($_POST['exvat']) { ?><td class="total"><?=$_CFG['CURRENCY']?>&nbsp;<?=number_format((round(round($total, 2) * $json[key($json)]['count'], 2)), 2, ",", ".")?></td><?php } ?>
                             </tr>
                             <?php
                             $totalIncVat = $totalIncVat + round(round($total, 2) * $json[key($json)]['count'], 2);
                             next($json);
                         }
                         
-                        $totalVat = $totalIncVat-($totalIncVat / 1.21);
+                        $totalVat = $totalIncVat * 0.21;
                         $totalExVat = $totalIncVat - $totalVat;
                         ?>
-                        <?php if ($_POST['exvat']) {?>
                         <tr>
-                            <td colspan="4">SUB-TOTAAL</td>
+                            <?php if ($_POST['exvat']) { ?><td class="total"></td><?php } ?>
+                            <td colspan="4" class="total">EXCL. BTW</td>
                             <td class="total"><?=$_CFG['CURRENCY']?>&nbsp;<?=number_format(round($totalExVat, 2), 2, ",", ".")?></td>
                         </tr>
-                        <?php } ?>
                         <tr>
+                            <?php if ($_POST['exvat']) { ?><td></td><?php } ?>
                             <td colspan="4">BTW <?=$_CFG['VAT']*100-100?>%</td>
                             <td class="total"><?=$_CFG['CURRENCY']?>&nbsp;<?=number_format(round($totalVat, 2), 2, ",", ".")?></td>
                         </tr>
                         <tr>
+                            <?php if ($_POST['exvat']) { ?><td class="grand total"></td><?php } ?>
                             <td colspan="4" class="grand total">EINDTOTAAL</td>
                             <td class="grand total"><?=$_CFG['CURRENCY']?>&nbsp;<?=number_format(round($totalIncVat, 2), 2, ",", ".")?></td>
                         </tr>
                     </tbody>
                 </table>
-                <?php if (isset($_POST['notice']) && $_POST['notice'] != "") {?>
+                <?php if (isset($notice) && $notice != "") {?>
                 <div id="notices">
                     <div>OPMERKING:</div>
-                    <div class="notice">&emsp;<?=urldecode($_SESSION['pdf']['notice'])?></div>
+                    <div class="notice">&emsp;<?=urldecode($notice)?></div>
                 </div>
                 <?php } ?>
             </main>

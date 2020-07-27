@@ -39,7 +39,7 @@
         $lid = mysqli_insert_id($db);
     
         /// Get the PDF
-        $content = Misc::url_get_contents('http://cashier.local/pdf/?cid=' . $cid . '&lid=' . $lid);
+        $content = Misc::url_get_contents('http://cashier.local/pdf/?cid=' . $cid . '&lid=' . $lid . '&exvat');
         file_put_contents(getcwd() . "/temp/factuur-" . $cid . "-".$lid.".pdf", $content);
         
         /// Setup the email

@@ -1386,12 +1386,12 @@ else
                     </th>
                     <th>
                         <a href="#" class="mustFocus">
-                            <input type="text" class="form-control" placeholder="Bon totaal" disabled />
+                            <input type="text" class="form-control" placeholder="Klant" disabled />
                         </a>
                     </th>
                     <th>
                         <a href="#" class="mustFocus">
-                            <input type="text" class="form-control" placeholder="Betaal Methode" disabled />
+                            <input type="text" class="form-control" placeholder="Bon totaal" disabled />
                         </a>
                     </th>
                     <th>
