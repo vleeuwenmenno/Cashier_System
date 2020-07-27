@@ -84,7 +84,7 @@ else if (isset($_GET['open']))
                                         $("#time").text(data);
                                     }
                                 );
-                            }, 1000);
+                            }, 5000);
 
                             $("#openCr").on("click", function() {
                                 $.get(
@@ -575,7 +575,7 @@ else
                                         $("#time").text(data);
                                     }
                                 );
-                            }, 1000);
+                            }, 5000);
 
                             $("#printReport").on("click", function() {
                                 window.open("print.php?openReport=<?=$cashSessionId?>");

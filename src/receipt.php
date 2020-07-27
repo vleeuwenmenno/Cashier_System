@@ -1294,8 +1294,12 @@ else
 
 <div class="row">
     <div class="col-lg-offset-3 col-lg-6">
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="searchCustomer">
+            <label class="form-check-label" for="exampleCheck1">Zoek naar klant</label>
+        </div>
         <div class="input-group">
-            <input type="text" class="form-control" name="searchBar" id="searchBar" placeholder="Zoek term... (Bon nummer, klant, bedrijf, etc.)" aria-describedby="basic-addon2" />
+            <input type="text" class="form-control" name="searchBar" id="searchBar" placeholder="Zoek term... (Bon nummer, datum of klant details)" aria-describedby="basic-addon2" />
             <span class="input-group-btn">
                 <button class="btn btn-primary" type="submit" id="searchBtn" style="height: 38px;">
                     <span class="glyphicon glyphicon-search"></span>
@@ -1316,10 +1320,6 @@ else
             $("#searchBtn").on("click", function () {
                 startLocation = 0;
 
-                $("#loadMore").fadeOut("fast", function () {
-                    $("#moreLoaderIndicator").fadeIn();
-                });
-
                 $("#listContents").html("");
 
                 $.get(
@@ -1327,7 +1327,8 @@ else
                     {
                         start: 0,
                         count: 25,
-                        sTerm: $("#searchBar").val()
+                        sTerm: $("#searchBar").val(),
+                        searchCustomer: $("#searchCustomer").is(":checked") ? 1 : 0
                     },
                     function (data)
                     {
@@ -1340,7 +1341,6 @@ else
                             $("#listContents").html('<tr><td>Uw zoekopdracht - ' + $("#searchBar").val() + ' - heeft geen resultaat opgeleverd.</td></tr>');
                         }
 
-                        $("#moreLoaderIndicator").fadeOut();
                         $("#listContents").append(data);
                         startLocation += 25;
                     }
@@ -1443,13 +1443,8 @@ else
 
             </tbody>
         </table>
-        <?php
-    if (0 >= 25)
-    {
-        ?>
         <button type="button" class="btn btn-info center-block" id="loadMore">Laad Meer</button>
         <br />
-        <div class="loader mainLoader" id="moreLoaderIndicator" style="display: none;"></div>
         <script>
                         $(document).ready(function ()
                         {
@@ -1457,7 +1452,6 @@ else
                             $("#loadMore").on("click", function () {
 
                                 $("#loadMore").fadeOut("fast", function () {
-                                    $("#moreLoaderIndicator").fadeIn();
                                     $("html, body").animate({ scrollTop: $(document).height() }, "normal");
                                 });
 
@@ -1466,7 +1460,8 @@ else
                                     {
                                         start: startLocation,
                                         count: 25,
-                                        sTerm: $("#searchBar").val()
+                                        sTerm: $("#searchBar").val(),
+                                        searchCustomer: $("#searchCustomer").is(":checked") ? 1 : 0
                                     },
                                     function (data)
                                     {
@@ -1475,7 +1470,6 @@ else
                                             $("#loadMore").fadeIn();
                                         }
 
-                                        $("#moreLoaderIndicator").fadeOut();
                                         $("#listContents").append(data);
                                         startLocation += 25;
                                     }
@@ -1483,9 +1477,6 @@ else
                             });
                         });
         </script>
-        <?php
-    }
-        ?>
     </div>
     <br />
     <br />
