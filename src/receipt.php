@@ -356,7 +356,7 @@ else if (isset($_GET['new']))
                                     },
                                     function (data)
                                     {
-                                        $(\'#priceVatOnly' . key($_SESSION['receipt']['items']) . '\').html("'.$_CFG['VATText']'<br />&nbsp;'.$_CFG['CURRENCY'].'&nbsp;" + parseFloat(data.replace(",", ".") - $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(",", ".")).toFixed(2).replace(".", ","));
+                                        $(\'#priceVatOnly' . key($_SESSION['receipt']['items']) . '\').html("'.$_CFG['VATText'].'<br />&nbsp;'.$_CFG['CURRENCY'].'&nbsp;" + parseFloat(data.replace(",", ".") - $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(",", ".")).toFixed(2).replace(".", ","));
                                     }
                                 );
 
@@ -542,7 +542,7 @@ else if (isset($_GET['new']))
                 						},
                 						function (data)
                 						{
-                							$(\'#priceVatOnly' . key($_SESSION['receipt']['items']) . '\').html("'.$_CFG['VATText']'<br />&nbsp;'.$_CFG['CURRENCY'].'&nbsp;" + parseFloat(data.replace(",", ".") - $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(",", ".")).toFixed(2).replace(".", ","));
+                							$(\'#priceVatOnly' . key($_SESSION['receipt']['items']) . '\').html("'.$_CFG['VATText'].'<br />&nbsp;'.$_CFG['CURRENCY'].'&nbsp;" + parseFloat(data.replace(",", ".") - $(\'#priceExclVat' . key($_SESSION['receipt']['items']) . '\').val().replace(",", ".")).toFixed(2).replace(".", ","));
                 						}
                 					);
 
