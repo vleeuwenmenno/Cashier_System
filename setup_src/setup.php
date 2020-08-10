@@ -57,7 +57,7 @@ if (isset($_POST['mysqlHost']) && isset($_POST['mysqlPass']) && isset($_POST['my
                 <p class="lead">
                     <?php
     echo 'Downloading archive ...<br/>';
-    $f = file_put_contents("cashier.zip", fopen("https://github.com/vleeuwenmenno/Cashier_System/archive/v2.0.5-beta.zip", 'r'), LOCK_EX);
+    $f = file_put_contents("cashier.zip", fopen("https://github.com/vleeuwenmenno/Cashier_System/archive/v2.0.6-beta.zip", 'r'), LOCK_EX);
     if(FALSE === $f)
         die("Couldn't write to file.");
 

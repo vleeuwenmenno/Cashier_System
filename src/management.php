@@ -591,7 +591,7 @@ if (isset($_GET['content'])) {?>
 						</div>
 						<div class="form-group">
 							<label for="VATText">Belasting afkorting: </label>
-							<input type="text" class="form-control" id="VATText" placeholder="<?=$_CFG['VATText']?>%">
+							<input type="text" class="form-control" id="VATText" placeholder="<?=$_CFG['VATText']?>">
 						</div>
 						<div class="form-group">
 							<label for="currency">Valuta: </label>
