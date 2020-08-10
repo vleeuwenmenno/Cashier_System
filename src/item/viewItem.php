@@ -71,7 +71,7 @@ if (isset($_GET['id']))
 			<?=$_CFG['CURRENCY']?>&nbsp;
 		</span>
 		<span class="input-group-addon" id="priceVatOnly" style="border-bottom-right-radius: 0px !important;">
-			Btw<br />
+			<?=$_CFG['VATText']?><br />
 			&nbsp;<?=$_CFG['CURRENCY']?>&nbsp;
 		</span>
 		<span class="input-group-addon" id="priceMarginOnly" style="border-bottom-right-radius: 0px !important;">
@@ -85,7 +85,7 @@ if (isset($_GET['id']))
 	</div>
 	<div class="input-group">
 		<span class="input-group-addon" id="" style="border-top-left-radius: 0px !important;">
-			($INKOOP * $BTW)<br />
+			($INKOOP * $<?=$_CFG['VATText']?>)<br />
 		</span>
 		<input type="text" style="height: 42px; border-top-right-radius: 0px !important;" class="form-control" id="priceModifier" aria-describedby="priceModifierLabel" placeholder=" * 1.375" value="<?php echo str_replace(".", ",", $row["priceModifier"]); ?>" readonly />
 	</div>
@@ -114,7 +114,7 @@ if (isset($_GET['id']))
 						},
 						function (data)
 						{
-							$('#priceVatOnly').html("Btw<br />&nbsp;<?=$_CFG['CURRENCY']?>&nbsp;" + parseFloat(data.replace(",", ".") - $('#priceExclVat').val().replace(",", ".")).toFixed(2).replace(".", ","));
+							$('#priceVatOnly').html("<?=$_CFG['VATText']?><br />&nbsp;<?=$_CFG['CURRENCY']?>&nbsp;" + parseFloat(data.replace(",", ".") - $('#priceExclVat').val().replace(",", ".")).toFixed(2).replace(".", ","));
 						}
 					);
 
@@ -184,7 +184,7 @@ if (isset($_GET['id']))
 							},
 							function (data)
 							{
-								$('#priceVatOnly').html("Btw<br />&nbsp;<?=$_CFG['CURRENCY']?>&nbsp;" + parseFloat(data.replace(",", ".") - $('#priceExclVat').val().replace(",", ".")).toFixed(2).replace(".", ","));
+								$('#priceVatOnly').html("<?=$_CFG['VATText']?><br />&nbsp;<?=$_CFG['CURRENCY']?>&nbsp;" + parseFloat(data.replace(",", ".") - $('#priceExclVat').val().replace(",", ".")).toFixed(2).replace(".", ","));
 							}
 						);
 

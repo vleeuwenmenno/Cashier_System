@@ -50,7 +50,7 @@ if (isset($_GET['new']))
             <?=$_CFG['CURRENCY']?>&nbsp;
         </span>
         <span class="input-group-addon" id="priceVatOnly" style="border-bottom-right-radius: 0px !important;">
-            Btw<br />
+            <?=$_CFG['VATText']?><br />
             &nbsp;<?=$_CFG['CURRENCY']?>&nbsp;
         </span>
         <span class="input-group-addon" id="priceMarginOnly" style="border-bottom-right-radius: 0px !important;">
@@ -64,7 +64,7 @@ if (isset($_GET['new']))
     </div>
     <div class="input-group">
         <span class="input-group-addon" id="" style="border-top-left-radius: 0px !important;">
-            ($INKOOP * $BTW)<br />
+            ($INKOOP * $<?=$_CFG['VATText']?>)<br />
         </span>
         <input type="text" style="height: 42px; border-top-right-radius: 0px !important;" class="form-control" id="priceModifier" aria-describedby="priceModifierLabel" placeholder=" * 1.375" value=" * 1.375" />
     </div>
@@ -135,7 +135,7 @@ if (isset($_GET['new']))
                     },
                     function (data)
                     {
-                        $('#priceVatOnly').html("Btw<br />&nbsp;<?=$_CFG['CURRENCY']?>&nbsp;" + parseFloat(data.replace(",", ".") - $('#priceExclVat').val().replace(",", ".")).toFixed(2).replace(".", ","));
+                        $('#priceVatOnly').html("<?=$_CFG['VATText']?><br />&nbsp;<?=$_CFG['CURRENCY']?>&nbsp;" + parseFloat(data.replace(",", ".") - $('#priceExclVat').val().replace(",", ".")).toFixed(2).replace(".", ","));
                     }
                 );
 

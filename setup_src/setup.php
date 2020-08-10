@@ -57,7 +57,7 @@ if (isset($_POST['mysqlHost']) && isset($_POST['mysqlPass']) && isset($_POST['my
                 <p class="lead">
                     <?php
     echo 'Downloading archive ...<br/>';
-    $f = file_put_contents("cashier.zip", fopen("https://github.com/vleeuwenmenno/Cashier_System/archive/v2.0.4-beta.zip", 'r'), LOCK_EX);
+    $f = file_put_contents("cashier.zip", fopen("https://github.com/vleeuwenmenno/Cashier_System/archive/v2.0.5-beta.zip", 'r'), LOCK_EX);
     if(FALSE === $f)
         die("Couldn't write to file.");
 
@@ -183,7 +183,7 @@ else
                         </div>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-default">Host</span>
+                                <span class="input-group-text" id="inputGroup-sizing-default">Wachtwoord</span>
                             </div>
                             <input class="form-control" type="password" id="mysqlPass" name="mysqlPass" value="" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                         </div>

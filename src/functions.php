@@ -24,6 +24,7 @@ $_CFG['disclaimer'] = Misc::sqlGet("disclaimer", "options", "id", 1)['disclaimer
 $_CFG['invoiceExpireDays'] = Misc::sqlGet("invoiceExpireDays", "options", "id", 1)['invoiceExpireDays'];
 
 $_CFG['VAT'] = Misc::sqlGet("vat", "options", "id", 1)['vat'];
+$_CFG['VATText'] = Misc::sqlGet("VATText", "options", "id", 1)['VATText'];
 $_CFG['CURRENCY'] = Misc::sqlGet("currency", "options", "id", 1)['currency'];
 $_CFG['smtpHost'] = Misc::sqlGet("smtpHost", "options", "id", 1)['smtpHost'];
 $_CFG['smtpPort'] = Misc::sqlGet("smtpPort", "options", "id", 1)['smtpPort'];

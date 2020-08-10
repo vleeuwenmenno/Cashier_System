@@ -18,6 +18,7 @@
         $cust = Misc::sqlGet("*", "customers", "customerId", $custid);
         $email = $cust['email'];
         $items = Misc::sqlGet("items", "contract", "contractId", $cid)['items'];
+        $planningPeriod = Misc::sqlGet("planningPeriod", "contract", "contractId", $cid)['planningPeriod'];
         $total = Calculate::getContractTotal(json_decode(urldecode($items), true), true)['total'];
 
         /// Save new log entry
@@ -56,16 +57,23 @@
         ///TODO: SET CORRECT EMAIL AND REANBLE BCC
         $mail->setFrom($_CFG['smtpUser'], 'Com Today');
         $mail->addAddress($email, $cust['initials'] . ' ' . $cust['familyName']);
-        //$mail->addBCC($_CFG['smtpName']);
+        $mail->addBCC($_CFG['smtpName']);
 
         $mail->addAttachment(getcwd() . "/temp/factuur-" . $cid . "-".$lid.".pdf");
         $mail->isHTML(true);
+
+        if ($planningPeriod == "month")
+            $when = "maandelijks";
+        else if ($planningPeriod == "quarter")
+            $when = "per kwartaal";
+        else if ($planningPeriod == "year")
+            $when = "jaarlijks";
 
         $mail->Subject = 'Uw factuur';
         $mail->Body    = 'Geachte klant,<br /><br />
 
                             De bijlage bevat uw factuur.<br />
-                            Zorg ervoor dat u het totaalbedrag van deze factuur voor de vervaldatum heeft overgemaakt naar '.$_CFG['companyIBAN'].' ten name van '.$_CFG['COMPANY_NAME'].', onder vermelding van het factuurnummer.<br /><br />
+                            <span style="color: red;">LET OP! Deze factuur wordt automatisch geïncasseerd, dit gebeurt ' . $when . '. U hoeft deze nota niet handmatig te betalen.</span><br /><br />
 
                             Met vriendelijke groeten,<br /><br />
 
@@ -73,7 +81,8 @@
                             '.str_replace(",", "<br/>", $_CFG['companyAddress']).'<br />
                             '.$_CFG['companyPhone'].'<br />
                             '.$_CFG['companyEmail'].'<br />';
-
+        
+        ///Zorg ervoor dat u het totaalbedrag van deze factuur voor de vervaldatum heeft overgemaakt naar '.$_CFG['companyIBAN'].' ten name van '.$_CFG['COMPANY_NAME'].', onder vermelding van het factuurnummer.
         if(!$mail->send())
         {
             Misc::sqlUpdate("log", "success", 0, "logId", $lid);

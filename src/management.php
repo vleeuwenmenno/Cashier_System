@@ -24,6 +24,7 @@ if (isset($_GET['applyOptions']))
 
 	Misc::sqlUpdate("options", "companyName", "'".$_GET['companyName']."'", "id", 1);
 	Misc::sqlUpdate("options", "vat", $_GET['vat'], "id", 1);
+	Misc::sqlUpdate("options", "VATText", $_GET['VATText'], "id", 1);
 	Misc::sqlUpdate("options", "currency", "'".$_GET['currency']."'", "id", 1);
 
 	die();
@@ -585,8 +586,12 @@ if (isset($_GET['content'])) {?>
 							<input type="text" class="form-control" id="companyName" placeholder="<?=$_CFG['COMPANY_NAME']?>">
 						</div>
 						<div class="form-group">
-							<label for="taxAmount">BTW: </label>
+							<label for="taxAmount">Belasting: </label>
 							<input type="text" class="form-control" id="taxAmount" placeholder="<?=number_format($_CFG['VAT'] * 100 - 100, 2)?>%">
+						</div>
+						<div class="form-group">
+							<label for="VATText">Belasting afkorting: </label>
+							<input type="text" class="form-control" id="VATText" placeholder="<?=$_CFG['VATText']?>%">
 						</div>
 						<div class="form-group">
 							<label for="currency">Valuta: </label>
@@ -621,7 +626,7 @@ if (isset($_GET['content'])) {?>
 							<input type="text" class="form-control" id="companyIBAN" value="<?=$_CFG['companyIBAN']?>">
 						</div>
 						<div class="form-group">
-							<label for="street">BTW Nummer: </label>
+							<label for="street"><?=$_CFG['VATText']?> Nummer: </label>
 							<input type="text" class="form-control" id="companyVATNo" value="<?=$_CFG['companyVATNo']?>">
 						</div>
 						<div class="form-group">
@@ -669,6 +674,7 @@ if (isset($_GET['content'])) {?>
 											applyOptions: 1,
 											companyName: $("#companyName").val() !== null && $("#companyName").val() !== '' ? $("#companyName").val() : "<?=$_CFG['COMPANY_NAME']?>",
 											vat: $("#taxAmount").val() !== null && $("#taxAmount").val() !== '' ? $("#taxAmount").val() / 100 + 1 : "<?=$_CFG['VAT']?>",
+											VATText: $("#VATText").val() !== null && $("#VATText").val() !== '' ? $("#VATText").val() : "<?=$_CFG['VATText']?>",
 											currency: $("#currency").val() !== null && $("#currency").val() !== '' ? $("#currency").val() : "<?=$_CFG['currency']?>",
 											smtpHost: $("#smtpHost").val() !== null && $("#smtpHost").val() !== '' ? $("#smtpHost").val() : "<?=$_CFG['smtpHost']?>",
 											smtpPort: $("#smtpPort").val() !== null && $("#smtpPort").val() !== '' ? $("#smtpPort").val() : "<?=$_CFG['smtpPort']?>",

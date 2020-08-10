@@ -45,8 +45,8 @@
                             <th></th>
                             <th>STUKPRIJS</th>
                             <th>AANTAL</th>
-                            <th><?=$_POST['exvat'] ? "EXCL. BTW" : "BEDRAG"?></th>
-                            <?=$_POST['exvat'] ? "<th>INCL. BTW</th>" : ""?>
+                            <th><?=$_POST['exvat'] ? "EXCL. ".$_CFG['VATText'] : "BEDRAG"?></th>
+                            <?=$_POST['exvat'] ? "<th>INCL. ".$_CFG['VATText']."</th>" : ""?>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,12 +85,12 @@
                         ?>
                         <tr>
                             <?php if ($_POST['exvat']) { ?><td class="total"></td><?php } ?>
-                            <td colspan="4" class="total">EXCL. BTW</td>
+                            <td colspan="4" class="total">EXCL. <?=$_CFG['VATText']?></td>
                             <td class="total"><?=$_CFG['CURRENCY']?>&nbsp;<?=number_format(round($totalExVat, 2), 2, ",", ".")?></td>
                         </tr>
                         <tr>
                             <?php if ($_POST['exvat']) { ?><td></td><?php } ?>
-                            <td colspan="4">BTW <?=$_CFG['VAT']*100-100?>%</td>
+                            <td colspan="4"><?=$_CFG['VATText']?> <?=$_CFG['VAT']*100-100?>%</td>
                             <td class="total"><?=$_CFG['CURRENCY']?>&nbsp;<?=number_format(round($totalVat, 2), 2, ",", ".")?></td>
                         </tr>
                         <tr>

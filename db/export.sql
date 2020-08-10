@@ -146,6 +146,7 @@ CREATE TABLE `options` (
   `id` int(11) NOT NULL,
   `companyName` varchar(255) NOT NULL,
   `vat` decimal(10,2) NOT NULL,
+  `VATText` varchar(128) NOT NULL,
   `currency` varchar(32) NOT NULL,
   `smtpHost` varchar(256) NOT NULL,
   `smtpName` varchar(256) NOT NULL,
