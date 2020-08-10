@@ -147,6 +147,10 @@ if (isset($_GET['id']))
                 ?>" aria-describedby="basic-addon2" readonly>
 				<a href="#" class="input-group-addon" type="button" id="selectCust">Selecteer klant</a>
             </div><br />
+            
+            <div class="checkbox">
+                <label><input type="checkbox" id="directDebit" value="" <?php if (Misc::sqlGet("directDebit", "contract", "contractId", $_GET['id'])['directDebit'] == 1) { echo 'checked'; }?>>Automatisch incasso</label>
+            </div>
 
             <div class="container">
                 <div class="row">
@@ -371,7 +375,7 @@ if (isset($_GET['id']))
 							?>
 						</tbody>
 					</table>
-                    <h2 class="pull-right" style="margin: 0 !important; padding: 0 !important;">Totaal: <?=$_CFG['CURRENCY']?><?php echo number_format(round(Calculate::getContractTotal($json, true)['total'], 2), 2, ",", "."); ?></h2>
+                    <h2 class="pull-right" style="margin: 0 !important; padding: 0 !important;">Totaal: <?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getContractTotal($json, true)['total'], 2), 2, ",", "."); ?></h2>
                 </div>
             </div>
 			
@@ -502,7 +506,8 @@ if (isset($_GET['id']))
                                         id: <?=$_GET['id']?>,
                                         startDate: "01-" + $("#startDate").val() + " 00:00:00",
                                         planningPeriod: $("#paymentPeroid").children("option:selected").val(),
-                                        planningDay: parseInt($("#paymentDate").children("option:selected").val())
+                                        planningDay: parseInt($("#paymentDate").children("option:selected").val()),
+                                        directDebit: $('#directDebit').is(":checked")
                                     },
                                     function(data)
                                     {
@@ -634,7 +639,7 @@ if (isset($_GET['id']))
                         },
                         function (data)
                         {
-                            funct(new Date(data));
+                            funct(new Date(data.split('-')[0].replace("\n", ""), data.split('-')[1], data.split('-')[2]));
                         }
                     );
                 }

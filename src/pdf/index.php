@@ -6,7 +6,7 @@
     if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') 
         $snappy = new Pdf("wkhtmltopdf.exe");
     else 
-        $snappy = new Pdf($myProjectDirectory . '/vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64');
+        $snappy = new Pdf('/opt/lampp/htdocs/vendor/bin/wkhtmltopdf-amd64');
 
     if (isset($_GET['cid']) && isset($_GET['lid']))
     {

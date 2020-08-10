@@ -98,6 +98,10 @@ if (isset($_GET['new']))
                 <label><input type="checkbox" id="sendOrderImmediatly" value="">Factuur direct sturen (Met factuur datum: <span id="today"></span>)</label>
             </div>
             
+            <div class="checkbox">
+                <label><input type="checkbox" id="directDebit" value="">Automatisch incasso</label>
+            </div>
+            
             <label for="email">Klant: </label>
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="A. Bakker | Com Today | abakker@voorbeeld.nl" value="<?php
@@ -203,7 +207,7 @@ if (isset($_GET['new']))
                     ?>
                 </tbody>
             </table>
-                    <h2 class="pull-right" style="margin: 0 !important; padding: 0 !important;">Totaal: <?=$_CFG['CURRENCY']?><?php echo number_format(round(Calculate::getReceiptTotal($_SESSION['receipt']['id'], true)['total'], 2), 2, ",", "."); ?></h2>
+                    <h2 class="pull-right" style="margin: 0 !important; padding: 0 !important;">Totaal: <?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getReceiptTotal($_SESSION['receipt']['id'], true)['total'], 2), 2, ",", "."); ?></h2>
                     <?php } ?>
                 </div>
             </div>
@@ -333,6 +337,7 @@ if (isset($_GET['new']))
                                 planningPeriod: $("#paymentPeroid").children("option:selected").val(),
                                 planningDay: parseInt($("#paymentDate").children("option:selected").val()),
                                 sendNow: $('#sendOrderImmediatly').is(":checked"),
+                                directDebit: $('#directDebit').is(":checked")
                             },
 							function(data)
 							{
@@ -439,7 +444,7 @@ if (isset($_GET['new']))
                         },
                         function (data)
                         {
-                            funct(new Date(data));
+                            funct(new Date(data.split('-')[0].replace("\n", ""), data.split('-')[1], data.split('-')[2]));
                         }
                     );
                 }

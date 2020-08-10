@@ -19,6 +19,7 @@
         $email = $cust['email'];
         $items = Misc::sqlGet("items", "contract", "contractId", $cid)['items'];
         $planningPeriod = Misc::sqlGet("planningPeriod", "contract", "contractId", $cid)['planningPeriod'];
+        $dd = Misc::sqlGet("directDebit", "contract", "contractId", $cid)['directDebit'];
         $total = Calculate::getContractTotal(json_decode(urldecode($items), true), true)['total'];
 
         /// Save new log entry
@@ -73,7 +74,7 @@
         $mail->Body    = 'Geachte klant,<br /><br />
 
                             De bijlage bevat uw factuur.<br />
-                            <span style="color: red;">LET OP! Deze factuur wordt automatisch geïncasseerd, dit gebeurt ' . $when . '. U hoeft deze nota niet handmatig te betalen.</span><br /><br />
+                            '.($dd == 1 ? '<span style="color: red;">LET OP! Deze factuur wordt automatisch geïncasseerd, dit gebeurt ' . $when . '. U hoeft deze nota niet handmatig te betalen.</span>' : 'Zorg ervoor dat u het totaalbedrag van deze factuur voor de vervaldatum heeft overgemaakt naar '.$_CFG['companyIBAN'].' ten name van '.$_CFG['COMPANY_NAME'].', onder vermelding van het factuurnummer.').'<br /><br />
 
                             Met vriendelijke groeten,<br /><br />
 
@@ -82,7 +83,6 @@
                             '.$_CFG['companyPhone'].'<br />
                             '.$_CFG['companyEmail'].'<br />';
         
-        ///Zorg ervoor dat u het totaalbedrag van deze factuur voor de vervaldatum heeft overgemaakt naar '.$_CFG['companyIBAN'].' ten name van '.$_CFG['COMPANY_NAME'].', onder vermelding van het factuurnummer.
         if(!$mail->send())
         {
             Misc::sqlUpdate("log", "success", 0, "logId", $lid);

@@ -2,10 +2,10 @@
 -- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Jul 22, 2020 at 03:08 AM
--- Server version: 10.4.11-MariaDB
--- PHP Version: 7.4.5
+-- Host: localhost
+-- Generation Time: Aug 10, 2020 at 04:25 PM
+-- Server version: 10.4.13-MariaDB
+-- PHP Version: 7.4.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `cashier`
+-- Database: `cashier_server`
 --
 
 -- --------------------------------------------------------
@@ -29,14 +29,14 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `cashsession` (
   `cashSessionId` int(11) NOT NULL,
-  `cashRegisterId` int(11) NOT NULL,
-  `openedBy` int(11) NOT NULL,
-  `closedBy` int(11) NOT NULL,
-  `cashIn` decimal(18,2) NOT NULL,
-  `cashOut` decimal(18,2) NOT NULL,
-  `cutOut` decimal(18,2) NOT NULL,
-  `margin` decimal(18,2) NOT NULL,
-  `openDate` varchar(255) NOT NULL,
+  `cashRegisterId` int(11) DEFAULT NULL,
+  `openedBy` int(11) DEFAULT NULL,
+  `closedBy` int(11) DEFAULT NULL,
+  `cashIn` decimal(18,2) DEFAULT NULL,
+  `cashOut` decimal(18,2) DEFAULT NULL,
+  `cutOut` decimal(18,2) DEFAULT NULL,
+  `margin` decimal(18,2) DEFAULT NULL,
+  `openDate` varchar(255) DEFAULT NULL,
   `closeDate` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -59,7 +59,7 @@ CREATE TABLE `cash_registers` (
 --
 
 INSERT INTO `cash_registers` (`id`, `crName`, `crStaticIP`, `status`, `currentSession`) VALUES
-(0, 'Kassa 1', '127.0.0.1', 'LoggedOff', 0);
+(0, 'Kassa 1', '127.0.0.1', 'LoggedOn', 1);
 
 -- --------------------------------------------------------
 
@@ -71,9 +71,10 @@ CREATE TABLE `contract` (
   `contractId` int(11) NOT NULL,
   `customerId` int(11) NOT NULL,
   `startDate` varchar(128) NOT NULL,
-  `planningPeriod` varchar(64) NOT NULL,
-  `planningDay` int(11) NOT NULL,
-  `sendOrderNow` tinyint(1) NOT NULL,
+  `planningPeriod` varchar(64) NOT NULL DEFAULT 'month',
+  `planningDay` int(11) NOT NULL DEFAULT 1,
+  `sendOrderNow` tinyint(1) NOT NULL DEFAULT 0,
+  `directDebit` tinyint(1) NOT NULL DEFAULT 0,
   `items` varchar(8192) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -85,15 +86,15 @@ CREATE TABLE `contract` (
 
 CREATE TABLE `customers` (
   `customerId` int(11) NOT NULL,
-  `initials` varchar(8) NOT NULL,
-  `familyName` varchar(255) NOT NULL,
-  `companyName` varchar(512) NOT NULL,
-  `streetName` varchar(512) NOT NULL,
-  `city` varchar(512) NOT NULL,
-  `postalCode` varchar(8) NOT NULL,
-  `phoneNumber` varchar(32) NOT NULL,
-  `mobileNumber` varchar(32) NOT NULL,
-  `email` varchar(96) NOT NULL,
+  `initials` varchar(8) DEFAULT NULL,
+  `familyName` varchar(255) DEFAULT NULL,
+  `companyName` varchar(512) DEFAULT NULL,
+  `streetName` varchar(512) DEFAULT NULL,
+  `city` varchar(512) DEFAULT NULL,
+  `postalCode` varchar(8) DEFAULT NULL,
+  `phoneNumber` varchar(32) DEFAULT NULL,
+  `mobileNumber` varchar(32) DEFAULT NULL,
+  `email` varchar(96) DEFAULT NULL,
   `receipts` varchar(4096) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -170,8 +171,8 @@ CREATE TABLE `options` (
 -- Dumping data for table `options`
 --
 
-INSERT INTO `options` (`id`, `companyName`, `vat`, `currency`, `smtpHost`, `smtpName`, `smtpUser`, `smtpPass`, `smtpSecure`, `smtpPort`, `companyAddress`, `companyPhone`, `companyFax`, `companyEmail`, `companyWebsite`, `companyKvk`, `companyIBAN`, `companyVATNo`, `disclaimer`, `invoiceExpireDays`) VALUES
-(1, '', '1.0', '€', '', '', '', '', '', '', '', '', '', '', '', 'KVK nr. ', 'IBAN ', 'BTW nr. ', '', 14);
+INSERT INTO `options` (`id`, `companyName`, `vat`, `VATText`, `currency`, `smtpHost`, `smtpName`, `smtpUser`, `smtpPass`, `smtpSecure`, `smtpPort`, `companyAddress`, `companyPhone`, `companyFax`, `companyEmail`, `companyWebsite`, `companyKvk`, `companyIBAN`, `companyVATNo`, `disclaimer`, `invoiceExpireDays`) VALUES
+(1, 'Company Name', '1.21', 'VAT', '&EURO;', '', '', '', '', '', '', '', '', '', '', '', 'KVK nr. ', 'IBAN ', 'BTW nr. ', '', 14);
 
 -- --------------------------------------------------------
 
@@ -181,15 +182,15 @@ INSERT INTO `options` (`id`, `companyName`, `vat`, `currency`, `smtpHost`, `smtp
 
 CREATE TABLE `receipt` (
   `receiptId` bigint(20) NOT NULL,
-  `creator` int(11) NOT NULL,
-  `parentSession` int(11) NOT NULL,
-  `items` varchar(8192) NOT NULL,
+  `creator` int(11) DEFAULT NULL,
+  `parentSession` int(11) DEFAULT NULL,
+  `items` varchar(8192) DEFAULT NULL,
   `receiptDesc` varchar(4096) DEFAULT NULL,
-  `createDt` varchar(128) NOT NULL,
+  `createDt` varchar(128) DEFAULT NULL,
   `paidDt` varchar(128) DEFAULT NULL,
-  `customerId` int(11) NOT NULL,
-  `cashValue` decimal(18,2) NOT NULL,
-  `pinValue` decimal(18,2) NOT NULL,
+  `customerId` int(11) DEFAULT NULL,
+  `cashValue` decimal(18,2) NOT NULL DEFAULT 0.00,
+  `pinValue` decimal(18,2) NOT NULL DEFAULT 0.00,
   `paymentMethod` varchar(128) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

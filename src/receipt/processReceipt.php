@@ -29,6 +29,11 @@ else
         $cashValue = $_GET['cash'];
         $pinValue = $_GET['pin'];
     }
+    else     
+    {
+        $cashValue = 0.0;
+        $pinValue = 0.0;
+    }
 
     //Register receipt as paid into the database
     $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);

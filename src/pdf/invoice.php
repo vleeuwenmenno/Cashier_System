@@ -2,6 +2,8 @@
     include_once("../includes.php");
 
     $custId = Misc::sqlGet("customerId", "contract", "contractId", $_POST['cid'])['customerId'];
+    $dd = Misc::sqlGet("directDebit", "contract", "contractId", $_POST['cid'])['directDebit'];
+    $planningPeriod = Misc::sqlGet("planningPeriod", "contract", "contractId", $_POST['cid'])['planningPeriod'];
 
     $time = new DateTime(Misc::sqlGet("orderDate", "log", "logId", $_POST['lid'])['orderDate']);
     $expireTime = new DateTime($time->format("Y-m-d"));
@@ -28,7 +30,7 @@
                 <div id="invoice">
                     <div><span>#<?=str_pad($_POST['lid'], 8, '0', STR_PAD_LEFT)?></span> FACTUURNUMMER</div>
                     <div><span><?=strftime("%d %B %Y", $time->getTimestamp()), PHP_EOL?></span> DATUM</div>
-                    <div><span><?=strftime("%d %B %Y", $expireTime->getTimestamp()), PHP_EOL?></span> VERVALDATUM</div>
+                    <?php if ($dd == 0) { ?><div><span><?=strftime("%d %B %Y", $expireTime->getTimestamp()), PHP_EOL?></span> VERVALDATUM</div><?php } ?>
                 </div>
                 <div id="project">
                     <div><span>BEDRIJF</span> <?=Misc::sqlGet("companyName", "customers", "customerId", $custId)['companyName'] != ""? Misc::sqlGet("companyName", "customers", "customerId", $custId)['companyName']: "Particulier"?></div>
@@ -100,10 +102,23 @@
                         </tr>
                     </tbody>
                 </table>
-                <?php if ($_POST['notice'] != "") {?>
+                <?php if ($_POST['notice'] != "" || $dd == 1) {?>
                 <div id="notices">
                     <div>OPMERKING:</div>
                     <div class="notice">&emsp;<?=urldecode($_SESSION['pdf']['notice'])?></div>
+
+                    <?php 
+                        if ($planningPeriod == "month")
+                            $when = "maandelijks";
+                        else if ($planningPeriod == "quarter")
+                            $when = "per kwartaal";
+                        else if ($planningPeriod == "year")
+                            $when = "jaarlijks";
+
+                        if ($dd == 1) {
+                    ?>
+                    <div class="notice"><span style="color: red;">LET OP! Deze factuur wordt automatisch geïncasseerd, dit gebeurt <?=$when?>. U hoeft deze nota niet handmatig te betalen.</span></div>
+                    <?php } ?>
                 </div>
                 <?php } ?>
             </main>

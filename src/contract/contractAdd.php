@@ -1,7 +1,7 @@
 <?php
 include_once("../includes.php");
 
-if ($_GET['startDate'] != "" && $_GET['planningPeriod'] != "" && $_GET['planningDay'] != "" && $_GET['sendNow'] != "")
+if ($_GET['startDate'] != "" && $_GET['planningPeriod'] != "" && $_GET['planningDay'] != "" && $_GET['sendNow'] != "" && $_GET['directDebit'] != "")
 {
 	$json = json_encode($_SESSION['receipt']['items']);
 	$db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
@@ -28,7 +28,10 @@ if ($_GET['startDate'] != "" && $_GET['planningPeriod'] != "" && $_GET['planning
 		die('Unable to connect to database [' . $db->connect_error . ']');
 	}
 
-	$sql = "INSERT INTO contract (customerId, startDate, planningPeriod, planningDay, items) VALUES ('" . $_SESSION['receipt']['customer'] . "', '" . $_GET['startDate'] . "', '" . $_GET['planningPeriod'] . "', '" . $_GET['planningDay'] . "', '" . urlencode($json) . "');";
+
+	$sn = $_GET['sendNow'] == "true" ? 1 : 0;
+	$dd = $_GET['directDebit'] == "true" ? 1 : 0;
+	$sql = "INSERT INTO contract (customerId, startDate, planningPeriod, planningDay, items, directDebit, sendOrderNow) VALUES ('" . $_SESSION['receipt']['customer'] . "', '" . $_GET['startDate'] . "', '" . $_GET['planningPeriod'] . "', '" . $_GET['planningDay'] . "', '" . urlencode($json) . "', '$dd', '$sn');";
 
 	if(!$result = $db->query($sql))
 	{
