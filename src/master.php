@@ -32,14 +32,19 @@
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <div class="navbar-header" style="max-height: 42px;">
+                    <button type="button" style="max-height: 42px;" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
                     <a class="navbar-brand" href="#"><?php echo $_CFG['COMPANY_NAME'] . ' - ' . $_SESSION['login_ok']['nickName']; ?></a>
+                    <span style="font-size: 7pt;
+                                color: white;
+                                display: block;
+                                position: relative;
+                                top: -12px; left: 70%;"><?=$_CFG['VERSION']?></span>
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->

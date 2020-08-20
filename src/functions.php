@@ -8,7 +8,8 @@ include('classes/Calculate.php');
 
 
 $_CFG = array(
-  'HOST_NAME' => 'cashier.local'
+  'HOST_NAME' => 'cashier.local',
+  'VERSION' => 'v2.0.8 (Beta)'
 );
 
 $_CFG['COMPANY_NAME'] = Misc::sqlGet("companyName", "options", "id", 1)['companyName'];

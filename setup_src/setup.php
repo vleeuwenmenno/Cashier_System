@@ -1,5 +1,5 @@
 <?php 
-$version = "2.0.7-beta";
+$version = "2.0.8-beta";
 function copyfiles($source_folder, $target_folder, $move=false) {
     $source_folder=trim($source_folder, '/').'/';
     $target_folder=trim($target_folder, '/').'/';
