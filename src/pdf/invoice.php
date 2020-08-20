@@ -82,8 +82,8 @@
                             next($json);
                         }
                         
-                        $totalVat = $totalIncVat * 0.21;
-                        $totalExVat = $totalIncVat - $totalVat;
+                        $totalVat = $totalIncVat - ($totalIncVat / 1.21);
+                        $totalExVat = $totalIncVat / 1.21;
                         ?>
                         <tr>
                             <?php if ($_POST['exvat']) { ?><td class="total"></td><?php } ?>

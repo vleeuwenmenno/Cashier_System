@@ -171,37 +171,8 @@ if (isset($_GET['new']))
                             echo '        <span id="editPrice' . key($_SESSION['receipt']['items']) . '">';
                             echo '            '.$_CFG['CURRENCY'].'&nbsp;' . number_format(round(round($total, 2) * $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['count'], 2), 2, ",", ".") . '</span>';
                             echo '        </span>';
-                            echo '        <div id="popover-title' . key($_SESSION['receipt']['items']) . '" class="hidden">';
-                            echo '            <b>Prijs berekening</b>';
-                            echo '        </div>';
-                            echo '        <div id="popover-content' . key($_SESSION['receipt']['items']) . '" class="hidden">';
-                            echo '            <div>';
-                            echo '            Inkoop: '.$_CFG['CURRENCY'].'&nbsp;' . number_format(round($purchase, 2), 2, ",", ".") . '<br/>
-                                              '.$_CFG['VATText'].'. : &nbsp;&nbsp;&nbsp;'.$_CFG['CURRENCY'].'&nbsp;' . number_format(round($vatOnly, 2), 2, ",", ".") . '<br />
-                                              Marge: '.$_CFG['CURRENCY'].'&nbsp;' . number_format(round($total - (round($purchase, 2) + round($vatOnly, 2)), 2), 2, ",", ".") . '<br />
-                                              P.S: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$_CFG['CURRENCY'].'&nbsp; ' . number_format(round($total, 2), 2, ",", ".") . '<br />
-                                              Totaal:&nbsp; '.$_CFG['CURRENCY'].'&nbsp;' . number_format(round(round($total, 2) * $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['count'], 2), 2, ",", ".") . '<br />';
-                            echo '            </div>';
-                            echo '        </div>';
                             echo '    </th>';
-                            echo '</tr>';
-
-                            ?>
-                            <script>
-                                $(document).ready(function () {
-                                    $("#<?=key($_SESSION['receipt']['items'])?>").popover({
-                                        html : true,
-                                        content: function() {
-                                            return $("#popover-content<?=key($_SESSION['receipt']['items'])?>").html();
-                                        },
-                                        title: function() {
-                                            return $("#popover-title<?=key($_SESSION['receipt']['items'])?>").html();
-                                        }
-                                    });
-                                });
-                            </script>
-                            <?php
-                            
+                            echo '</tr>';                            
                             next($_SESSION['receipt']['items']);
                         }
                     ?>

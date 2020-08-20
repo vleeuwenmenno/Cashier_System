@@ -48,23 +48,12 @@ if (isset($_GET['sTerm']))
 
         $total = Misc::calculate(round($row['priceExclVat'] * $_CFG['VAT'], 2) . " " . str_replace(',', '.', $row['priceModifier']));
         $purchase = $row['priceExclVat'];
-        $vatOnly = round(round($row['priceExclVat'] * $_CFG['VAT'], 2) - $row['priceExclVat'], 2);
+        $vatOnly = $total - ($total / 1.21);
 
         echo '    <td><span class="priceClickable" id="popOver' . $row['nativeId'] . '" data-placement="bottom" data-trigger="hover">';
         echo '        <a>';
         echo '            '.$_CFG['CURRENCY'].'&nbsp;' . number_format(round($total, 2), 2, ",", ".") . '</a>';
         echo '        </span>';
-        echo '        <div id="popover-title' . $row['nativeId'] . '" class="hidden">';
-        echo '            <b>Prijs berekening</b>';
-        echo '        </div>';
-        echo '        <div id="popover-content' . $row['nativeId'] . '" class="hidden">';
-        echo '            <div>';
-        echo '            Inkoop: '.$_CFG['CURRENCY'].'&nbsp;' . number_format(round($purchase, 2), 2, ",", ".") . '<br/>
-                            '.$_CFG['VATText'].'. : &nbsp;&nbsp;&nbsp;'.$_CFG['CURRENCY'].'&nbsp;' . number_format(round($vatOnly, 2), 2, ",", ".") . '<br />
-                            Marge: '.$_CFG['CURRENCY'].'&nbsp;' . number_format(round($total - (round($purchase, 2) + round($vatOnly, 2)), 2), 2, ",", ".") . '<br />
-                            P.S: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$_CFG['CURRENCY'].'&nbsp; ' . number_format(round($total, 2), 2, ",", ".") . '<br />';
-        echo '            </div>';
-        echo '        </div>';
         echo '    </td>';
 
         if (isset($_SESSION['receipt']['status']) && $_SESSION['receipt']['status'] == "open")
@@ -172,18 +161,7 @@ if (isset($_GET['sTerm']))
                             align: "right"
                         }
                     });
-                });';
-
-        echo       '$("#popOver' . $row['nativeId'] . '").popover({
-                        html : true,
-                        content: function() {
-                            return $("#popover-content' . $row['nativeId'] . '").html();
-                        },
-                        title: function() {
-                            return $("#popover-title' . $row['nativeId'] . '").html();
-                        }
-                    });
-
+                });
                     $("#item' . $row['nativeId'] . 'Btn").on("click", function () {
                     $("#loaderAnimation").fadeIn();
                     $("#PageContent").load("item/viewItem.php?id=' . $row['nativeId'] . '");
@@ -220,23 +198,12 @@ if (isset($_GET['sTerm']))
 
                 $total = Misc::calculate(round($row['priceExclVat'] * $_CFG['VAT'], 2) . " " . str_replace(',', '.', $row['priceModifier']));
                 $purchase = $row['priceExclVat'];
-                $vatOnly = round(round($row['priceExclVat'] * $_CFG['VAT'], 2) - $row['priceExclVat'], 2);
+                $vatOnly = $total - ($total / 1.21);
 
                 echo '    <td><span class="priceClickable" id="popOver' . $row['nativeId'] . '" data-placement="bottom" data-trigger="hover">';
                 echo '        <a>';
                 echo '            '.$_CFG['CURRENCY'].'&nbsp;' . number_format(round($total, 2), 2, ",", ".") . '</a>';
                 echo '        </span>';
-                echo '        <div id="popover-title' . $row['nativeId'] . '" class="hidden">';
-                echo '            <b>Prijs berekening</b>';
-                echo '        </div>';
-                echo '        <div id="popover-content' . $row['nativeId'] . '" class="hidden">';
-                echo '            <div>';
-                echo '            Inkoop: '.$_CFG['CURRENCY'].'&nbsp;' . number_format(round($purchase, 2), 2, ",", ".") . '<br/>
-                                  '.$_CFG['VATText'].'. : &nbsp;&nbsp;&nbsp;'.$_CFG['CURRENCY'].'&nbsp;' . number_format(round($vatOnly, 2), 2, ",", ".") . '<br />
-                                  Marge: '.$_CFG['CURRENCY'].'&nbsp;' . number_format(round($total - (round($purchase, 2) + round($vatOnly, 2)), 2), 2, ",", ".") . '<br />
-                                  P.S: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$_CFG['CURRENCY'].'&nbsp; ' . number_format(round($total, 2), 2, ",", ".") . '<br />';
-                echo '            </div>';
-                echo '        </div>';
                 echo '    </td>';
 
                 if (isset($_SESSION['receipt']['status']) && $_SESSION['receipt']['status'] == "open")
@@ -344,17 +311,7 @@ if (isset($_GET['sTerm']))
                                     align: "right"
                                 }
                             });
-                        });';
-
-                echo       '$("#popOver' . $row['nativeId'] . '").popover({
-                                html : true,
-                                content: function() {
-                                  return $("#popover-content' . $row['nativeId'] . '").html();
-                                },
-                                title: function() {
-                                  return $("#popover-title' . $row['nativeId'] . '").html();
-                                }
-                            });
+                        });
 
                             $("#item' . $row['nativeId'] . 'Btn").on("click", function () {
                             $("#loaderAnimation").fadeIn();

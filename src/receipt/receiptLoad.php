@@ -11,7 +11,7 @@ function process($row)
             <td><a id="viewReceipt<?=$row['receiptId']?>" href="#">#<?=str_pad($row['receiptId'], 8, '0', STR_PAD_LEFT)?></a> - <?php if ($row['paymentMethod'] == "CASH") { echo "Kontant"; } else if ($row['paymentMethod'] == "PIN") { echo 'Pin'; } else if ($row['paymentMethod'] == "BANK") { echo 'Bankoverdracht'; } else if ($row['paymentMethod'] == "iDeal") { echo 'iDeal'; } else if ($row['paymentMethod'] == "PC") { echo 'Pin en Kontant'; } ?></td>
             <td><?=Misc::sqlGet("createDt", "receipt", "receiptId", $row['receiptId'])['createDt']?></td>
             <td><?=$row['customerId'] != 0 ? Misc::sqlGet("*", "customers", "customerId", $row['customerId'])['initials']." ".Misc::sqlGet("*", "customers", "customerId", $row['customerId'])['familyName']." | ".(Misc::sqlGet("*", "customers", "customerId", $row['customerId'])['companyName'] != "" ? Misc::sqlGet("*", "customers", "customerId", $row['customerId'])['companyName']: "Particulier") : "Geen klant"?></td>
-            <td><?=$_CFG['CURRENCY']?>&nbsp;<?=number_format(round(Calculate::getReceiptTotal(Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId'])['items'])['total'], 2), 2, ",", ".")?></td>
+            <td><?=Misc::sqlGet("currency", "options", "id", 1)['currency']?>&nbsp;<?=number_format(round(Calculate::getReceiptTotal(Misc::sqlGet("items", "receipt", "receiptId", $row['receiptId'])['items'])['total'], 2), 2, ",", ".")?></td>
             <td>
                 <a id="viewReceipt<?=$row['receiptId']?>Btn" href="#">PDF Openen</a>
                 <?php if ($row['paymentMethod'] == "") { ?>

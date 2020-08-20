@@ -2,6 +2,36 @@
 include_once("includes.php");
 Permissions::checkSession(basename($_SERVER['REQUEST_URI']));
 
+if (!isset($_SESSION['receipt']['status']) || $_SESSION['receipt']['status'] != 'open')
+{
+    $thisIp = $_SERVER['REMOTE_ADDR'];
+    $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
+
+    if($db->connect_errno > 0)
+    {
+        die('Unable to connect to database [' . $db->connect_error . ']');
+    }
+
+    //Create the recept (ALTER TABLE receipt AUTO_INCREMENT = 20170000)
+    $sql = "INSERT INTO receipt (creator, items, createDt, parentSession) VALUES ('" . $_SESSION['login_ok']['userId'] . "', '', '" .  date("H:i:s d-m-Y") . "', '" . Misc::sqlGet("currentSession", "cash_registers", "crStaticIP", $thisIp)['currentSession'] . "')";
+
+    if(!$result = $db->query($sql))
+    {
+        die('There was an error running the query [' . $db->error . ']');
+    }
+
+    $_SESSION['receipt']['status'] = 'open';
+    $_SESSION['receipt']['saved'] = false;
+    $_SESSION['receipt']['id'] = mysqli_insert_id($db);
+    ?>
+    <script>
+        $(document).ready(function() {
+            $("#newReceipt").show();
+        });
+    </script>
+    <?php
+}
+
 if (isset($_GET['new']))
 {
 ?>
