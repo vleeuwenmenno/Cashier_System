@@ -635,7 +635,7 @@ else
                             $('#searchBar').val('');
                             $("#isBarCodeMode").prop('checked', true);
 
-                            $('#searchBar').prop('placeholder', 'Druk op enter om het artikel toe tevoegen aan de bon...');
+                            $('#searchBar').prop('placeholder', 'Druk op enter om het artikel toe tevoegen aan de factuur...');
                             barCodemode = true;
 
                             e.preventDefault();

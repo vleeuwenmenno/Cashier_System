@@ -2,6 +2,10 @@ body {
 zoom: 110%;
 }
 
+#mennoName {
+  color: #a1a1a1;
+}
+
 .navbar-brand  {
   background-color: #333333;
 }

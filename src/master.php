@@ -39,12 +39,14 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#"><?php echo $_CFG['COMPANY_NAME'] . ' - ' . $_SESSION['login_ok']['nickName']; ?></a>
-                    <span style="font-size: 7pt;
-                                color: white;
-                                display: block;
-                                position: relative;
-                                top: -12px; left: 70%;"><?=$_CFG['VERSION']?></span>
+                    <div class="navbar-brand" style="display: grid;">
+                        <?php echo $_CFG['COMPANY_NAME'] . ' - ' . $_SESSION['login_ok']['nickName']; ?>
+                        <span style="font-size: 7pt;
+                                    color: white;
+                                    text-align: center;
+                                    position: relative;
+                                    top: -6px;"><?=$_CFG['VERSION']?></span>
+                    </div>
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
@@ -57,11 +59,11 @@
                             if (isset($_SESSION['receipt']['order'])) 
                                 echo '<li><a href="#" id="newReceipt"><span class="glyphicon glyphicon-file"></span> Factuur specificatie</a></li>';
                             else
-                                echo '<li><a href="#" id="newReceipt"><span class="glyphicon glyphicon-file"></span> Bon #' . str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT) .'</a></li>';
+                                echo '<li><a href="#" id="newReceipt"><span class="glyphicon glyphicon-file"></span> Factuur #' . str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT) .'</a></li>';
                         }
                         else
                         {
-                            echo '<li><a href="#" id="newReceipt" style="display: none;"><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;&nbsp; Nieuwe Bon</a></li>';
+                            echo '<li><a href="#" id="newReceipt" style="display: none;"><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;&nbsp; Nieuwe factuur</a></li>';
                         }
                         ?>
                         <?php if (Misc::crIsActive()) { ?>
@@ -74,13 +76,14 @@
                             </ul>
                         </li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Bonnen <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Facturen <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="#" id="searchReceipt"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;Zoeken</a></li>
-                                <li><a href="#" id="newReceiptBtn"><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;&nbsp; Nieuwe Bon</a></li>
+                                <li><a href="#" id="newReceiptBtn"><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;&nbsp; Nieuwe factuur</a></li>
                             </ul>
                         </li>
                         <?php } ?>
+                        <?php if ($_CFG['contractSystemChk']) { ?>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Contracten <span class="caret"></span></a>
                             <ul class="dropdown-menu">
@@ -89,6 +92,7 @@
                                 <li><a href="#" id="createContract"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;Nieuw contract</a></li>
                             </ul>
                         </li>
+                        <?php } ?>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Klanten <span class="caret"></span></a>
                             <ul class="dropdown-menu">
@@ -282,7 +286,7 @@
                 transform: translate(-50%, -50%);
                 font-size: 10px;
                 top: -8px;">
-                Ontwikkelt door <span id="mennoName">Menno van Leeuwen</span>
+                Ontwikkelt door <a href="https://menno.vleeuwen.me/contact.php" id="mennoName">Menno van Leeuwen</a>
             </span>
     </body>
 </html>

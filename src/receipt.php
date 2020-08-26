@@ -7,7 +7,7 @@ if (isset($_GET['recover']))
     $_SESSION['receipt'] = $_SESSION['receipt']['old'];
 
     ?>
-    <span id="receiptNo"><h2>Bon #<?php if (isset($_SESSION['receipt']['order'])) echo "Factuur specificatie"; else echo str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT); ?></h2></span>
+    <span id="receiptNo"><h2>Factuur nr.&nbsp;<?php if (isset($_SESSION['receipt']['order'])) echo "Factuur specificatie"; else echo str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT); ?></h2></span>
 
     <script>
         $(document).ready(function ()
@@ -25,7 +25,7 @@ if (isset($_GET['recover']))
 
             $.notify({
                 icon: 'glyphicon glyphicon-trash',
-                title: '<b>Bon is successvol herstelt</b><br / >',
+                title: '<b>Factuur is successvol herstelt</b><br / >',
                 message: ''
             }, {
                 // settings
@@ -74,7 +74,7 @@ else if (isset($_GET['new']))
     }
 ?>
 <div id="cartForm">
-        <span id="receiptNo"><h2>Bon #<?php if (isset($_SESSION['receipt']['order'])) echo "Factuur specificatie"; else echo str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT); ?></h2></span>
+        <span id="receiptNo"><h2>Factuur nr.&nbsp;<?php if (isset($_SESSION['receipt']['order'])) echo "Factuur specificatie"; else echo str_pad($_SESSION['receipt']['id'], 4, '0', STR_PAD_LEFT); ?></h2></span>
 
         <div class="panel panel filterable">
             <div class="panel-heading">
@@ -94,7 +94,7 @@ else if (isset($_GET['new']))
                 ?>
             </div>
 
-            Bon omschrijving: <input type="text" class="form-control" id="receiptDescription"></input>
+            Factuur omschrijving: <input type="text" class="form-control" id="receiptDescription"></input>
             <table class="table">
                 <thead>
                     <tr class="filters">
@@ -103,7 +103,14 @@ else if (isset($_GET['new']))
                                 <input type="text" class="form-control" placeholder="" disabled />
                             </a>
                         </th>
-                        <th width="64px">
+                        <?php if ($_CFG['multiplierOnItemsChk']) { ?> 
+                        <th width="96px">
+                            <a href="#" class="mustFocus">
+                                <input type="text" class="form-control" placeholder="Personen" disabled />
+                            </a>
+                        </th>
+                        <?php } ?>
+                        <th width="72px">
                             <a href="#" class="mustFocus">
                                 <input type="text" class="form-control" placeholder="Aantal" disabled />
                             </a>
@@ -132,8 +139,13 @@ else if (isset($_GET['new']))
 
                             echo '<tr>';
                             echo '    <th><button id="trash' .  key($_SESSION['receipt']['items']) . '" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" style="font-size: 12px;"></span></button></th>';
-                            echo '    <th><input class="form-control" style="width: 156px; display: none;" id="editable' . key($_SESSION['receipt']['items']) . '" value="' . $val['count'] . '" type="text" name="type"/><a style="float: left;" href="javascript:void(0);" id="editAmount' . key($_SESSION['receipt']['items']) . '">' . $val['count'] . '</a></th>';
                             
+                            if ($_CFG['multiplierOnItemsChk'])
+                            {
+                                echo '    <th><input class="form-control" style="width: 156px; display: none;" id="editableMultiplier' . key($_SESSION['receipt']['items']) . '" value="' . $val['multiplier'] . '" type="text" name="type"/><a style="float: left;" href="javascript:void(0);" id="editAmountMultiplier' . key($_SESSION['receipt']['items']) . '">' . $val['multiplier'] . '</a></th>';
+                            }         
+
+                            echo '    <th><input class="form-control" style="width: 156px; display: none;" id="editable' . key($_SESSION['receipt']['items']) . '" value="' . $val['count'] . '" type="text" name="type"/><a style="float: left;" href="javascript:void(0);" id="editAmount' . key($_SESSION['receipt']['items']) . '">' . $val['count'] . '</a></th>';
                             echo '    <th>';
 
                             if ($_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['itemDesc'] == "")
@@ -185,7 +197,7 @@ else if (isset($_GET['new']))
                                                                 $.notify({
                                                                     icon: \'fa fa-check fa-2x\',
                                                                     title: \'<b>Artikel naam veranderd</b><br / >\',
-                                                                    message: \'Artikel naam is voor deze bon veranderd.\'
+                                                                    message: \'Artikel naam is voor deze factuur veranderd.\'
                                                                 }, {
                                                                     // settings
                                                                     type: \'success\',
@@ -222,7 +234,7 @@ else if (isset($_GET['new']))
                                       </th>';
                             echo '    <th><span class="priceClickable" id="' . key($_SESSION['receipt']['items']) . '" data-placement="bottom" data-trigger="hover">';
                             echo '        <a href="javascript:void(0);" id="editPrice' . key($_SESSION['receipt']['items']) . '">';
-                            echo '            '.$_CFG['CURRENCY'].'&nbsp;' . number_format(round(round($total, 2) * $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['count'], 2), 2, ",", ".") . '</a>';
+                            echo '            '.$_CFG['CURRENCY'].'&nbsp;' . number_format(round(round(round($total, 2) * $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['count'], 2) * $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['multiplier'], 2), 2, ",", ".") . '</a>';
                             echo '        </span>';
                             echo '    </th>';
                             echo '</tr>';
@@ -285,7 +297,7 @@ else if (isset($_GET['new']))
                                               <label><input type="checkbox" value="" id="absolutePrice' . key($_SESSION['receipt']['items']) . '" checked>Absolute prijs berekening</label>
                                             </div>
                                             <div class="checkbox">
-                                              <label><input type="checkbox" value="" id="global' . key($_SESSION['receipt']['items']) . '" checked>Artikel prijs aanpassen voor alleen deze bon.</label>
+                                              <label><input type="checkbox" value="" id="global' . key($_SESSION['receipt']['items']) . '" checked>Artikel prijs aanpassen voor alleen deze factuur.</label>
                                             </div>
                                         </div>
                                         <div class="modal-footer" id="stockWarningFooter">
@@ -423,6 +435,58 @@ else if (isset($_GET['new']))
                                                 }
                                             );
                                         }
+                                    }
+                                });
+
+                                $("#editAmountMultiplier' . key($_SESSION['receipt']['items']) . '").click(function() {
+                                    var $this = $(this);
+                                    var text = $this.text();
+
+                                    if(text == "Aanpassen")
+                                    {
+                                        if ($("#editableMultiplier' . key($_SESSION['receipt']['items']) . '").val() != "0")
+                                        {
+                                            $("#editableMultiplier' . key($_SESSION['receipt']['items']) . '").css("display", "none");
+                                            $this.text($("#editableMultiplier' . key($_SESSION['receipt']['items']) . '").val());
+
+                                            $.get(
+                                                "receipt/updateMultiplierAmount.php",
+                                                {
+                                                    multiplier: $("#editableMultiplier' . key($_SESSION['receipt']['items']) . '").val(),
+                                                    nativeId: "' . key($_SESSION['receipt']['items']) . '"
+                                                },
+                                                function (data)
+                                                {
+                                                    $("#pageLoaderIndicator").fadeIn();
+                                                    $("#PageContent").load("receipt.php?new", function () {
+                                                        $("#pageLoaderIndicator").fadeOut();
+                                                    });
+                                                }
+                                            );
+
+                                            var priceOne = ' . Misc::calculate($_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['priceAPiece']['priceExclVat'] . ' ' . $_SESSION['receipt']['items'][key($_SESSION['receipt']['items'])]['priceAPiece']['priceModifier']) . ';
+                                            var total = priceOne * parseInt($("#editableMultiplier' . key($_SESSION['receipt']['items']) . '").val());
+                                            $("#editPrice' . key($_SESSION['receipt']['items']) . '").val(total);
+                                        }
+                                        else
+                                        {
+                                            $.get(
+                                                "receipt/updateMultiplierAmount.php",
+                                                {
+                                                    multiplier: 1,
+                                                    nativeId: "' . key($_SESSION['receipt']['items']) . '"
+                                                },
+                                                function (data)
+                                                {
+                                                    $("#trash' .  key($_SESSION['receipt']['items']) . '").click();
+                                                }
+                                            );
+                                        }
+                                    }
+                                    else
+                                    {
+                                         $this.text("Aanpassen");
+                                         $("#editableMultiplier' . key($_SESSION['receipt']['items']) . '").toggle();
                                     }
                                 });
 
@@ -564,7 +628,7 @@ else if (isset($_GET['new']))
                                         $.notify({
                                             icon: \'glyphicon glyphicon-trash\',
                                             title: \'<b>' . urldecode(Items::getField("itemName", key($_SESSION['receipt']['items']))) . '</b><br / >\',
-                                            message: \'<br />Verwijderd van bon <a style="color: white;" href="#" id="undo' . key($_SESSION['receipt']['items']) . '">(Ongedaan maken)</a>\'
+                                            message: \'<br />Verwijderd van factuur <a style="color: white;" href="#" id="undo' . key($_SESSION['receipt']['items']) . '">(Ongedaan maken)</a>\'
                                         }, {
                                             // settings
                                             type: \'danger\',
@@ -588,14 +652,15 @@ else if (isset($_GET['new']))
                                               "receipt/addItem.php",
                                               {
                                                   itemId: \'' . key($_SESSION['receipt']['items']) . '\',
-                                                  itemCount: \'1\'
+                                                  itemCount: \'1\',
+                                                  itemMultiplier: \'1\'
                                               },
                                               function (data)
                                               {
                                                 $.notify({
                                                     icon: \'glyphicon glyphicon-trash\',
                                                     title: \'<b>' . urldecode(Items::getField("itemName", key($_SESSION['receipt']['items']))) . '</b><br / >\',
-                                                    message: \'<br />Toegevoegt aan bon.\'
+                                                    message: \'<br />Toegevoegt aan factuur.\'
                                                 }, {
                                                     // settings
                                                     type: \'success\',
@@ -630,6 +695,98 @@ else if (isset($_GET['new']))
                     ?>
                 </tbody>
             </table>
+
+            
+
+            <?php if ($_CFG['showCustomerFieldsChk']) { ?>
+			<h3>Klant gegevens</h3>
+            <div class="row">
+                <div class="col-xs-6">
+                    <?php if (!isset($_SESSION['receipt']['customer'])) { ?>
+                    <div class="form-group">
+                        <label for="initials">Voorletters: </label>
+                        <input type="text" class="form-control" id="initials" placeholder="A.">
+                    </div>
+                    <div class="form-group">
+                        <label for="familyname">Achternaam: </label>
+                        <input type="text" class="form-control" id="familyname" placeholder="Bakker">
+                    </div>
+                    <div class="form-group">
+                        <label for="street">Straat: </label>
+                        <input type="text" class="form-control" id="street" placeholder="Kerkstraat">
+                    </div>
+                    <?php } ?>
+                    <div class="form-group">
+                        <label for="street">Aankomst: </label>
+                        <div class='input-group date' id='datetimepicker1'>
+                            <input type='text' class="form-control" id="startDate" placeholder="01-01-2020" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="street">Vertrek: </label>
+                        <div class='input-group date' id='datetimepicker2'>
+                            <input type='text' class="form-control" id="startDate" placeholder="01-01-2020" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            const event = new Date();
+                            const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+
+                            $("#startDate").attr("value", event.toLocaleDateString('nl-NL', options));
+
+                            $('#datetimepicker1').datepicker({
+                                format: "dd-mm-yyyy",
+                                calendarWeeks: true,
+                                orientation: "bottom auto",    
+                                viewMode: "days", 
+                                minViewMode: "days",
+                                startDate: "today"
+                            });
+                            $('#datetimepicker2').datepicker({
+                                format: "dd-mm-yyyy",
+                                calendarWeeks: true,
+                                orientation: "bottom auto",    
+                                viewMode: "days", 
+                                minViewMode: "days",
+                                startDate: "today"
+                            });
+                        });
+                    </script>
+                </div>
+                <div class="col-xs-6">
+                    <?php if (!isset($_SESSION['receipt']['customer'])) { ?>
+                    <div class="form-group">
+                        <label for="city">Woonplaats: </label>
+                        <input type="text" class="form-control" id="city" placeholder="Heemskerk">
+                    </div>
+                    <div class="form-group">
+                        <label for="postalCode">Postcode: </label>
+                        <input type="text" class="form-control" id="postalCode" placeholder="0123 AB" />
+                    </div>
+                    <div class="form-group">
+                        <label for="phonehome">Telefoon: </label>
+                        <input type="text" class="form-control" id="phonehome" placeholder="0251 200 627">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email: </label>
+                        <input type="text" class="form-control" id="email" placeholder="abakker@voorbeeld.nl">
+                    </div>
+                    <?php } ?>
+                    <div class="form-group">
+                        <label for="placeNumber">Plaatsnummer: </label>
+                        <input type="number" class="form-control" id="placeNumber" placeholder="21">
+                    </div>
+                </div>
+            </div>
+            <?php } ?>
         </div>
     <div class="row">
         <button type="button" id="payBtn" class="btn btn-success" style="float: left; margin-left: 8px; margin-right: 8px;">Betalen</button>
@@ -661,18 +818,18 @@ else if (isset($_GET['new']))
         </script>
         
         <div class="dropdown" style="float: left; margin-left: 8px; margin-right: 8px;">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Bon opties
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Factuur opties
             <span class="caret"></span></button>
             <ul class="dropdown-menu">
-                <li><button type="button" id="closeReceipt" class="btn btn-default" style="width: 100%;">Bon Sluiten</button></li>
-                <li><button type="button" id="destroyReceipt" class="btn btn-warning" style="width: 100%;">Bon Verwijderen</button></li>
-                <li><button type="button" id="saveReceipt" class="btn btn-primary" style="width: 100%;">Bon Opslaan</button></li>
+                <li><button type="button" id="closeReceipt" class="btn btn-default" style="width: 100%;">Factuur Sluiten</button></li>
+                <li><button type="button" id="destroyReceipt" class="btn btn-warning" style="width: 100%;">Factuur Verwijderen</button></li>
+                <li><button type="button" id="saveReceipt" class="btn btn-primary" style="width: 100%;">Factuur Opslaan</button></li>
             </ul>
         </div>
 
         <?php if (!isset($_SESSION['receipt']['customer'])) { ?><button type="button" id="selectCustomer" class="btn btn-info" style="float: left; margin-left: 8px; margin-right: 8px;">Selecteer klant</button> <?php } ?>
-        <?php if (isset($_SESSION['receipt']['customer'])) { ?><button type="button" id="deselectCustomer" class="btn btn-danger" style="float: left; margin-left: 8px; margin-right: 8px;">Verwijder klant van bon</button> <?php } ?>
-        
+        <?php if (isset($_SESSION['receipt']['customer'])) { ?><button type="button" id="deselectCustomer" class="btn btn-danger" style="float: left; margin-left: 8px; margin-right: 8px;">Verwijder klant van factuur</button> <?php } ?>
+
         <div class="form-group" style="margin-left: 8px; margin-right: 8px;">
             <select class="combobox form-control" id="paymentMethod">
                 <option value="" selected="selected">Selecteer betaal methode</option>
@@ -708,14 +865,14 @@ else if (isset($_GET['new']))
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Bon mailen?</h4>
+                    <h4 class="modal-title">Factuur mailen?</h4>
                 </div>
 
                 <div class="modal-footer">
                     <?php if (isset($_SESSION['receipt']['customer'])) { ?>
                     <div id="mailingSegment">
                         <span style="top: -8px; position: relative;">
-                            Bon emailen naar klant <input type="checkbox" name="emailToCustomer" id="emailToCustomer" 	data-size="small" data-on-text="Ja" data-off-text="Nee" checked></input><br />
+                            Factuur emailen naar klant <input type="checkbox" name="emailToCustomer" id="emailToCustomer" 	data-size="small" data-on-text="Ja" data-off-text="Nee" checked></input><br />
                         </span>
                         <div class="row" id="emailList">
                             <div class="column">
@@ -765,7 +922,7 @@ else if (isset($_GET['new']))
                     <?php } else if (!isset($_SESSION['receipt']['customer'])) { ?>
                     <div id="mailingSegment">
                         <span style="top: -8px; position: relative;">
-                            Bon emailen naar administratie <input type="checkbox" name="emailToCustomer" id="emailToCustomer" 	data-size="small" data-on-text="Ja" data-off-text="Nee"></input><br />
+                            Factuur emailen naar administratie <input type="checkbox" name="emailToCustomer" id="emailToCustomer" 	data-size="small" data-on-text="Ja" data-off-text="Nee"></input><br />
                         </span>
                         <div class="row" id="emailList">
                             <div class="column">
@@ -800,7 +957,7 @@ else if (isset($_GET['new']))
                     </div>
                     <br />
                     <?php } ?>
-                    <button type="button" class="btn btn-success" id="processReceipt" data-dismiss="modal">Bon verwerken</button>
+                    <button type="button" class="btn btn-success" id="processReceipt" data-dismiss="modal">Factuur verwerken</button>
                 </div>
             </div>
         </div>
@@ -902,7 +1059,7 @@ else if (isset($_GET['new']))
                                 $.notify({
                                     icon: 'glyphicon glyphicon-floppy-saved',
                                     title: 'Opgeslagen',
-                                    message: '<br />Bon is successvol opgeslagen.'
+                                    message: '<br />Factuur is successvol opgeslagen.'
                                 }, {
                                     // settings
                                     type: 'info',
@@ -919,7 +1076,7 @@ else if (isset($_GET['new']))
                                 $.notify({
                                     icon: 'glyphicon glyphicon-warning-sign',
                                     title: '<b>Fout</b><br / >',
-                                    message: 'Bon is niet opgeslagen :(<br />' + data
+                                    message: 'Factuur is niet opgeslagen :(<br />' + data
                                 }, {
                                     // settings
                                     type: 'danger',
@@ -938,8 +1095,8 @@ else if (isset($_GET['new']))
                 {
                     $.notify({
                         icon: 'glyphicon glyphicon-warning-sign',
-                        title: '<b>Bon is niet opgeslagen</b><br / >',
-                        message: 'Voeg eerst artikelen toe om de bon op te slaan.'
+                        title: '<b>Factuur is niet opgeslagen</b><br / >',
+                        message: 'Voeg eerst artikelen toe om de factuur op te slaan.'
                     }, {
                         // settings
                         type: 'warning',
@@ -1057,7 +1214,7 @@ else if (isset($_GET['new']))
                     {
                         $.notify({
                             icon: 'glyphicon glyphicon-trash',
-                            title: '<b>Klant verwijderd van bon</b><br / >',
+                            title: '<b>Klant verwijderd van factuur</b><br / >',
                             message: ''
                         }, {
                             // settings
@@ -1085,7 +1242,7 @@ else if (isset($_GET['new']))
             });
             
             $('#destroyReceipt').click(function () {
-                $("#newReceipt").html("<i class=\"fa fa-file-text\" aria-hidden=\"true\"></i>&nbsp;&nbsp; Nieuwe Bon");
+                $("#newReceipt").html("<i class=\"fa fa-file-text\" aria-hidden=\"true\"></i>&nbsp;&nbsp; Nieuwe factuur");
                 $("#newReceipt").hide();
 
                 $("#pageLoaderIndicator").fadeIn();
@@ -1103,7 +1260,7 @@ else if (isset($_GET['new']))
                     {
                         $.notify({
                             icon: 'glyphicon glyphicon-trash',
-                            title: '<b>Bon is verwijderd</b><br / >',
+                            title: '<b>Factuur is verwijderd</b><br / >',
                             message: '<a href="#" id="undoCloseReceipt" style="color: white;">(Ongedaan maken)</a>'
                         }, {
                             // settings
@@ -1129,7 +1286,7 @@ else if (isset($_GET['new']))
             });
 
             $('#closeReceipt').click(function () {
-                $("#newReceipt").html("<i class=\"fa fa-file-text\" aria-hidden=\"true\"></i>&nbsp;&nbsp; Nieuwe Bon");
+                $("#newReceipt").html("<i class=\"fa fa-file-text\" aria-hidden=\"true\"></i>&nbsp;&nbsp; Nieuwe factuur");
                 $("#newReceipt").hide();
 
                 $("#pageLoaderIndicator").fadeIn();
@@ -1146,7 +1303,7 @@ else if (isset($_GET['new']))
                     {
                         $.notify({
                             icon: 'glyphicon glyphicon-trash',
-                            title: '<b>Bon venster gesloten</b><br / >',
+                            title: '<b>Factuur venster gesloten</b><br / >',
                             message: '<a href="#" id="undoCloseReceipt" style="color: white;">(Ongedaan maken)</a>'
                         }, {
                             // settings
@@ -1277,7 +1434,7 @@ else
             <label class="form-check-label" for="exampleCheck1">Zoek naar klant</label>
         </div>
         <div class="input-group">
-            <input type="text" class="form-control" name="searchBar" id="searchBar" placeholder="Zoek term... (Bon nummer, datum of klant details)" aria-describedby="basic-addon2" />
+            <input type="text" class="form-control" name="searchBar" id="searchBar" placeholder="Zoek term... (Factuur nr., datum of klant details)" aria-describedby="basic-addon2" />
             <span class="input-group-btn">
                 <button class="btn btn-primary" type="submit" id="searchBtn" style="height: 38px;">
                     <span class="glyphicon glyphicon-search"></span>
@@ -1342,7 +1499,7 @@ else
 <div class="row">
     <div class="panel panel-primary filterable">
         <div class="panel-heading">
-            <h3 class="panel-title">Bonnen</h3>
+            <h3 class="panel-title">Facturen</h3>
             <div class="pull-right">
                 <button class="btn btn-default btn-xs btn-filter">
                     <span class="glyphicon glyphicon-filter"></span>&nbsp;Filteren
@@ -1354,7 +1511,7 @@ else
                 <tr class="filters">
                     <th>
                         <a href="#" class="mustFocus">
-                            <input type="text" class="form-control" placeholder="Bon Nummer" disabled />
+                            <input type="text" class="form-control" placeholder="Factuur nr." disabled />
                         </a>
                     </th>
                     <th>
@@ -1369,7 +1526,7 @@ else
                     </th>
                     <th>
                         <a href="#" class="mustFocus">
-                            <input type="text" class="form-control" placeholder="Bon totaal" disabled />
+                            <input type="text" class="form-control" placeholder="Factuur totaal" disabled />
                         </a>
                     </th>
                     <th>

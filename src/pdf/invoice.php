@@ -15,13 +15,15 @@
         <head>
             <meta charset="utf-8">
             <title>Factuur</title>
+            
+            <link rel="stylesheet" href="../assets/style.css" media="all" />
             <link rel="stylesheet" href="style.css" media="all" />
         </head>
         <body>
             <header class="clearfix">
                 <div>
                     <div id="logo">
-                        <img src="logo.png">
+                        <img src="../assets/logo.png">
                     </div>
                     <h1><?=$_CFG['companyAddress']?> &bull; <?=$_CFG['companyPhone']?> &bull; <?=$_CFG['companyWebsite']?> &bull; <?=$_CFG['companyEmail']?></h1>
                     <h2><?=$_CFG['companyKvk']?> &bull; <?=$_CFG['companyVATNo']?> &bull; <?=$_CFG['companyIBAN']?></h2>
@@ -33,7 +35,10 @@
                     <?php if ($dd == 0) { ?><div><span><?=strftime("%d %B %Y", $expireTime->getTimestamp()), PHP_EOL?></span> VERVALDATUM</div><?php } ?>
                 </div>
                 <div id="project">
+                    <?php if (!$_CFG['showCustomerFieldsChk']) { ?>
                     <div><span>BEDRIJF</span> <?=Misc::sqlGet("companyName", "customers", "customerId", $custId)['companyName'] != ""? Misc::sqlGet("companyName", "customers", "customerId", $custId)['companyName']: "Particulier"?></div>
+                    <?php } ?>
+                    
                     <div><span>KLANT</span> <?=Misc::sqlGet("initials", "customers", "customerId", $custId)['initials']?> <?=Misc::sqlGet("familyName", "customers", "customerId", $custId)['familyName']?></div>
                     <div><span>ADRES</span> <?=Misc::sqlGet("streetName", "customers", "customerId", $custId)['streetName']?>, <?=Misc::sqlGet("postalCode", "customers", "customerId", $custId)['postalCode']?> <?=Misc::sqlGet("city", "customers", "customerId", $custId)['city']?></div>
                     <div><span>EMAIL</span> <a href="mailto:<?=Misc::sqlGet("email", "customers", "customerId", $custId)['email']?>"><?=Misc::sqlGet("email", "customers", "customerId", $custId)['email']?></a></div>
@@ -46,6 +51,9 @@
                             <th class="desc">OMSCRHIJVING</th>
                             <th></th>
                             <th>STUKPRIJS</th>
+                            <?php if ($_CFG['multiplierOnItemsChk']) { ?> 
+                            <th>PERSONEN</th>
+                            <?php } ?>
                             <th>AANTAL</th>
                             <th><?=$_POST['exvat'] ? "EXCL. ".$_CFG['VATText'] : "BEDRAG"?></th>
                             <?=$_POST['exvat'] ? "<th>INCL. ".$_CFG['VATText']."</th>" : ""?>
@@ -73,6 +81,9 @@
                                 ?></td>
                                 <td class="unit"></td>
                                 <td class="unit"><?=$_CFG['CURRENCY']?>&nbsp;<?=$_POST['exvat'] ? number_format((round($total, 2))-(round($total, 2) * 0.21), 2, ",", "."): number_format((round($total, 2)), 2, ",", ".")?></td>
+                                <?php if ($_CFG['multiplierOnItemsChk']) { ?> 
+                                <td class="qty"><?=$json[key($json)]['multiplier']?></td>
+                                <?php } ?>
                                 <td class="qty"><?=$json[key($json)]['count']?></td>
                                 <td class="total"><?=$_CFG['CURRENCY']?>&nbsp;<?=$_POST['exvat'] ? number_format((round(round($total, 2) * $json[key($json)]['count'], 2))-(round(round($total, 2) * $json[key($json)]['count'], 2) * 0.21), 2, ",", ".") : number_format((round(round($total, 2) * $json[key($json)]['count'], 2)), 2, ",", ".")?></td>
                                 <?php if ($_POST['exvat']) { ?><td class="total"><?=$_CFG['CURRENCY']?>&nbsp;<?=number_format((round(round($total, 2) * $json[key($json)]['count'], 2)), 2, ",", ".")?></td><?php } ?>
@@ -82,20 +93,23 @@
                             next($json);
                         }
                         
-                        $totalVat = $totalIncVat - ($totalIncVat / 1.21);
-                        $totalExVat = $totalIncVat / 1.21;
+                        $totalVat = $totalIncVat - ($totalIncVat / $_CFG['VAT']);
+                        $totalExVat = $totalIncVat / $_CFG['VAT'];
                         ?>
                         <tr>
+                            <td colspan="4"></td>
                             <?php if ($_POST['exvat']) { ?><td class="total"></td><?php } ?>
                             <td colspan="4" class="total">EXCL. <?=$_CFG['VATText']?></td>
                             <td class="total"><?=$_CFG['CURRENCY']?>&nbsp;<?=number_format(round($totalExVat, 2), 2, ",", ".")?></td>
                         </tr>
                         <tr>
+                            <td colspan="4"></td>
                             <?php if ($_POST['exvat']) { ?><td></td><?php } ?>
                             <td colspan="4"><?=$_CFG['VATText']?> <?=$_CFG['VAT']*100-100?>%</td>
                             <td class="total"><?=$_CFG['CURRENCY']?>&nbsp;<?=number_format(round($totalVat, 2), 2, ",", ".")?></td>
                         </tr>
                         <tr>
+                            <td colspan="4"></td>
                             <?php if ($_POST['exvat']) { ?><td class="grand total"></td><?php } ?>
                             <td colspan="4" class="grand total">EINDTOTAAL</td>
                             <td class="grand total"><?=$_CFG['CURRENCY']?>&nbsp;<?=number_format(round($totalIncVat, 2), 2, ",", ".")?></td>

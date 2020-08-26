@@ -101,7 +101,7 @@ else
 
     echo '
 
-            $("#newReceipt").html("<i class=\"fa fa-file-text\" aria-hidden=\"true\"></i>&nbsp;&nbsp; Nieuwe Bon");
+            $("#newReceipt").html("<i class=\"fa fa-file-text\" aria-hidden=\"true\"></i>&nbsp;&nbsp; Nieuwe factuur");
             $("#newReceipt").hide();
         });
     </script>';

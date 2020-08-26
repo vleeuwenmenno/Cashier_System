@@ -18,14 +18,14 @@ if (isset($_GET['rid']))
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Bon mailen</h4>
+                    <h4 class="modal-title">Factuur mailen</h4>
                 </div>
 
                 <div class="modal-footer">
                     <?php if (isset($_SESSION['receipt']['customer'])) { ?>
                     <div id="mailingSegment">
                         <span style="top: -8px; position: relative;">
-                            Bon emailen<br />
+                            Factuur emailen<br />
                         </span>
                         <div class="row" id="emailList">
                             <div class="column">
@@ -107,12 +107,12 @@ if (isset($_GET['rid']))
                     </div>
                     <br />
                     <?php } ?>
-                    <button type="button" class="btn btn-success" id="sendMailBtn" data-dismiss="modal">Bon mailen</button>
+                    <button type="button" class="btn btn-success" id="sendMailBtn" data-dismiss="modal">Factuur mailen</button>
                 </div>
             </div>
         </div>
     </div>
-    <button id="mailBtn" class="btn btn-secondary">Bon mailen</button><br /><br />
+    <button id="mailBtn" class="btn btn-secondary">Factuur mailen</button><br /><br />
     <script>
         $(document).ready(function () {
             $("#mailBtn").click(function(){

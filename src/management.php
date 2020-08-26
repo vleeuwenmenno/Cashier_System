@@ -27,6 +27,10 @@ if (isset($_GET['applyOptions']))
 	Misc::sqlUpdate("options", "VATText", $_GET['VATText'], "id", 1);
 	Misc::sqlUpdate("options", "currency", "'".$_GET['currency']."'", "id", 1);
 
+	Misc::sqlUpdate("options", "contractSystemChk", "'".$_GET['contractSystemChk']."'", "id", 1);
+	Misc::sqlUpdate("options", "multiplierOnItemsChk", "'".$_GET['multiplierOnItemsChk']."'", "id", 1);
+	Misc::sqlUpdate("options", "showCustomerFieldsChk", "'".$_GET['showCustomerFieldsChk']."'", "id", 1);
+
 	die();
 }
 if (isset($_GET['content'])) {?>
@@ -573,6 +577,21 @@ if (isset($_GET['content'])) {?>
 			</div>
 				<div class="tab-pane <?php if (isset($_GET['content'])) { echo 'active'; } ?>" id="2">
 					<div id="userManagement">
+					<h2>Functies</h2>
+
+
+					<div class="checkbox">
+						<label><input type="checkbox" id="contractSystemChk" <?=$_CFG['contractSystemChk'] ? "checked" : ""?>>Contracten systeem</label>
+					</div>
+					
+					<div class="checkbox">
+						<label><input type="checkbox" id="multiplierOnItemsChk" <?=$_CFG['multiplierOnItemsChk'] ? "checked" : ""?>>Vermenigvuldiger op artikelen</label>
+					</div>
+					
+					<div class="checkbox">
+						<label><input type="checkbox" id="showCustomerFieldsChk" <?=$_CFG['showCustomerFieldsChk'] ? "checked" : ""?>>Toon klantgegevens velden in factuur venster</label>
+					</div>
+
 					<h2>Content Beheer</h2>
 					    <br />
 					    <!-- <div class="form-group">
@@ -675,7 +694,7 @@ if (isset($_GET['content'])) {?>
 											companyName: $("#companyName").val() !== null && $("#companyName").val() !== '' ? $("#companyName").val() : "<?=$_CFG['COMPANY_NAME']?>",
 											vat: $("#taxAmount").val() !== null && $("#taxAmount").val() !== '' ? $("#taxAmount").val() / 100 + 1 : "<?=$_CFG['VAT']?>",
 											VATText: $("#VATText").val() !== null && $("#VATText").val() !== '' ? $("#VATText").val() : "<?=$_CFG['VATText']?>",
-											currency: $("#currency").val() !== null && $("#currency").val() !== '' ? $("#currency").val() : "<?=$_CFG['currency']?>",
+											currency: $("#currency").val() !== null && $("#currency").val() !== '' ? $("#currency").val() : "<?=$_CFG['CURRENCY']?>",
 											smtpHost: $("#smtpHost").val() !== null && $("#smtpHost").val() !== '' ? $("#smtpHost").val() : "<?=$_CFG['smtpHost']?>",
 											smtpPort: $("#smtpPort").val() !== null && $("#smtpPort").val() !== '' ? $("#smtpPort").val() : "<?=$_CFG['smtpPort']?>",
 											smtpName: $("#smtpName").val() !== null && $("#smtpName").val() !== '' ? $("#smtpName").val() : "<?=$_CFG['smtpName']?>",
@@ -692,6 +711,9 @@ if (isset($_GET['content'])) {?>
 											companyVATNo: $("#companyVATNo").val() !== null && $("#companyVATNo").val() !== '' ? $("#companyVATNo").val() : "<?=$_CFG['companyVATNo']?>",
 											disclaimer: $("#disclaimer").val() !== null && $("#disclaimer").val() !== '' ? $("#disclaimer").val() : "<?=$_CFG['disclaimer']?>",
 											invoiceExpireDays: $("#invoiceExpireDays").val() !== null && $("#invoiceExpireDays").val() !== '' ? $("#invoiceExpireDays").val() : "<?=$_CFG['invoiceExpireDays']?>",
+											contractSystemChk: $('#contractSystemChk').is(":checked") ? 1 : 0,
+											multiplierOnItemsChk: $('#multiplierOnItemsChk').is(":checked") ? 1 : 0,
+											showCustomerFieldsChk: $('#showCustomerFieldsChk').is(":checked") ? 1 : 0
 										},
 										function (data)
 										{
@@ -892,7 +914,7 @@ if (isset($_GET['content'])) {?>
 													<label><input type="checkbox" id="resetAll" value="">Voorraad naar NUL zetten voor alle artikelen. (UPDATE items SET itemStock=0;)</label>
 												</div>
 												<div class="checkbox">
-													<label><input type="checkbox" id="deleteAllReceipts" value="">Alle opgeslagen/verwerkte bonnen verwijderen. (DELETE FROM `receipt` WHERE 1)</label>
+													<label><input type="checkbox" id="deleteAllReceipts" value="">Alle opgeslagen/verwerkte facturen verwijderen. (DELETE FROM `receipt` WHERE 1)</label>
 												</div>
 												<div class="checkbox">
 													<label><input type="checkbox" id="deleteAllSessions" value="">Alle dag overzichten verwijderen. (DELETE FROM `cashsession` WHERE 1)</label>

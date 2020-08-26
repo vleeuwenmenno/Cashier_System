@@ -128,9 +128,9 @@ if (isset($_GET['new']))
                 </div>
                 <div class="panel-body">
                     <?php if(!isset($_SESSION['receipt']['items'])) {?>
-                    <?php if($_SESSION['receipt']['status'] != "open") {?><span class="pull-center">De factuur specificatie wordt opgebouwd vanuit de gegevens op een open staande bon, maak een nieuwe bon aan en vul deze aan. Kom daarna terug op deze pagina om je contract aan te maken.</span><br /><br /><?php } ?>
-                    <?php if($_SESSION['receipt']['status'] == "open") {?><span class="pull-center">Er zijn geen artikelen toegevoegt op de open staande bon! De factuur specificatie wordt opgebouwd vanuit de gegevens op een open staande bon, voeg artikelen toe aan de bon. Kom daarna terug op deze pagina om je contract aan te maken.</span><br /><br /><?php } ?>
-                    <?php if($_SESSION['receipt']['status'] != "open") {?><button type="button" id="loadNewReceipt" class="btn btn-secondary pull-center">Nieuwe bon maken</button><?php } ?>
+                    <?php if($_SESSION['receipt']['status'] != "open") {?><span class="pull-center">De factuur specificatie wordt opgebouwd vanuit de gegevens op een open staande factuur, maak een nieuwe factuur aan en vul deze aan. Kom daarna terug op deze pagina om je contract aan te maken.</span><br /><br /><?php } ?>
+                    <?php if($_SESSION['receipt']['status'] == "open") {?><span class="pull-center">Er zijn geen artikelen toegevoegt op de open staande factuur! De factuur specificatie wordt opgebouwd vanuit de gegevens op een open staande factuur, voeg artikelen toe aan de factuur. Kom daarna terug op deze pagina om je contract aan te maken.</span><br /><br /><?php } ?>
+                    <?php if($_SESSION['receipt']['status'] != "open") {?><button type="button" id="loadNewReceipt" class="btn btn-secondary pull-center">Nieuwe factuur maken</button><?php } ?>
                     <?php } else { ?>
                         <table class="table">
                 <thead>
@@ -314,7 +314,7 @@ if (isset($_GET['new']))
 							{
 								if (data.replace(/(\r\n|\n|\r)/gm,"").startsWith("OK"))
 								{        
-                                    $("#newReceipt").html("<i class=\"fa fa-file-text\" aria-hidden=\"true\"></i>&nbsp;&nbsp; Nieuwe Bon");
+                                    $("#newReceipt").html("<i class=\"fa fa-file-text\" aria-hidden=\"true\"></i>&nbsp;&nbsp; Nieuwe factuur");
                                     $("#newReceipt").hide();
 
 									var arr = data.replace(/(\r\n|\n|\r)/gm,"").split(' ');
@@ -600,7 +600,7 @@ else if (isset($_GET['overview']))
                         <thead>
                             <tr>
                                 <th scope="col">Tijd & Datum</th>
-                                <th scope="col">Factuur #</th>
+                                <th scope="col">Factuur nr.&nbsp;</th>
                                 <th scope="col">Contract</th>
                                 <th scope="col">Ontvanger</th>
                                 <th scope="col">Succesvol verstuurd</th>

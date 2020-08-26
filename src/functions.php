@@ -9,7 +9,7 @@ include('classes/Calculate.php');
 
 $_CFG = array(
   'HOST_NAME' => 'cashier.local',
-  'VERSION' => 'v2.0.8 (Beta)'
+  'VERSION' => ApplicationVersion::get()
 );
 
 $_CFG['COMPANY_NAME'] = Misc::sqlGet("companyName", "options", "id", 1)['companyName'];
@@ -33,5 +33,10 @@ $_CFG['smtpName'] = Misc::sqlGet("smtpName", "options", "id", 1)['smtpName'];
 $_CFG['smtpUser'] = Misc::sqlGet("smtpUser", "options", "id", 1)['smtpUser'];
 $_CFG['smtpPass'] = Misc::sqlGet("smtpPass", "options", "id", 1)['smtpPass'];
 $_CFG['smtpSecure'] = Misc::sqlGet("smtpSecure", "options", "id", 1)['smtpSecure'];
+
+$_CFG['showCustomerFieldsChk'] = Misc::sqlGet("showCustomerFieldsChk", "options", "id", 1)['showCustomerFieldsChk'];
+$_CFG['multiplierOnItemsChk'] = Misc::sqlGet("multiplierOnItemsChk", "options", "id", 1)['multiplierOnItemsChk'];
+$_CFG['contractSystemChk'] = Misc::sqlGet("contractSystemChk", "options", "id", 1)['contractSystemChk'];
+
 
 ?>

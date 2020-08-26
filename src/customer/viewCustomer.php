@@ -22,7 +22,7 @@ if (isset($_GET['id']))
 	{
 ?>
 		<div id="customerForm">
-			<h2>Klant Gegevens</h2>
+			<h2>Klant gegevens</h2>
 			<div class="form-group">
 				<label for="initials">Voorletters: </label>
 				<input type="text" class="form-control" id="initials" placeholder="A." value="<?php echo $row["initials"]; ?>" readonly>

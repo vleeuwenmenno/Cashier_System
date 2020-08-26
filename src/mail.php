@@ -49,11 +49,11 @@ if (isset($_GET['receipt']))
         $mail->addAttachment(getcwd() . "/temp/factuur-" . $_GET['receipt'] . ".pdf");
         $mail->isHTML(true);
 
-        $mail->Subject = 'Uw bon';
+        $mail->Subject = 'Uw factuur';
         $mail->Body    = 'Geachte klant,<br /><br />
 
                             Bedankt voor uw aankoop bij '.$_CFG['COMPANY_NAME'].'.<br />
-                            De bijlage bevat uw bon.<br /><br />
+                            De bijlage bevat uw factuur.<br /><br />
 
                             Wij wensen u veel plezier met uw aankoop<br /><br />
 

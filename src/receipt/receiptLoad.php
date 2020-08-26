@@ -15,7 +15,7 @@ function process($row)
             <td>
                 <a id="viewReceipt<?=$row['receiptId']?>Btn" href="#">PDF Openen</a>
                 <?php if ($row['paymentMethod'] == "") { ?>
-                    &nbsp;<a id="loadReceipt<?=$row['receiptId']?>" href="#">/ Bon laden</a>
+                    &nbsp;<a id="loadReceipt<?=$row['receiptId']?>" href="#">/ Factuur laden</a>
                 <?php } ?>
             </td>
         </tr>

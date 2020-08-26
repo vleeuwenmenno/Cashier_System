@@ -48,7 +48,7 @@ if (isset($_GET['sTerm']))
 
         $total = Misc::calculate(round($row['priceExclVat'] * $_CFG['VAT'], 2) . " " . str_replace(',', '.', $row['priceModifier']));
         $purchase = $row['priceExclVat'];
-        $vatOnly = $total - ($total / 1.21);
+        $vatOnly = $total - ($total / $_CFG['VAT']);
 
         echo '    <td><span class="priceClickable" id="popOver' . $row['nativeId'] . '" data-placement="bottom" data-trigger="hover">';
         echo '        <a>';
@@ -82,7 +82,8 @@ if (isset($_GET['sTerm']))
                                     "receipt/addItem.php",
                                     {
                                         itemId: \'' . $row['nativeId'] . '\',
-                                        itemCount: \'1\'
+                                        itemCount: \'1\',
+                                        itemMultiplier: \'1\'
                                     },
                                     function (data)
                                     { }
@@ -90,7 +91,7 @@ if (isset($_GET['sTerm']))
 
                                 $.notify({
                                     icon: \'fa fa-cart-plus fa-2x\',
-                                    title: \'<b>Toegevoegt aan bon</b><br / >\',
+                                    title: \'<b>Toegevoegt aan factuur</b><br / >\',
                                     message: \'' . urldecode($row['itemName']) . '\'
                                 }, {
                                     // settings
@@ -112,7 +113,8 @@ if (isset($_GET['sTerm']))
                                 "receipt/addItem.php",
                                 {
                                     itemId: \'' . $row['nativeId'] . '\',
-                                    itemCount: \'1\'
+                                    itemCount: \'1\',
+                                    itemMultiplier: \'1\'
                                 },
                                 function (data)
                                 { }
@@ -120,7 +122,7 @@ if (isset($_GET['sTerm']))
 
                             $.notify({
                                 icon: \'fa fa-cart-plus fa-2x\',
-                                title: \'<b>Toegevoegt aan bon</b><br / >\',
+                                title: \'<b>Toegevoegt aan factuur</b><br / >\',
                                 message: \'' . urldecode($row['itemName']) . '\'
                             }, {
                                 // settings
@@ -149,7 +151,7 @@ if (isset($_GET['sTerm']))
 
                     $.notify({
                         icon: \'fa fa-archive fa-2x\',
-                        title: \'<b>Retour is toegevoegt aan bon</b><br / >\',
+                        title: \'<b>Retour is toegevoegt aan factuur</b><br / >\',
                         message: \'' . urldecode($row['itemName']) . '\'
                     }, {
                         // settings
@@ -198,7 +200,7 @@ if (isset($_GET['sTerm']))
 
                 $total = Misc::calculate(round($row['priceExclVat'] * $_CFG['VAT'], 2) . " " . str_replace(',', '.', $row['priceModifier']));
                 $purchase = $row['priceExclVat'];
-                $vatOnly = $total - ($total / 1.21);
+                $vatOnly = $total - ($total / $_CFG['VAT']);
 
                 echo '    <td><span class="priceClickable" id="popOver' . $row['nativeId'] . '" data-placement="bottom" data-trigger="hover">';
                 echo '        <a>';
@@ -232,7 +234,8 @@ if (isset($_GET['sTerm']))
                                             "receipt/addItem.php",
                                             {
                                                 itemId: \'' . $row['nativeId'] . '\',
-                                                itemCount: \'1\'
+                                                itemCount: \'1\',
+                                                itemMultiplier: \'1\'
                                             },
                                             function (data)
                                             { }
@@ -240,7 +243,7 @@ if (isset($_GET['sTerm']))
 
                                         $.notify({
                                             icon: \'fa fa-cart-plus fa-2x\',
-                                            title: \'<b>Toegevoegt aan bon</b><br / >\',
+                                            title: \'<b>Toegevoegt aan factuur</b><br / >\',
                                             message: \'' . urldecode($row['itemName']) . '\'
                                         }, {
                                             // settings
@@ -262,7 +265,8 @@ if (isset($_GET['sTerm']))
                                         "receipt/addItem.php",
                                         {
                                             itemId: \'' . $row['nativeId'] . '\',
-                                            itemCount: \'1\'
+                                            itemCount: \'1\',
+                                            itemMultiplier: \'1\'
                                         },
                                         function (data)
                                         { }
@@ -270,7 +274,7 @@ if (isset($_GET['sTerm']))
 
                                     $.notify({
                                         icon: \'fa fa-cart-plus fa-2x\',
-                                        title: \'<b>Toegevoegt aan bon</b><br / >\',
+                                        title: \'<b>Toegevoegt aan factuur</b><br / >\',
                                         message: \'<br />' . urldecode($row['itemName']) . '\'
                                     }, {
                                         // settings
@@ -299,7 +303,7 @@ if (isset($_GET['sTerm']))
 
                             $.notify({
                                 icon: \'fa fa-archive fa-2x\',
-                                title: \'<b>Retour is toegevoegt aan bon</b><br / >\',
+                                title: \'<b>Retour is toegevoegt aan factuur</b><br / >\',
                                 message: \'' . urldecode($row['itemName']) . '\'
                             }, {
                                 // settings

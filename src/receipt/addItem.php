@@ -12,6 +12,7 @@ if (isset($_GET['itemId']) && isset($_GET['itemCount']))
 
         $_SESSION['receipt']['items'][$_GET['itemId']]['itemDesc'] = urldecode(Misc::sqlGet("itemName", "items", "nativeId", $_GET['itemId'])['itemName']);
         $_SESSION['receipt']['items'][$_GET['itemId']]['count'] = $_GET['itemCount'];
+        $_SESSION['receipt']['items'][$_GET['itemId']]['multiplier'] = $_GET['itemMultiplier'];
         $_SESSION['receipt']['items'][$_GET['itemId']]['priceAPiece'] = $priceApiece;
     }
 

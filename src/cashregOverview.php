@@ -217,7 +217,7 @@ else if (isset($_GET['close']))
                                     </div>
 
                                     <div class="input-group">
-                                        <span class="input-group-addon" style="max-width: 120px; width: 120px;">Pinbon</span>
+                                        <span class="input-group-addon" style="max-width: 120px; width: 120px;">Pin</span>
                                         <input type="text" class="form-control" id="pinOut" placeholder="<?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2), 2, ",", "."); ?>">
                                     </div>
 
@@ -407,7 +407,7 @@ else if (isset($_GET['cashOut']) && isset($_GET['pinOut']) && isset($_GET['bankO
                                     <div><b>Totaal Omzet:</b><span style="float: right;"> <?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2), 2, ",", "."); ?></span></div>
                                     <div><b>Verschil:</b><span style="float: right;"> <?=$_CFG['CURRENCY']?> <?php echo number_format(round($totalIn - round(Calculate::getNetTurnover(PaymentMethod::All, $cashSessionId), 2), 2), 2, ",", ".");?></span></div>
                                     <br />
-                                    <div><span>Pinbon: </span><span style="float: right;"><?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(str_replace("€ ", "", str_replace(",", ".", $_GET['pinOut'])), 2, ",", "."); ?></span></div>
+                                    <div><span>Pin: </span><span style="float: right;"><?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(str_replace("€ ", "", str_replace(",", ".", $_GET['pinOut'])), 2, ",", "."); ?></span></div>
                                     <div><span>Omzet pin: </span><span style="float: right;"> <?=$_CFG['CURRENCY']?>&nbsp;<?php echo number_format(round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2), 2, ",", "."); ?></span></div>
                                     <div><b>Verschil: </b><span style="float: right;"> <?=$_CFG['CURRENCY']?> <?php echo number_format(round(str_replace("€ ", "", str_replace(",", ".", $_GET['pinOut'])) - round(Calculate::getNetTurnover(PaymentMethod::Pin, $cashSessionId), 2), 2), 2, ",", ".");?></span></div>
                                     <br />

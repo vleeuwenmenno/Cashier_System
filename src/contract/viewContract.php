@@ -223,7 +223,7 @@ if (isset($_GET['id']))
 					<table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">Factuur #</th>
+                                <th scope="col">Factuur nr.&nbsp;</th>
                                 <th scope="col">Tijd & Datum</th>
                                 <th scope="col">Ontvanger</th>
                                 <th scope="col">Factuur totaal</th>
@@ -357,7 +357,7 @@ if (isset($_GET['id']))
 				<span class="caret"></span></button>
 				<ul class="dropdown-menu">
 					<li><button type="button" id="loadReceiptFromItems" style="width: 100%;" class="btn btn-info">Factuur specificatie laden</button></li>
-					<li><button type="button" id="loadItemsFromReceipt" style="width: 100%;" class="btn btn-info">Contract naar bon laden</button></li>
+					<li><button type="button" id="loadItemsFromReceipt" style="width: 100%;" class="btn btn-info">Contract naar factuur laden</button></li>
 					<li><button type="button" id="sendNewOrder" style="width: 100%;" class="btn btn-warning">Factuur vandaag inplannen</button></li>
 					<li><button type="button" id="deleteContract" style="width: 100%;" class="btn btn-danger">Contract verwijderen</button></li>
 				</ul>

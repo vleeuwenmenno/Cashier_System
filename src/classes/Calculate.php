@@ -504,8 +504,8 @@ class Calculate
 
         foreach ($json as $key => $val)
         {
-            $final['total'] += (Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier']) * $val['count']);
-            $final['exclVat'] += round($val['priceAPiece']['priceExclVat'] *  $val['count'], 2);
+            $final['total'] += ((Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier']) * $val['count']) * $val['multiplier']);
+            $final['exclVat'] += round($val['priceAPiece']['priceExclVat'] *  $val['count'] * $val['multiplier'], 2);
         }
         return $final;
     }
