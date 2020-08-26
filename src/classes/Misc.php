@@ -3,7 +3,7 @@ class ApplicationVersion
 {
     const MAJOR = 2;
     const MINOR = 0;
-    const PATCH = 9;
+    const PATCH = 10;
 
     public static function get()
     {
