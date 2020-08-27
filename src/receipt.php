@@ -719,7 +719,7 @@ else if (isset($_GET['new']))
                     <div class="form-group">
                         <label for="street">Aankomst: </label>
                         <div class='input-group date' id='datetimepicker1'>
-                            <input type='text' class="form-control" id="startDate" placeholder="01-01-2020" />
+                            <input type='text' class="form-control" id="arrivalDate" placeholder="01-01-2020" />
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
@@ -728,7 +728,7 @@ else if (isset($_GET['new']))
                     <div class="form-group">
                         <label for="street">Vertrek: </label>
                         <div class='input-group date' id='datetimepicker2'>
-                            <input type='text' class="form-control" id="startDate" placeholder="01-01-2020" />
+                            <input type='text' class="form-control" id="departureDate" placeholder="01-01-2020" />
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
@@ -773,7 +773,7 @@ else if (isset($_GET['new']))
                     </div>
                     <div class="form-group">
                         <label for="phonehome">Telefoon: </label>
-                        <input type="text" class="form-control" id="phonehome" placeholder="0251 200 627">
+                        <input type="text" class="form-control" id="phonehome" placeholder="06 123 456 78">
                     </div>
                     <div class="form-group">
                         <label for="email">Email: </label>
@@ -1171,23 +1171,68 @@ else if (isset($_GET['new']))
                 {
                     isButtonClick = false;
 
-                    console.log($('#example_email').val());
-
                     if ($( "#paymentMethod" ).val() != "")
                     {
-                        if ($('#paymentMethod').val() == "PC")
-                        {
-                            var pinVal = $('#pinVal').val();
-                            var cashVal = $('#cashVal').val();
+                        var dep = $("#departureDate").val();
+                        var arr = $("#arrivalDate").val();
+                        var rono = $("#placeNumber").val();
 
-                            $("#pageLoaderIndicator").fadeIn();
-                            $("#PageContent").load("receipt/processReceipt.php?receiptId=<?=$_SESSION['receipt']['id']?>&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=0&paymentMethod=" + $( "#paymentMethod" ).val() +"&receiptDesc=" + encodeURIComponent($('#receiptDescription').val()) + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&pin=" + pinVal + "&cash=" + cashVal, function () { });
-                       }
-                       else
-                       {
-                           $("#pageLoaderIndicator").fadeIn();
-                           $("#PageContent").load("receipt/processReceipt.php?receiptId=<?=$_SESSION['receipt']['id']?>&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=0&receiptDesc=" + encodeURIComponent($('#receiptDescription').val()) + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&paymentMethod=" + $( "#paymentMethod" ).val(), function () { });
-                       }
+                        $.get(
+                            "customer/customerAdd.php",
+                            {
+                            	intials: $("#initials").val(),
+                            	famName: $("#familyname").val(),
+                            	street: $("#street").val(),
+                            	city: $("#city").val(),
+                            	pMobile: $("#phonehome").val(),
+                            	email: $("#email").val(),
+                            	postalCode: $("#postalCode").val()
+                            },
+							function(data)
+							{
+								if (data.replace(/(\r\n|\n|\r)/gm, "").startsWith('OK '))
+								{
+									var customerId = data.split(' ')[1];
+
+                                    <?php if ($_CFG['showCustomerFieldsChk']) { ?>
+                                    if (dep == "")
+                                    {
+                                        $( "#statusText" ).html("<p style=\"color: orange !important;\">Selecteer een vertrek datum.</p>");
+                                        return;
+                                    }
+                                    else if (arr == "")
+                                    {
+                                        $( "#statusText" ).html("<p style=\"color: orange !important;\">Selecteer een aankomst datum.</p>");
+                                        return;
+                                    }
+                                    else if (rono == "")
+                                    {
+                                        $( "#statusText" ).html("<p style=\"color: orange !important;\">Vul een plaatsnummer in.</p>");
+                                        return;
+                                    }
+                                    <?php } ?>
+                                    
+                                    if ($('#paymentMethod').val() == "PC")
+                                    {
+                                        var pinVal = $('#pinVal').val();
+                                        var cashVal = $('#cashVal').val();
+
+                                        $("#pageLoaderIndicator").fadeIn();
+                                        $("#PageContent").load("receipt/processReceipt.php?receiptId=<?=$_SESSION['receipt']['id']?>&cust="+customerId+"&arrival="+arr+"&departure="+dep+"&roomNo="+rono+"&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=0&paymentMethod=" + $( "#paymentMethod" ).val() +"&receiptDesc=" + encodeURIComponent($('#receiptDescription').val()) + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&pin=" + pinVal + "&cash=" + cashVal, function () { });
+                                    }
+                                    else
+                                    {
+                                        $("#pageLoaderIndicator").fadeIn();
+                                        $("#PageContent").load("receipt/processReceipt.php?receiptId=<?=$_SESSION['receipt']['id']?>&cust="+customerId+"&arrival="+arr+"&departure="+dep+"&roomNo="+rono+"&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=0&receiptDesc=" + encodeURIComponent($('#receiptDescription').val()) + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&paymentMethod=" + $( "#paymentMethod" ).val(), function () { });
+                                    }
+								}
+								else
+								{
+                                    alert("Er is iets fout gegaan!\n"+data);
+                                    return;
+								}
+							}
+                        );
                     }
                     else
                     {

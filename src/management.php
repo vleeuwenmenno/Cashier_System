@@ -600,89 +600,104 @@ if (isset($_GET['content'])) {?>
 							<input id="input-b1" name="input-b1" type="file" class="file" data-browse-on-zone-click="true">
 							<img src="/images/A4-Template.png" class="img-fluid" alt="Responsive image" style="max-width: 95%">
 						</div> -->
-						<div class="form-group">
-							<label for="familyname">Bedrijf naam: </label>
-							<input type="text" class="form-control" id="companyName" placeholder="<?=$_CFG['COMPANY_NAME']?>">
-						</div>
-						<div class="form-group">
-							<label for="taxAmount">Belasting: </label>
-							<input type="text" class="form-control" id="taxAmount" placeholder="<?=number_format($_CFG['VAT'] * 100 - 100, 2)?>%">
-						</div>
-						<div class="form-group">
-							<label for="VATText">Belasting afkorting: </label>
-							<input type="text" class="form-control" id="VATText" placeholder="<?=$_CFG['VATText']?>">
-						</div>
-						<div class="form-group">
-							<label for="currency">Valuta: </label>
-							<input type="text" class="form-control" id="currency" placeholder="<?=$_CFG['CURRENCY']?>">
-						</div>
-						<div class="form-group">
-							<label for="street">Adres: </label>
-							<input type="text" class="form-control" id="companyAddress" placeholder="<?=$_CFG['companyAddress']?>">
-						</div> <!-- NEW -->
-						<div class="form-group">
-							<label for="street">Telefoon: </label>
-							<input type="text" class="form-control" id="companyPhone" placeholder="<?=$_CFG['companyPhone']?>">
-						</div>
-						<div class="form-group">
-							<label for="street">Fax: </label>
-							<input type="text" class="form-control" id="companyFax" placeholder="<?=$_CFG['companyFax']?>">
-						</div>
-						<div class="form-group">
-							<label for="street">Email: </label>
-							<input type="text" class="form-control" id="companyEmail" placeholder="<?=$_CFG['companyEmail']?>">
-						</div>
-						<div class="form-group">
-							<label for="street">Website: </label>
-							<input type="text" class="form-control" id="companyWebsite" placeholder="<?=$_CFG['companyWebsite']?>">
-						</div>
-						<div class="form-group">
-							<label for="street">KvK Nummer: </label>
-							<input type="text" class="form-control" id="companyKvk" value="<?=$_CFG['companyKvk']?>">
-						</div>
-						<div class="form-group">
-							<label for="street">IBAN: </label>
-							<input type="text" class="form-control" id="companyIBAN" value="<?=$_CFG['companyIBAN']?>">
-						</div>
-						<div class="form-group">
-							<label for="street"><?=$_CFG['VATText']?> Nummer: </label>
-							<input type="text" class="form-control" id="companyVATNo" value="<?=$_CFG['companyVATNo']?>">
+						
+						<div class="row">
+                			<div class="col-xs-6">
+								<div class="form-group">
+									<label for="familyname">Bedrijf naam: </label>
+									<input type="text" class="form-control" id="companyName" placeholder="<?=$_CFG['COMPANY_NAME']?>">
+								</div>
+								<div class="form-group">
+									<label for="taxAmount">Belasting: </label>
+									<input type="text" class="form-control" id="taxAmount" placeholder="<?=number_format($_CFG['VAT'] * 100 - 100, 2)?>%">
+								</div>
+								<div class="form-group">
+									<label for="VATText">Belasting afkorting: </label>
+									<input type="text" class="form-control" id="VATText" placeholder="<?=$_CFG['VATText']?>">
+								</div>
+								<div class="form-group">
+									<label for="currency">Valuta: </label>
+									<input type="text" class="form-control" id="currency" placeholder="<?=$_CFG['CURRENCY']?>">
+								</div>
+								<div class="form-group">
+									<label for="street">Adres: </label>
+									<input type="text" class="form-control" id="companyAddress" placeholder="<?=$_CFG['companyAddress']?>">
+								</div> <!-- NEW -->
+								<div class="form-group">
+									<label for="street">Telefoon: </label>
+									<input type="text" class="form-control" id="companyPhone" placeholder="<?=$_CFG['companyPhone']?>">
+								</div>
+								<div class="form-group">
+									<label for="street">Fax: </label>
+									<input type="text" class="form-control" id="companyFax" placeholder="<?=$_CFG['companyFax']?>">
+								</div>
+							</div>
+                			<div class="col-xs-6">
+								<div class="form-group">
+									<label for="street">Email: </label>
+									<input type="text" class="form-control" id="companyEmail" placeholder="<?=$_CFG['companyEmail']?>">
+								</div>
+								<div class="form-group">
+									<label for="street">Website: </label>
+									<input type="text" class="form-control" id="companyWebsite" placeholder="<?=$_CFG['companyWebsite']?>">
+								</div>
+								<div class="form-group">
+									<label for="street">KvK Nummer: </label>
+									<input type="text" class="form-control" id="companyKvk" value="<?=$_CFG['companyKvk']?>">
+								</div>
+								<div class="form-group">
+									<label for="street">IBAN: </label>
+									<input type="text" class="form-control" id="companyIBAN" value="<?=$_CFG['companyIBAN']?>">
+								</div>
+								<div class="form-group">
+									<label for="street"><?=$_CFG['VATText']?> Nummer: </label>
+									<input type="text" class="form-control" id="companyVATNo" value="<?=$_CFG['companyVATNo']?>">
+								</div>
+								<div class="form-group">
+									<label for="street">Factuur verval tijd (in dagen): </label>
+									<input type="text" class="form-control" id="invoiceExpireDays" placeholder="<?=$_CFG['invoiceExpireDays']?>">
+								</div>
+							</div>
 						</div>
 						<div class="form-group">
 							<label for="street">Disclaimer: </label>
-							<textarea type="text" class="form-control" id="disclaimer" placeholder="<?=$_CFG['disclaimer']?>"><?=$_CFG['disclaimer']?></textarea>
+							<textarea type="text" class="form-control" rows="4" id="disclaimer" placeholder="<?=$_CFG['disclaimer']?>"><?=$_CFG['disclaimer']?></textarea>
 						</div>
-						<div class="form-group">
-							<label for="street">Factuur verval tijd (in dagen): </label>
-							<input type="text" class="form-control" id="invoiceExpireDays" placeholder="<?=$_CFG['invoiceExpireDays']?>">
-						</div>
+
 						<h2>SMTP Beheer</h2>
 					    <br />
 						
-						<div class="form-group">
-							<label for="familyname">SMTP Server: </label>
-							<input type="text" class="form-control" id="smtpHost" placeholder="<?=$_CFG['smtpHost']?>">
+						<div class="row">
+							<div class="col-xs-6">
+								<div class="form-group">
+									<label for="familyname">Server: </label>
+									<input type="text" class="form-control" id="smtpHost" placeholder="<?=$_CFG['smtpHost']?>">
+								</div>
+								<div class="form-group">
+									<label for="taxAmount">Server port: </label>
+									<input type="text" class="form-control" id="smtpPort" placeholder="<?=$_CFG['smtpPort']?>">
+								</div>
+								<div class="form-group">
+									<label for="street">Security: </label>
+									<input type="text" class="form-control" id="smtpSecure" placeholder="<?=$_CFG['smtpSecure']?>">
+								</div>
+							</div>
+							<div class="col-xs-6">
+								<div class="form-group">
+									<label for="taxAmount">Username SMTP: (Email)</label>
+									<input type="text" class="form-control" id="smtpUser" placeholder="<?=$_CFG['smtpUser']?>">
+								</div>
+								<div class="form-group">
+									<label for="street">Password: </label>
+									<input type="password" class="form-control" id="smtpPass" value="<?=$_CFG['smtpPass']?>">
+								</div>
+								<div class="form-group">
+									<label for="taxAmount">BCC: </label>
+									<input type="text" class="form-control" id="smtpName" placeholder="<?=$_CFG['smtpName']?>">
+								</div>
+							</div>
 						</div>
-						<div class="form-group">
-							<label for="taxAmount">SMTP Server poort: </label>
-							<input type="text" class="form-control" id="smtpPort" placeholder="<?=$_CFG['smtpPort']?>">
-						</div>
-						<div class="form-group">
-							<label for="taxAmount">Email: </label>
-							<input type="text" class="form-control" id="smtpUser" placeholder="<?=$_CFG['smtpUser']?>">
-						</div>
-						<div class="form-group">
-							<label for="taxAmount">BCC Email: </label>
-							<input type="text" class="form-control" id="smtpName" placeholder="<?=$_CFG['smtpName']?>">
-						</div>
-						<div class="form-group">
-							<label for="street">Wachtwoord: </label>
-							<input type="password" class="form-control" id="smtpPass" value="<?=$_CFG['smtpPass']?>">
-						</div>
-						<div class="form-group">
-							<label for="street">SMTP Security: </label>
-							<input type="text" class="form-control" id="smtpSecure" placeholder="<?=$_CFG['smtpSecure']?>">
-						</div>
+
 						<input type="button" class="btn btn-primary btn-xl" id="updateVarsOptions" value="Instellingen opslaan" />
 						<script>
 							$(document).ready(function () {

@@ -2,10 +2,10 @@
 -- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Aug 10, 2020 at 04:25 PM
--- Server version: 10.4.13-MariaDB
--- PHP Version: 7.4.8
+-- Host: 127.0.0.1
+-- Generation Time: Aug 27, 2020 at 03:14 PM
+-- Server version: 10.4.11-MariaDB
+-- PHP Version: 7.4.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -29,14 +29,14 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `cashsession` (
   `cashSessionId` int(11) NOT NULL,
-  `cashRegisterId` int(11) DEFAULT NULL,
-  `openedBy` int(11) DEFAULT NULL,
-  `closedBy` int(11) DEFAULT NULL,
-  `cashIn` decimal(18,2) DEFAULT NULL,
-  `cashOut` decimal(18,2) DEFAULT NULL,
-  `cutOut` decimal(18,2) DEFAULT NULL,
-  `margin` decimal(18,2) DEFAULT NULL,
-  `openDate` varchar(255) DEFAULT NULL,
+  `cashRegisterId` int(11) NOT NULL,
+  `openedBy` int(11) NOT NULL,
+  `closedBy` int(11) NOT NULL,
+  `cashIn` decimal(18,2) NOT NULL,
+  `cashOut` decimal(18,2) NOT NULL,
+  `cutOut` decimal(18,2) NOT NULL,
+  `margin` decimal(18,2) NOT NULL,
+  `openDate` varchar(255) NOT NULL,
   `closeDate` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -59,7 +59,7 @@ CREATE TABLE `cash_registers` (
 --
 
 INSERT INTO `cash_registers` (`id`, `crName`, `crStaticIP`, `status`, `currentSession`) VALUES
-(0, 'Kassa 1', '127.0.0.1', 'LoggedOn', 1);
+(0, 'Kassa 1', '127.0.0.1', 'LoggedOff', NULL);
 
 -- --------------------------------------------------------
 
@@ -71,10 +71,10 @@ CREATE TABLE `contract` (
   `contractId` int(11) NOT NULL,
   `customerId` int(11) NOT NULL,
   `startDate` varchar(128) NOT NULL,
-  `planningPeriod` varchar(64) NOT NULL DEFAULT 'month',
-  `planningDay` int(11) NOT NULL DEFAULT 1,
-  `sendOrderNow` tinyint(1) NOT NULL DEFAULT 0,
-  `directDebit` tinyint(1) NOT NULL DEFAULT 0,
+  `planningPeriod` varchar(64) NOT NULL,
+  `planningDay` int(11) NOT NULL,
+  `sendOrderNow` tinyint(1) NOT NULL,
+  `directDebit` tinyint(4) NOT NULL DEFAULT 0,
   `items` varchar(8192) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -86,15 +86,15 @@ CREATE TABLE `contract` (
 
 CREATE TABLE `customers` (
   `customerId` int(11) NOT NULL,
-  `initials` varchar(8) DEFAULT NULL,
-  `familyName` varchar(255) DEFAULT NULL,
-  `companyName` varchar(512) DEFAULT NULL,
-  `streetName` varchar(512) DEFAULT NULL,
-  `city` varchar(512) DEFAULT NULL,
-  `postalCode` varchar(8) DEFAULT NULL,
-  `phoneNumber` varchar(32) DEFAULT NULL,
-  `mobileNumber` varchar(32) DEFAULT NULL,
-  `email` varchar(96) DEFAULT NULL,
+  `initials` varchar(8) NOT NULL,
+  `familyName` varchar(255) NOT NULL,
+  `companyName` varchar(512) NOT NULL,
+  `streetName` varchar(512) NOT NULL,
+  `city` varchar(512) NOT NULL,
+  `postalCode` varchar(8) NOT NULL,
+  `phoneNumber` varchar(32) NOT NULL,
+  `mobileNumber` varchar(32) NOT NULL,
+  `email` varchar(96) NOT NULL,
   `receipts` varchar(4096) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -117,6 +117,24 @@ CREATE TABLE `items` (
   `priceModifier` varchar(255) NOT NULL DEFAULT '* 1.375',
   `manuallyInserted` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `items`
+--
+
+INSERT INTO `items` (`nativeId`, `itemId`, `EAN`, `supplier`, `factoryId`, `itemName`, `itemCategory`, `itemStock`, `priceExclVat`, `priceModifier`, `manuallyInserted`) VALUES
+(446295, '0001', '', 'Camping Schoonenberg', '0001', 'Volwassenen (dagen)', 'Dagen', 2147483647, '0.00', '+7', 1),
+(446296, '0002', '', 'Camping Schoonenberg', '0002', 'Kinderen 1-12 jaar (dagen)', 'Dagen', 2147483647, '0.00', ' + 5', 1),
+(446297, '0003', '', 'Camping Schoonenberg', '0003', 'Caravan/Tent', 'Overige', 2147483647, '0.00', ' + 7', 1),
+(446298, '0004', '', 'Camping Schoonenberg', '0004', 'Elektra', 'Overige', 2147483647, '0.00', ' + 3', 1),
+(446299, '0005', '', 'Camping Schoonenberg', '0005', 'Hond', 'Overige', 2147483647, '0.00', '+ 3.5', 1),
+(446300, '0006', '', 'Camping Schoonenberg', '0006', 'Reseveringskosten', 'Overige', 2147483647, '0.00', ' + 20', 1),
+(446301, '0007', '', 'Camping Schoonenberg', '0007', 'Natuurkampeerkaart', 'Overige', 2147483647, '0.00', ' + 20', 1),
+(446302, '0008', '', 'Camping Schoonenberg', '0008', 'Kennemerduinenkaart', 'Overige', 2147483647, '0.00', ' + 20', 1),
+(446303, '0009', '', 'Camping Schoonenberg', '0009', 'Fietsen', 'Overige', 2147483647, '0.00', '+ 9.5', 1),
+(446304, '0010', '', 'Camping Schoonenberg', '0010', 'Toeristenbelasting', 'Overige', 2147483647, '0.00', ' + 1,50', 1),
+(446305, '0011', '', 'Camping Schoonenberg', '0012', 'Milieubelasting', 'Overige', 2147483647, '0.00', ' + 0.25', 1),
+(446306, '0012', '', 'Camping Schoonenberg', '0011', 'Aanbetaald', 'Overige', 2147483647, '0.00', ' + 0', 1);
 
 -- --------------------------------------------------------
 
@@ -147,7 +165,6 @@ CREATE TABLE `options` (
   `id` int(11) NOT NULL,
   `companyName` varchar(255) NOT NULL,
   `vat` decimal(10,2) NOT NULL,
-  `VATText` varchar(128) NOT NULL,
   `currency` varchar(32) NOT NULL,
   `smtpHost` varchar(256) NOT NULL,
   `smtpName` varchar(256) NOT NULL,
@@ -164,15 +181,19 @@ CREATE TABLE `options` (
   `companyIBAN` varchar(512) NOT NULL,
   `companyVATNo` varchar(512) NOT NULL,
   `disclaimer` varchar(8192) NOT NULL,
-  `invoiceExpireDays` int(11) NOT NULL DEFAULT 14
+  `invoiceExpireDays` int(11) NOT NULL DEFAULT 14,
+  `VATText` varchar(128) NOT NULL,
+  `showCustomerFieldsChk` tinyint(1) NOT NULL DEFAULT 0,
+  `multiplierOnItemsChk` tinyint(1) NOT NULL DEFAULT 0,
+  `contractSystemChk` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `options`
 --
 
-INSERT INTO `options` (`id`, `companyName`, `vat`, `VATText`, `currency`, `smtpHost`, `smtpName`, `smtpUser`, `smtpPass`, `smtpSecure`, `smtpPort`, `companyAddress`, `companyPhone`, `companyFax`, `companyEmail`, `companyWebsite`, `companyKvk`, `companyIBAN`, `companyVATNo`, `disclaimer`, `invoiceExpireDays`) VALUES
-(1, 'Company Name', '1.21', 'VAT', '&EURO;', '', '', '', '', '', '', '', '', '', '', '', 'KVK nr. ', 'IBAN ', 'BTW nr. ', '', 14);
+INSERT INTO `options` (`id`, `companyName`, `vat`, `currency`, `smtpHost`, `smtpName`, `smtpUser`, `smtpPass`, `smtpSecure`, `smtpPort`, `companyAddress`, `companyPhone`, `companyFax`, `companyEmail`, `companyWebsite`, `companyKvk`, `companyIBAN`, `companyVATNo`, `disclaimer`, `invoiceExpireDays`, `VATText`, `showCustomerFieldsChk`, `multiplierOnItemsChk`, `contractSystemChk`) VALUES
+(1, 'Camping Schoonenberg', '1.21', '&euro;', '', '', '', '', 'STARTTLS', '587', ' ', ' ', '', ' ', ' ', '', '', '', 'kampeerterrein Schoonenberg • Driehuizerkerkweg 15D • 1981 EH Velsen-Zuid<br/>tel: 0255-523998 • b.g.g: 06 54 72 86 99 • email: info@campingschoonenberg.nl<br/>Inschr. K.v.K. te Haarlem nr.: 34095591 • IBAN: NL64 RABO 0169938441 • NL28 INGB 0007832751', 14, 'BTW', 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -182,15 +203,18 @@ INSERT INTO `options` (`id`, `companyName`, `vat`, `VATText`, `currency`, `smtpH
 
 CREATE TABLE `receipt` (
   `receiptId` bigint(20) NOT NULL,
-  `creator` int(11) DEFAULT NULL,
-  `parentSession` int(11) DEFAULT NULL,
-  `items` varchar(8192) DEFAULT NULL,
+  `creator` int(11) NOT NULL,
+  `parentSession` int(11) NOT NULL,
+  `items` varchar(8192) NOT NULL,
   `receiptDesc` varchar(4096) DEFAULT NULL,
-  `createDt` varchar(128) DEFAULT NULL,
+  `createDt` varchar(128) NOT NULL,
   `paidDt` varchar(128) DEFAULT NULL,
-  `customerId` int(11) DEFAULT NULL,
-  `cashValue` decimal(18,2) NOT NULL DEFAULT 0.00,
-  `pinValue` decimal(18,2) NOT NULL DEFAULT 0.00,
+  `customerId` int(11) NOT NULL,
+  `cashValue` decimal(18,2) NOT NULL,
+  `pinValue` decimal(18,2) NOT NULL,
+  `roomNo` varchar(32) DEFAULT NULL,
+  `arrival` varchar(128) DEFAULT NULL,
+  `departure` varchar(128) DEFAULT NULL,
   `paymentMethod` varchar(128) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -206,6 +230,13 @@ CREATE TABLE `sessions` (
   `lastPing` datetime NOT NULL,
   `validUntil` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `sessions`
+--
+
+INSERT INTO `sessions` (`sessionId`, `userId`, `lastPing`, `validUntil`) VALUES
+('QgH9CUCjoi2Nvx76fk7X3upcM8F7qh55', '1', '2020-08-27 15:11:03', '2020-08-28 01:59:11');
 
 -- --------------------------------------------------------
 
@@ -228,7 +259,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`userId`, `username`, `nickName`, `hash`, `salt`, `userTheme`, `managementUser`) VALUES
-('1', 'admin', 'Admin', '3B75DDDF71B8F3A273FC917FDBAD3554119EF92DE80DE36A2FADA83BF6F4FFEBE373C502D5E6E7490A5D1F3B08373E09344EBD19FBA9825F10C1E602E9B789F1', 'rrOHdicTpimJFDbi2DBz5n7SXA3j1Tb7ayyvXssJzO40ib1hfpQMcKbJVrsgWps4g7bSVuMG9qs17ii91BbugNqstYibrqK4iO1pDY4SzaCURfevr6ukD5ln9CQaiMTO', 'Superhero', 1);
+('1', 'admin', 'Admin', '4423D696B54809CB925E5B1BB93099DF40F58308222591C123031981E8716FC975556918F0D7A2525696AA7D055DCA76AC781A56A56C680E07316EA00258B05E', '1Pvtj4tttH0uQx5P8a46tCpFoZtLRtzA1ivxWCjc9ctTqKCG5FVsFthdiQpYJL6Lv5tfZk9SyXAldZspxQEcILWkVaWCoXHrjrgPY3bDwn4Ji7D6QmCwgsiY3sKhl3qW', 'Superhero', 1);
 
 --
 -- Indexes for dumped tables
@@ -312,13 +343,13 @@ ALTER TABLE `contract`
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `customerId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `customerId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `nativeId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `nativeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `log`
@@ -330,7 +361,7 @@ ALTER TABLE `log`
 -- AUTO_INCREMENT for table `options`
 --
 ALTER TABLE `options`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `receipt`

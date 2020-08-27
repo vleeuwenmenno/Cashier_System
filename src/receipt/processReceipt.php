@@ -23,6 +23,19 @@ else
     $printAmount = $_GET['printAmount'];
     $receiptId = $_GET['receiptId'];
     $paymentMethod = $_GET['paymentMethod'];
+    $departure = $_GET["departure"];
+    $arrival = $_GET["arrival"];
+    $roomNo = $_GET["roomNo"];
+    $customerId = $_GET["cust"];
+
+    if ($_CFG['showCustomerFieldsChk'])
+    {
+        if ($roomNo == "" || $departure == "" || $arrival == "")
+        {
+            echo '<script src="../js/jquery.min.js"></script>';
+            die("Vul alle velden in om verder te gaan.");
+        }
+    }
 
     if ($paymentMethod == "PC")
     {
@@ -35,6 +48,10 @@ else
         $pinValue = 0.0;
     }
 
+    //Check if customer on receipt is 0 if so we will use newly entered data
+    if (Misc::sqlGet("customerId", "receipt", "receiptId", $receiptId)['customerId'] != 0)
+        $customerId = Misc::sqlGet("customerId", "receipt", "receiptId", $receiptId)['customerId'];
+
     //Register receipt as paid into the database
     $db = new mysqli($config['SQL_HOST'], $config['SQL_USER'], $config['SQL_PASS'], $config['SQL_DB']);
 
@@ -44,7 +61,7 @@ else
     }
 
     $json = json_encode($_SESSION['receipt']['items']);
-    $sql = "UPDATE `receipt` SET `receiptDesc` = '" . $_GET['receiptDesc'] . "', `paidDt` = '" . date("H:i:s d-m-Y") . "', `pinValue` = '" . str_replace (",", ".", $pinValue) . "', `cashValue` = '" . str_replace (",", ".", $cashValue) . "' , `paymentMethod` = '" . $paymentMethod . "', `items` = '" . urlencode($json) . "' WHERE `receipt`.`receiptId`='" . $receiptId . "';";
+    $sql = "UPDATE `receipt` SET `customerId`='$customerId', `arrival`='$arrival', `departure`='$departure', `roomNo`='$roomNo', `receiptDesc` = '" . $_GET['receiptDesc'] . "', `paidDt` = '" . date("H:i:s d-m-Y") . "', `pinValue` = '" . str_replace (",", ".", $pinValue) . "', `cashValue` = '" . str_replace (",", ".", $cashValue) . "' , `paymentMethod` = '" . $paymentMethod . "', `items` = '" . urlencode($json) . "' WHERE `receipt`.`receiptId`='" . $receiptId . "';";
 
     if(!$result = $db->query($sql))
     {
