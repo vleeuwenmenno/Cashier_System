@@ -142,6 +142,9 @@ else if (isset($_GET['new']))
                             
                             if ($_CFG['multiplierOnItemsChk'])
                             {
+                                if ($val['multiplier'] == 0)
+                                    $val['multiplier'] = 1;
+                                    
                                 echo '    <th><input class="form-control" style="width: 156px; display: none;" id="editableMultiplier' . key($_SESSION['receipt']['items']) . '" value="' . $val['multiplier'] . '" type="text" name="type"/><a style="float: left;" href="javascript:void(0);" id="editAmountMultiplier' . key($_SESSION['receipt']['items']) . '">' . $val['multiplier'] . '</a></th>';
                             }         
 
