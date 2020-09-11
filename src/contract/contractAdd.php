@@ -54,5 +54,5 @@ if ($_GET['startDate'] != "" && $_GET['planningPeriod'] != "" && $_GET['planning
 	}
 }
 else
-	die("Form is niet volledig ingevult, vul alle velden en verstuur hem opnieuw.");
+	die("Form is niet volledig ingevult, vul alle velden en verstuur hem opnieuw. 1");
 ?>

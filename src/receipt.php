@@ -1176,10 +1176,11 @@ else if (isset($_GET['new']))
 
                     if ($( "#paymentMethod" ).val() != "")
                     {
+                        <?php if ($_CFG['showCustomerFieldsChk']) { ?>
                         var dep = $("#departureDate").val();
                         var arr = $("#arrivalDate").val();
                         var rono = $("#placeNumber").val();
-
+                        
                         $.get(
                             "customer/customerAdd.php",
                             {
@@ -1192,12 +1193,11 @@ else if (isset($_GET['new']))
                             	postalCode: $("#postalCode").val()
                             },
 							function(data)
-							{
+                            {
 								if (data.replace(/(\r\n|\n|\r)/gm, "").startsWith('OK '))
 								{
 									var customerId = data.split(' ')[1];
 
-                                    <?php if ($_CFG['showCustomerFieldsChk']) { ?>
                                     if (dep == "")
                                     {
                                         $( "#statusText" ).html("<p style=\"color: orange !important;\">Selecteer een vertrek datum.</p>");
@@ -1213,29 +1213,31 @@ else if (isset($_GET['new']))
                                         $( "#statusText" ).html("<p style=\"color: orange !important;\">Vul een plaatsnummer in.</p>");
                                         return;
                                     }
-                                    <?php } ?>
                                     
+                                    <?php  }?>
                                     if ($('#paymentMethod').val() == "PC")
                                     {
                                         var pinVal = $('#pinVal').val();
                                         var cashVal = $('#cashVal').val();
 
                                         $("#pageLoaderIndicator").fadeIn();
-                                        $("#PageContent").load("receipt/processReceipt.php?receiptId=<?=$_SESSION['receipt']['id']?>&cust="+customerId+"&arrival="+arr+"&departure="+dep+"&roomNo="+rono+"&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=0&paymentMethod=" + $( "#paymentMethod" ).val() +"&receiptDesc=" + encodeURIComponent($('#receiptDescription').val()) + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&pin=" + pinVal + "&cash=" + cashVal, function () { });
+                                        $("#PageContent").load("receipt/processReceipt.php?receiptId=<?=$_SESSION['receipt']['id']?><?php if ($_CFG['showCustomerFieldsChk']) { ?>&cust="+customerId+"&arrival="+arr+"&departure="+dep+"&roomNo="+rono+"<?php  }?>&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=0&paymentMethod=" + $( "#paymentMethod" ).val() +"&receiptDesc=" + encodeURIComponent($('#receiptDescription').val()) + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&pin=" + pinVal + "&cash=" + cashVal, function () { });
                                     }
                                     else
                                     {
                                         $("#pageLoaderIndicator").fadeIn();
-                                        $("#PageContent").load("receipt/processReceipt.php?receiptId=<?=$_SESSION['receipt']['id']?>&cust="+customerId+"&arrival="+arr+"&departure="+dep+"&roomNo="+rono+"&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=0&receiptDesc=" + encodeURIComponent($('#receiptDescription').val()) + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&paymentMethod=" + $( "#paymentMethod" ).val(), function () { });
+                                        $("#PageContent").load("receipt/processReceipt.php?receiptId=<?=$_SESSION['receipt']['id']?><?php if ($_CFG['showCustomerFieldsChk']) { ?>&cust="+customerId+"&arrival="+arr+"&departure="+dep+"&roomNo="+rono+"<?php  }?>&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=0&receiptDesc=" + encodeURIComponent($('#receiptDescription').val()) + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&paymentMethod=" + $( "#paymentMethod" ).val(), function () { });
                                     }
+                                    <?php if ($_CFG['showCustomerFieldsChk']) { ?>
 								}
 								else
 								{
                                     alert("Er is iets fout gegaan!\n"+data);
                                     return;
-								}
+                                }
 							}
                         );
+                        <?php  }?>
                     }
                     else
                     {

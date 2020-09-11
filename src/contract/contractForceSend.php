@@ -7,6 +7,6 @@ if ($_GET['id'])
 	die("Contract staat ingepland " . $last_id);
 }
 else
-	die("Form is niet volledig ingevult, vul alle velden en verstuur hem opnieuw.");
+	die("Form is niet volledig ingevult, vul alle velden en verstuur hem opnieuw. 3");
 
 ?>

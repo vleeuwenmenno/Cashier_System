@@ -17,6 +17,6 @@ if ($_GET['id'] != "")
 	die("OK");
 }
 else
-	die("Form is niet volledig ingevult, vul alle velden en verstuur hem opnieuw.");
+	die("Form is niet volledig ingevult, vul alle velden en verstuur hem opnieuw. 2");
 
 ?>

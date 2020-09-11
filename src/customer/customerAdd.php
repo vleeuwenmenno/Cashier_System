@@ -24,6 +24,6 @@ if ($_GET['intials'] != "" && $_GET['famName'] != "")
 	}
 }
 else
-	die("Form is niet volledig ingevult, vul alle velden en verstuur hem opnieuw.");
+	die("Form is niet volledig ingevult, vul alle velden en verstuur hem opnieuw. 6");
 
 ?>
