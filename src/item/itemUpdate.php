@@ -30,7 +30,7 @@ else
 	//echo "'".$_GET['priceExclVat']. "'";
 	//echo "'".$_GET['priceModifier']. "'";
 
-die("Form is niet volledig ingevult, vul alle velden en verstuur hem opnieuw. (Let op! Artikel nummer moet ingevult zijn.)");
+die("Form is niet volledig ingevult, vul alle velden en verstuur hem opnieuw. (Let op! Artikel nummer moet ingevult zijn.) 11");
 }
 
 ?>

@@ -504,6 +504,9 @@ class Calculate
 
         foreach ($json as $key => $val)
         {
+            if ($val['multiplier'] == 0)
+                $val['multiplier'] = 1;
+                
             $final['total'] += ((Misc::calculate(round($val['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . $val['priceAPiece']['priceModifier']) * $val['count']) * $val['multiplier']);
             $final['exclVat'] += round($val['priceAPiece']['priceExclVat'] *  $val['count'] * $val['multiplier'], 2);
         }

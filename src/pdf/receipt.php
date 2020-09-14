@@ -122,6 +122,10 @@
                             $total = Misc::calculate(round($json[key($json)]['priceAPiece']['priceExclVat'] * $_CFG['VAT'], 2) . " " . $json[key($json)]['priceAPiece']['priceModifier']);
                             $purchase = $json[key($json)]['priceAPiece']['priceExclVat'];
                             $vatOnly = (($json[key($json)]['priceAPiece']['priceExclVat'] * $_CFG['VAT']) - $json[key($json)]['priceAPiece']['priceExclVat']);
+                            
+                            if ($json[key($json)]['multiplier'] == 0)
+                                $json[key($json)]['multiplier'] = 1;
+
                             ?>
                             <tr>
                                 <td class="service"><?php 
