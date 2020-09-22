@@ -50,9 +50,9 @@
                 <?php } ?>
                 <?php if ($custId != 0) {?>
                 <div id="invoice">
-                    <div><span><?=str_pad($_POST['rid'], 8, '0', STR_PAD_LEFT)?></span> FACTUUR NR.&nbsp;</div>
+                    <div>FACTUURNUMMER:&nbsp;<span><?=str_pad($_POST['rid'], 8, '0', STR_PAD_LEFT)?></span></div>
                     <?php if (!$_CFG['showCustomerFieldsChk']) { ?>
-                    <div><span><?=strftime("%d %B %Y %H:%M:%S", $time->getTimestamp()), PHP_EOL?></span> DATUM</div>
+                    <div>DATUM:&nbsp;<span><?=strftime("%d %B %Y %H:%M:%S", $time->getTimestamp()), PHP_EOL?></span> </div>
                     <?php } ?>
                     
                     <?php if (!$_CFG['showCustomerFieldsChk']) { ?>

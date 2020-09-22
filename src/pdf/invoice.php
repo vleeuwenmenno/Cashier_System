@@ -30,9 +30,9 @@
                 </div>
                 <div class="briefpapier" style="display: none;"></div>
                 <div id="invoice">
-                    <div>FACTUURNUMMER: <span><?=str_pad($_POST['lid'], 8, '0', STR_PAD_LEFT)?></span></div>
-                    <div>DATUM: <span><?=strftime("%d %B %Y", $time->getTimestamp()), PHP_EOL?></span></div>
-                    <?php if ($dd == 0) { ?><div>VERVALDATUM: <span><?=strftime("%d %B %Y", $expireTime->getTimestamp()), PHP_EOL?></span> </div><?php } ?>
+                    <div>FACTUURNUMMER:&nbsp;<span><?=str_pad($_POST['lid'], 8, '0', STR_PAD_LEFT)?></span></div>
+                    <div>DATUM:&nbsp;<span><?=strftime("%d %B %Y", $time->getTimestamp()), PHP_EOL?></span></div>
+                    <?php if ($dd == 0) { ?><div>VERVALDATUM:&nbsp;<span><?=strftime("%d %B %Y", $expireTime->getTimestamp()), PHP_EOL?></span></div><?php } ?>
                 </div>
                 <div id="project">
                     <?php if (!$_CFG['showCustomerFieldsChk']) { ?>
