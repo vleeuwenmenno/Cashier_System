@@ -64,6 +64,87 @@ else if (isset($_GET['new']))
         $_SESSION['receipt']['status'] = 'open';
         $_SESSION['receipt']['saved'] = false;
         $_SESSION['receipt']['id'] = mysqli_insert_id($db);
+        $_SESSION['receipt']['items'] = array(
+                "446295" => array(
+                    "itemDesc" => "Volwassenen (dagen)",
+                    "count" => 1,
+                    "multiplier" => 1,
+                    "priceAPiece" => array(
+                        "priceExclVat" => 0.00,
+                        "priceModifier" => +7
+                    )
+                ),
+
+                "446296" => array(
+                    "itemDesc" => "Kinderen 1-12 jaar (dagen)",
+                    "count" => 1,
+                    "multiplier" => 1,
+                    "priceAPiece" => array(
+                        "priceExclVat" => 0.00,
+                        "priceModifier" =>  + 5
+                    )
+                ),
+
+                "446297" => array(
+                    "itemDesc" => "Caravan/Tent",
+                    "count" => 1,
+                    "multiplier" => 1,
+                    "priceAPiece" => array(
+                        "priceExclVat" => 0.00,
+                        "priceModifier" =>  + 7
+                    )
+                ),
+
+                "446298" => array(
+                    "itemDesc" => "Elektra",
+                    "count" => 1,
+                    "multiplier" => 1,
+                    "priceAPiece" => array(
+                        "priceExclVat" => 0.00,
+                        "priceModifier" =>  + 3
+                    )
+                ),
+
+                "446299" => array(
+                    "itemDesc" => "Hond",
+                    "count" => 1,
+                    "multiplier" => 1,
+                    "priceAPiece" => array(
+                        "priceExclVat" => 0.00,
+                        "priceModifier" => + 3.5
+                    )
+                ),
+
+                "446300" => array(
+                    "itemDesc" => "Reseveringskosten",
+                    "count" => 1,
+                    "multiplier" => 1,
+                    "priceAPiece" => array(
+                        "priceExclVat" => 0.00,
+                        "priceModifier" =>  + 20
+                    )
+                ),
+
+                "446304" => array(
+                    "itemDesc" => "Toeristenbelasting",
+                    "count" => 1,
+                    "multiplier" => 1,
+                    "priceAPiece" => array(
+                        "priceExclVat" => 0.00,
+                        "priceModifier" =>  + 1,50
+                    )
+                ),
+
+                "446305" => array(
+                    "itemDesc" => "Milieubelasting",
+                    "count" => 1,
+                    "multiplier" => 1,
+                    "priceAPiece" => array(
+                        "priceExclVat" => 0.00,
+                        "priceModifier" =>  + 0.25
+                    )
+                )
+            );
         ?>
         <script>
             $(document).ready(function() {
@@ -1176,11 +1257,11 @@ else if (isset($_GET['new']))
 
                     if ($( "#paymentMethod" ).val() != "")
                     {
-                        <?php if ($_CFG['showCustomerFieldsChk']) { ?>
                         var dep = $("#departureDate").val();
                         var arr = $("#arrivalDate").val();
                         var rono = $("#placeNumber").val();
                         
+                        <?php if ($_CFG['showCustomerFieldsChk'] && $_SESSION['receipt']['customer'] == 0) { ?>
                         $.get(
                             "customer/customerAdd.php",
                             {
@@ -1213,8 +1294,10 @@ else if (isset($_GET['new']))
                                         $( "#statusText" ).html("<p style=\"color: orange !important;\">Vul een plaatsnummer in.</p>");
                                         return;
                                     }
-                                    
-                                    <?php  }?>
+                            <?php } else {?>
+									var customerId = <?=isset($_SESSION['receipt']['customer']) ? $_SESSION['receipt']['customer'] : 0?>;
+                            <?php }?>
+
                                     if ($('#paymentMethod').val() == "PC")
                                     {
                                         var pinVal = $('#pinVal').val();
@@ -1228,7 +1311,7 @@ else if (isset($_GET['new']))
                                         $("#pageLoaderIndicator").fadeIn();
                                         $("#PageContent").load("receipt/processReceipt.php?receiptId=<?=$_SESSION['receipt']['id']?><?php if ($_CFG['showCustomerFieldsChk']) { ?>&cust="+customerId+"&arrival="+arr+"&departure="+dep+"&roomNo="+rono+"<?php  }?>&mail=" + $("#emailToCustomer").is(":checked") + "&printAmount=0&receiptDesc=" + encodeURIComponent($('#receiptDescription').val()) + "&mailList=" + encodeURIComponent($('#example_email').val()) + "&paymentMethod=" + $( "#paymentMethod" ).val(), function () { });
                                     }
-                                    <?php if ($_CFG['showCustomerFieldsChk']) { ?>
+                            <?php if ($_CFG['showCustomerFieldsChk'] && $_SESSION['receipt']['customer'] == 0) { ?>
 								}
 								else
 								{
@@ -1237,7 +1320,7 @@ else if (isset($_GET['new']))
                                 }
 							}
                         );
-                        <?php  }?>
+                    <?php } ?>
                     }
                     else
                     {
