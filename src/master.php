@@ -112,6 +112,26 @@
         <script>
             $(document).ready(function ()
             {
+                $.get( "cron.php", function( data ) {
+                    console.log("Ran cron.php task, output: ");
+                    console.log(data);
+                    
+                    $.notify({
+                        icon: 'fa fa-check fa-2x',
+                        title: '<b>Contracten taak uitgevoerd</b><br />',
+                        message: 'Contracten mail  taak is uitgevoerd, voor meer info bekijk de developer console (f12)'
+                    }, {
+                        // settings
+                        type: 'success',
+                        delay: 5000,
+                        timer: 5,
+                        placement: {
+                            from: "bottom",
+                            align: "right"
+                        }
+                    });
+                });
+
                 var isShown = false;
                 $("#searchContracts").on("click", function ()
                 {
