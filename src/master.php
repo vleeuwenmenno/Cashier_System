@@ -112,10 +112,12 @@
         <script>
             $(document).ready(function ()
             {
+                <?php if ($_CFG['contractSystemChk']) { ?>
+
                 $.get( "cron.php", function( data ) {
                     console.log("Ran cron.php task, output: ");
                     console.log(data);
-                    
+
                     $.notify({
                         icon: 'fa fa-check fa-2x',
                         title: '<b>Contracten taak uitgevoerd</b><br />',
@@ -131,6 +133,7 @@
                         }
                     });
                 });
+                <?php } ?>
 
                 var isShown = false;
                 $("#searchContracts").on("click", function ()
