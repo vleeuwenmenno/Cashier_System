@@ -74,7 +74,7 @@
         $mail->Body    = 'Geachte klant,<br /><br />
 
                             De bijlage bevat uw factuur.<br />
-                            '.($dd == 1 ? '<span style="color: red;">LET OP! Deze factuur wordt automatisch geïncasseerd, dit gebeurt ' . $when . '. U hoeft deze nota niet handmatig te betalen.</span>' : 'Zorg ervoor dat u het totaalbedrag van deze factuur voor de vervaldatum heeft overgemaakt naar '.$_CFG['companyIBAN'].' ten name van '.$_CFG['COMPANY_NAME'].', onder vermelding van het factuurnummer.').'<br /><br />
+                            '.($dd == 1 ? '<span style="color: red;">LET OP! Deze factuur wordt automatisch geincasseerd, dit gebeurt ' . $when . '. U hoeft deze nota niet handmatig te betalen.</span>' : 'Zorg ervoor dat u het totaalbedrag van deze factuur voor de vervaldatum heeft overgemaakt naar '.$_CFG['companyIBAN'].' ten name van '.$_CFG['COMPANY_NAME'].', onder vermelding van het factuurnummer.').'<br /><br />
 
                             Met vriendelijke groeten,<br /><br />
 

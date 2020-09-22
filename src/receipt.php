@@ -65,6 +65,7 @@ else if (isset($_GET['new']))
         $_SESSION['receipt']['saved'] = false;
         $_SESSION['receipt']['id'] = mysqli_insert_id($db);
         $_SESSION['receipt']['items'] = array();
+        
         ?>
         <script>
             $(document).ready(function() {

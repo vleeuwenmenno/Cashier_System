@@ -30,9 +30,9 @@
                 </div>
                 <div class="briefpapier" style="display: none;"></div>
                 <div id="invoice">
-                    <div><span>#<?=str_pad($_POST['lid'], 8, '0', STR_PAD_LEFT)?></span> FACTUURNUMMER</div>
-                    <div><span><?=strftime("%d %B %Y", $time->getTimestamp()), PHP_EOL?></span> DATUM</div>
-                    <?php if ($dd == 0) { ?><div><span><?=strftime("%d %B %Y", $expireTime->getTimestamp()), PHP_EOL?></span> VERVALDATUM</div><?php } ?>
+                    <div>FACTUURNUMMER: <span><?=str_pad($_POST['lid'], 8, '0', STR_PAD_LEFT)?></span></div>
+                    <div>DATUM: <span><?=strftime("%d %B %Y", $time->getTimestamp()), PHP_EOL?></span></div>
+                    <?php if ($dd == 0) { ?><div>VERVALDATUM: <span><?=strftime("%d %B %Y", $expireTime->getTimestamp()), PHP_EOL?></span> </div><?php } ?>
                 </div>
                 <div id="project">
                     <?php if (!$_CFG['showCustomerFieldsChk']) { ?>
@@ -49,6 +49,7 @@
                     <thead>
                         <tr>
                             <th class="desc">OMSCRHIJVING</th>
+                            <th></th>
                             <th></th>
                             <th>STUKPRIJS</th>
                             <?php if ($_CFG['multiplierOnItemsChk']) { ?> 
@@ -80,6 +81,7 @@
                                         echo $json[key($json)]['itemDesc'];
                                 ?></td>
                                 <td class="unit"></td>
+                                <td class="unit"></td>
                                 <td class="unit"><?=$_CFG['CURRENCY']?>&nbsp;<?=$_POST['exvat'] ? number_format((round($total, 2))-(round($total, 2) * 0.21), 2, ",", "."): number_format((round($total, 2)), 2, ",", ".")?></td>
                                 <?php if ($_CFG['multiplierOnItemsChk']) { ?> 
                                 <td class="qty"><?=$json[key($json)]['multiplier']?></td>
@@ -99,19 +101,19 @@
                         <tr>
                             <td colspan="4"></td>
                             <?php if ($_POST['exvat']) { ?><td class="total"></td><?php } ?>
-                            <td colspan="4" class="total">EXCL. <?=$_CFG['VATText']?></td>
+                            <td  class="total">EXCL. <?=$_CFG['VATText']?></td>
                             <td class="total"><?=$_CFG['CURRENCY']?>&nbsp;<?=number_format(round($totalExVat, 2), 2, ",", ".")?></td>
                         </tr>
                         <tr>
                             <td colspan="4"></td>
                             <?php if ($_POST['exvat']) { ?><td></td><?php } ?>
-                            <td colspan="4"><?=$_CFG['VATText']?> <?=$_CFG['VAT']*100-100?>%</td>
+                            <td ><?=$_CFG['VATText']?> <?=$_CFG['VAT']*100-100?>%</td>
                             <td class="total"><?=$_CFG['CURRENCY']?>&nbsp;<?=number_format(round($totalVat, 2), 2, ",", ".")?></td>
                         </tr>
                         <tr>
-                            <td colspan="4"></td>
+                            <td colspan="4" class="grand total"></td>
                             <?php if ($_POST['exvat']) { ?><td class="grand total"></td><?php } ?>
-                            <td colspan="4" class="grand total">EINDTOTAAL</td>
+                            <td class="grand total">EINDTOTAAL</td>
                             <td class="grand total"><?=$_CFG['CURRENCY']?>&nbsp;<?=number_format(round($totalIncVat, 2), 2, ",", ".")?></td>
                         </tr>
                     </tbody>
@@ -131,7 +133,7 @@
 
                         if ($dd == 1) {
                     ?>
-                    <div class="notice"><span style="color: red;">LET OP! Deze factuur wordt automatisch geïncasseerd, dit gebeurt <?=$when?>. U hoeft deze nota niet handmatig te betalen.</span></div>
+                    <div class="notice"><span style="color: red;">LET OP! Deze factuur wordt automatisch geincasseerd, dit gebeurt <?=$when?>. U hoeft deze nota niet handmatig te betalen.</span></div>
                     <?php } ?>
                 </div>
                 <?php } ?>
