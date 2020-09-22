@@ -1295,7 +1295,7 @@ else if (isset($_GET['new']))
                                         return;
                                     }
                             <?php } else {?>
-									var customerId = <?=$_SESSION['receipt']['customer']?>;
+									var customerId = <?=isset($_SESSION['receipt']['customer']) ? $_SESSION['receipt']['customer'] : 0?>;
                             <?php }?>
 
                                     if ($('#paymentMethod').val() == "PC")
